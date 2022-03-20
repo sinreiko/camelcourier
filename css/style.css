@@ -284,6 +284,20 @@ a:focus {
   padding-left: 15px;
 }
 
+/* .action-button {
+  background: #EFE6C5;
+  color: black;
+  border: 0 none;
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 130px;
+  font: 700 14px/40px "Poppins", sans-serif;
+  border: 1px solid #EFE6C5;
+  margin: 0 5px;
+  text-transform: uppercase;
+  display: inline-block;
+} */
+
 .slider_form form .btm_input {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -295,16 +309,25 @@ a:focus {
   margin: 0;
   margin-right: 10px;
 }
-.slider_form form .btm_input button, .btn {
-  -webkit-box-flex: 1;
+.slider_form form .btm_input button, .btn, .action-button {
+  /* -webkit-box-flex: 1;
       -ms-flex: 1;
-          flex: 1;
+          flex: 1; */
   min-width: 120px;
   border: none;
   border-radius: 0.25rem;
   outline: none;
-  background-color: #110B11;
-  color: #ffffff;
+  background-color: #EFE6C5;
+  font: 700 14px/40px "Poppins", sans-serif;
+  text-transform: uppercase;
+  color: black;
+  padding:0;
+}
+
+.action-button:hover, .action-button:focus {
+  background: #DBC490;
+  border-color: #DBC490;
+  color:black;
 }
 
 .slider_section .carousel-indicators {
@@ -954,6 +977,92 @@ a:focus {
 .footer_section a {
   color: #000000;
 }
-/*# sourceMappingURL=style.css.map */
 
+.money-icon:before{
+  content: "\f316";
+  font: normal normal normal 24px/7px Ionicons;
+}
 
+/* .pickup-card{
+  padding: 0;
+  /* max-width: calc(100%/4); */
+/* } */
+
+.pickup-card a{
+  color: black;
+}
+
+.border-urgent{
+  border-color: #A67A61 !important;
+  border-width: 2px;
+}
+
+.border-urgent .card-header, .thead-brown th{
+  background-color:#A67A61;
+  color: white;
+}
+
+.border-medium{
+  border-color: #DBC490 !important;
+  border-width: 2px;
+}
+
+.border-medium .card-header, a .dropdown-item:visited{
+  background-color:#DBC490;
+  color: white;
+}
+.border-low{
+  border-color: #EFE6C5 !important;
+  border-width: 2px;
+}
+
+.border-low .card-header{
+  background-color:#EFE6C5;
+  color: black;
+}
+
+.color-urgent{
+  color:#A67A61;
+}
+
+.color-medium{
+  color:#DBC490;
+}
+
+.color-low{
+  color:#EFE6C5;
+}
+
+.form-check-urgent{
+  background-color: #A67A61!important;
+}
+
+.previous_button {
+  background: transparent;
+  color: grey;
+  border: 1px grey solid !important;
+}
+
+.previous_button:focus {
+  background: #DBC490;
+  border: 1px #DBC490 solid !important;
+  color: #fff;
+}
+/* 
+@media (max-width: 768px) {
+  .pickup-card{
+    max-width: calc(100%/2);
+  }
+}
+
+@media (max-width: 576px) {  
+  .pickup-card{
+    max-width: 100%;
+  }
+} */
+
+.navbar-toggler-icon:before{
+  content: "\f394";
+  font: normal normal normal 24px/7px Ionicons;
+  vertical-align: middle;
+}

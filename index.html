@@ -22,7 +22,8 @@
 
     <!-- fonts style -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
-
+    <!-- Icons CSS -->
+    <link rel='stylesheet' href='https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
     <!-- Custom styles for this template -->
     <link href="css/style.css" rel="stylesheet" />
     
@@ -32,45 +33,50 @@
         <!-- header section strats -->
         <header class="header_section">
             <div class="container-fluid">
-                <div class="row">
+                <!-- <div class="row"> -->
                     <nav class="navbar navbar-expand-lg custom_nav-container">
-                        <div class="col-auto">
-                            <ul class="navbar-nav">
-                                <a class="navbar-brand" href="index.html">
-                                    <span>
-                                        CAMELCOURIER
-                                    </span>
-                                </a>
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="index.html"> Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="about.html"> About</a>
-                                </li>
-                                
-                                <li class="nav-item">
-                                    <a class="nav-link" href="contact.html">Contact Us</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-auto">
-                            <form class="form-inline" action="" method="post">
-                                <div class="form-group mb-2">
+                        <!-- <div class="col-auto"> -->
+                            
+                            <a class="navbar-brand" href="index.html">
+                                <span>
+                                    CAMELCOURIER
+                                </span>
+                            </a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item active">
+                                        <a class="nav-link" href="index.html"> Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="track-order.html"> Track your parcel</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        <!-- </div> -->
+                        <div class=" mr-lg-5 pt-3">
+                            <form class="form-inline" action="create-delivery.html" method="post">
+                                <div class="form-group col-sm-6 col-md-4">
                                     <label for="email" class="sr-only">Email address</label>
                                     <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
                                 </div>
-                                <div class="form-group mx-sm-3 mb-2">
+                                <div class="form-group col-sm-6 col-md-4">
                                     <label for="password" class="sr-only">Password</label>
                                     <input type="password" class="form-control" id="password" aria-describedby="emailHelp" placeholder="Enter password">
                                 </div>
-                                <button type="submit" class="btn btn-primary mb-2 w-30">Login</button>
+                                <div class="form-group col-sm-6 col-md-3 mt-md-2">
+                                    <button type="submit" class="action-button btn btn-primary mb-2 w-100" style="padding:0">Login</button>
+                                </div>
+                                
                             </form> 
                         </div>
                         
                 </nav>
                 </div>
                 
-            </div>
+            <!-- </div> -->
         </header>
         <section class=" slider_section ">
             <div class="container-fluid">
@@ -142,7 +148,7 @@
                         <input type="text" class="form-control" id="dropoff" placeholder="Postcode">
                         <div class="btm_input">
                         <input type="number" class="form-control" placeholder="Weight">
-                        <button>Quote & Book</button>
+                        <button class="action-button">Quote & Book</button>
                         </div>
                     </form>
                     </div>

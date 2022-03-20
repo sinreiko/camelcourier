@@ -97,14 +97,6 @@
             return false;
         })
     }; 
-    
-    //* Add Phone no select
-    function phoneNoselect(){
-        if ( $('#msform').length ){   
-            $("#phone").intlTelInput(); 
-            $("#phone").intlTelInput("setNumber", "+880"); 
-        };
-    }; 
     //* Select js
     function nice_Select(){
         if ( $('.product_select').length ){ 
@@ -113,6 +105,5 @@
     }; 
     /*Function Calls*/  
     verificationForm ();
-    phoneNoselect ();
     nice_Select ();
 })(jQuery);

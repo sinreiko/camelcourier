@@ -20,6 +20,9 @@
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
 
+    <!-- Icons CSS -->
+    <link rel='stylesheet' href='https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
+    
     <!-- fonts style -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
 
@@ -31,22 +34,25 @@
     <header class="header_section">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg custom_nav-container">
-                <ul class="navbar-nav mr-auto">
-                    <a class="navbar-brand" href="index.html">
-                        <span>
-                            CAMELCOURIER
-                        </span>
-                    </a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html"> Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="create-delivery.html">Create Delivery</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="order-history.html">Order History</a>
-                    </li>
-                </ul>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">
+                    <span>CAMELCOURIER</span>
+                </a>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html"> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="create-delivery.html">Create Delivery</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="order-history.html">Order History</a>
+                        </li>
+                    </ul>
+                </div>
                 <span class="navbar-text my-1 mx-2">
                     Welcome, Reiko Lee
                 </span>
@@ -54,146 +60,144 @@
         </div>
     </header>
     <main>
-        <article>
-            <section class="container">
-                <div class="card">
-                    <div class="card-header">My Shipment Records</div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Date Created</th>
-                                    <th>Driver Details</th>
-                                    <th>Tracking No.</th>
-                                    <th>Receiver Address</th>
-                                    <th>Weight</th>
-                                    <th>Tracking Status</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>[Insert Date]</td>
-                                    <td>[Driver Details]</td>
-                                    <td>[Tracking No]</td>
-                                    <td>[Receiver's Address]</td>
-                                    <td>[Weight]</td>
-                                    <td>[DeliveryStatus]</td>
-                                    <td>
-                                        <!-- Modal btn -->
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderModal">
-                                            View
-                                        </button>
-                                        <!-- Modal -->
-                                        <div class="modal fade bd-example-modal-lg" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModal" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. [TrackingID]</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">General Information</th>
-                                                                <th scope="col">Parcel Details</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <small>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Date Created</dt>
-                                                                            <dd class="col-8 col-sm-9">2022-03-20</dd>
-                                                                        </dl>
-                                                                    </small>
-                                                                    
-                                                                </td>
-                                                                <td>
-                                                                    <small>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Delivery Fee</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Price]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Weight</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Weight]</dd>
-                                                                        </dl>
-                                                                    </small>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                        <thead>
-                                                            <th scope="col">Shipper Address</th>
-                                                            <th scope="col">Receiver Address</th>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <small>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Name</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Name]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Email</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Email]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Phone]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Address</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Address]</dd>
-                                                                        </dl>
-                                                                    </small>
-                                                                </td>
-                                                                <td>
-                                                                    <small>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Name</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Name]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Email</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Email]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Phone]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Address</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Address]</dd>
-                                                                        </dl>
-                                                                    </small>
-                                                                </td>
+        <section class="container">
+            <div class="card">
+                <div class="card-header">My Shipment Records</div>
+                <div class="card-body">
+                    <table class="table thead-brown">
+                        <thead>
+                            <tr>
+                                <th>Date Created</th>
+                                <th>Driver Details</th>
+                                <th>Tracking No.</th>
+                                <th>Receiver Address</th>
+                                <th>Weight</th>
+                                <th>Tracking Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>[Insert Date]</td>
+                                <td>[Driver Details]</td>
+                                <td>[Tracking No]</td>
+                                <td>[Receiver's Address]</td>
+                                <td>[Weight]</td>
+                                <td>[DeliveryStatus]</td>
+                                <td>
+                                    <!-- Modal btn -->
+                                    <button type="button" class="action-button btn btn-primary" data-toggle="modal" data-target="#orderModal">
+                                        View
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade bd-example-modal-lg" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModal" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. [TrackingID]</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">General Information</th>
+                                                            <th scope="col">Parcel Details</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <small>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Date Created</dt>
+                                                                        <dd class="col-8 col-sm-9">2022-03-20</dd>
+                                                                    </dl>
+                                                                </small>
                                                                 
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                </div>
-                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <small>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Delivery Fee</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Price]</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Weight</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Weight]</dd>
+                                                                    </dl>
+                                                                </small>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <thead>
+                                                        <th scope="col">Shipper Address</th>
+                                                        <th scope="col">Receiver Address</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <small>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Shipper Name]</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Email</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Shipper Email]</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Shipper Phone]</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Address</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Shipper Address]</dd>
+                                                                    </dl>
+                                                                </small>
+                                                            </td>
+                                                            <td>
+                                                                <small>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Receiver Name]</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Email</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Receiver Email]</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Receiver Phone]</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Address</dt>
+                                                                        <dd class="col-8 col-sm-9">[Enter Receiver Address]</dd>
+                                                                    </dl>
+                                                                </small>
+                                                            </td>
+                                                            
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
                                             </div>
                                         </div>
-                                        <!-- end of modal -->
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                    </div>
+                                    <!-- end of modal -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </section>
-            
-        </article>
+            </div>
+        </section>
+        
         
     </main>
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>

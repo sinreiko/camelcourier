@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>CamelCourier</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css'
+        rel='stylesheet'
+        integrity='sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC'
+        crossorigin='anonymous'>
+
+    <!-- Vue 3 -->
+    <script src='https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.js'></script>
+    <!-- Vue 3: production version, optimized for size and speed -->
+    <!-- <script src='https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.prod.js'></script> -->
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+    <!-- Icons CSS -->
+    <link rel='stylesheet' href='https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    
+</head>
+<body>
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container">
+                
+                <a class="navbar-brand" href="index.html">
+                    <span>CAMELCOURIER</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html"> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="pickup.html">Pickup</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="delivery-history.html">Delivery History</a>
+                        </li>
+                    </ul>
+                </div>
+                <span class="navbar-text my-1 mx-2">
+                    Welcome, Reiko Lee
+                </span>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="container">
+            <ul class="nav nav-pills mb-3 d-flex justify-content-center" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-ongoing-tab" data-toggle="pill" href="#pills-ongoing" role="tab" aria-controls="pills-ongoing" aria-selected="true">Ongoing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-completed-tab" data-toggle="pill" href="#pills-completed" role="tab" aria-controls="pills-completed" aria-selected="false">Completed</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-cancelled-tab" data-toggle="pill" href="#pills-cancelled" role="tab" aria-controls="pills-cancelled" aria-selected="false">Cancelled</a>
+                </li>
+            </ul>
+                <div class="tab-content mx-auto" id="pills-tabContent">
+                    <!-- Ongoing Tab -->
+                    <div class="tab-pane fade show active" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab">
+                        <div class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-3">
+                            <div class="card border-urgent">
+                                <a class="stretched-link text-decoration-none" href='#' data-toggle="modal" data-target="#orderModal">
+                
+                                <div class="card-header">[Date] [Time]</div>
+                                <div class="card-body mb-3">
+                                    <small>
+                                        <dl class="row mb-0">
+                                            <dt>Pickup Address</dt>
+                                            <dd>[Address]</dd>
+                                        </dl>
+                                        <dl class="row mb-0">
+                                            <dt>Receiver Address</dt>
+                                            <dd class="col-8 col-sm-9">[Address]</dd>
+                                        </dl>
+                                    </small>
+                                    <hr>
+                                    <div class="float-left money-icon">
+                                    </div>
+                                    <div class="float-right">
+                                        [Price]
+                                    </div>
+                                    
+                                </div>
+                                </a>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade bd-example-modal-lg" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModal" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. [TrackingID]</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">General Information</th>
+                                                        <th scope="col">Parcel Details</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <small>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Date Created</dt>
+                                                                    <dd class="col-8 col-sm-9">2022-03-20</dd>
+                                                                </dl>
+                                                            </small>
+                                                            
+                                                        </td>
+                                                        <td>
+                                                            <small>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Delivery Fee</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Price]</dd>
+                                                                </dl>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Weight</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Weight]</dd>
+                                                                </dl>
+                                                            </small>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <thead>
+                                                    <th scope="col">Shipper Address</th>
+                                                    <th scope="col">Receiver Address</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <small>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Shipper Name]</dd>
+                                                                </dl>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Email</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Shipper Email]</dd>
+                                                                </dl>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Shipper Phone]</dd>
+                                                                </dl>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Address</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Shipper Address]</dd>
+                                                                </dl>
+                                                            </small>
+                                                        </td>
+                                                        <td>
+                                                            <small>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Receiver Name]</dd>
+                                                                </dl>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Email</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Receiver Email]</dd>
+                                                                </dl>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Receiver Phone]</dd>
+                                                                </dl>
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4 col-sm-3 pr-0">Address</dt>
+                                                                    <dd class="col-8 col-sm-9">[Enter Receiver Address]</dd>
+                                                                </dl>
+                                                            </small>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn action-button previous previous_button" data-dismiss="modal">Close</button>
+                                            <!-- Dropdown btn -->
+                                            <div class="dropdown">
+                                                <button type="button" class="btn action-button dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                                    Update
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="#" data-dismiss="modal">Delay</a>
+                                                    <a class="dropdown-item" href="#" data-dismiss="modal">Complete</a>
+                                                </div>
+                                            </div>
+                                            <!-- end of dropdown btn -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Ongoing Tab -->
+                    <!-- Completed Tab -->
+                    <div class="tab-pane fade table-responsive" id="pills-completed" role="tabpanel" aria-labelledby="pills-completed-tab">
+                        <table class="table thead-brown">
+                            <thead>
+                                <tr>
+                                    <th>Date Created</th>
+                                    <th>Shipper Details</th>
+                                    <th>Tracking No.</th>
+                                    <th>Receiver Address</th>
+                                    <th>Contact No.</th>
+                                    <th>Delivery Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>[Insert Date]</td>
+                                    <td>[Shipper Details]</td>
+                                    <td>[Tracking No]</td>
+                                    <td>[Receiver's Address]</td>
+                                    <td>[Weight]</td>
+                                    <td>[DeliveryStatus]</td>
+                                    <td>
+                                        <!-- Modal btn -->
+                                        <button type="button" class="action-button btn btn-primary" data-toggle="modal" data-target="#completedModal">
+                                            View
+                                        </button>
+                                        <!-- Modal -->
+                                        <div class="modal fade bd-example-modal-lg" id="completedModal" tabindex="-1" role="dialog" aria-labelledby="completedModal" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. [TrackingID]</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="table thead-brown">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">General Information</th>
+                                                                <th scope="col">Parcel Details</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <small>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Date Created</dt>
+                                                                            <dd class="col-8 col-sm-9">2022-03-20</dd>
+                                                                        </dl>
+                                                                    </small>
+                                                                    
+                                                                </td>
+                                                                <td>
+                                                                    <small>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Delivery Fee</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Price]</dd>
+                                                                        </dl>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Weight</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Weight]</dd>
+                                                                        </dl>
+                                                                    </small>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <thead>
+                                                            <th scope="col">Shipper Address</th>
+                                                            <th scope="col">Receiver Address</th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <small>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Name]</dd>
+                                                                        </dl>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Email</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Email]</dd>
+                                                                        </dl>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Phone]</dd>
+                                                                        </dl>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Address</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Address]</dd>
+                                                                        </dl>
+                                                                    </small>
+                                                                </td>
+                                                                <td>
+                                                                    <small>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Name]</dd>
+                                                                        </dl>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Email</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Email]</dd>
+                                                                        </dl>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Phone]</dd>
+                                                                        </dl>
+                                                                        <dl class="row mb-0">
+                                                                            <dt class="col-4 col-sm-3 pr-0">Address</dt>
+                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Address]</dd>
+                                                                        </dl>
+                                                                    </small>
+                                                                </td>
+                                                                
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end of modal -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- end of ongoing content -->
+                    </div>
+                    <div class="tab-pane fade" id="pills-cancelled" role="tabpanel" aria-labelledby="pills-cancelled-tab">...</div>
+                </div>
+            
+            
+        </section>
+        
+        
+    </main>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'></script>
+
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+
+</body>
+</html>

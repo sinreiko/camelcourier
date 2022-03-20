@@ -1,8 +1,8 @@
 /*font Variables*/
 /*Color Variables*/
-@import url("https://fonts.googleapis.com/css?family=Roboto:300i,400,400i,500,700,900");
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap");
 .multi_step_form {
-  background: #f6f9fb;
+  background: #ffffff;
   display: block;
   overflow-x: hidden;
 }
@@ -20,12 +20,12 @@
   padding-bottom: 55px;
 }
 .multi_step_form #msform .tittle h2 {
-  font: 500 24px/35px "Roboto", sans-serif;
+  font: 500 24px/35px "Poppins", sans-serif;
   color: #3f4553;
   padding-bottom: 5px;
 }
 .multi_step_form #msform .tittle p {
-  font: 400 16px/28px "Roboto", sans-serif;
+  font: 400 16px/28px "Poppins", sans-serif;
   color: #5f6771;
 }
 .multi_step_form #msform fieldset {
@@ -40,11 +40,11 @@
   display: none;
 }
 .multi_step_form #msform fieldset h3 {
-  font: 500 18px/35px "Roboto", sans-serif;
+  font: 500 18px/35px "Poppins", sans-serif;
   color: #3f4553;
 }
 .multi_step_form #msform fieldset h6 {
-  font: 400 15px/28px "Roboto", sans-serif;
+  font: 400 15px/28px "Poppins", sans-serif;
   color: #5f6771;
   padding-bottom: 30px;
 }
@@ -93,7 +93,7 @@
   border: 1px solid #d8e1e7;
   padding: 0 20px;
   height: auto;
-  font: 400 15px/48px "Roboto", sans-serif;
+  font: 400 15px/48px "Poppins", sans-serif;
   color: #5f6771;
   box-shadow: none;
   outline: none;
@@ -194,7 +194,7 @@
   text-align: center;
 }
 .multi_step_form #msform fieldset .passport h4 {
-  font: 500 15px/23px "Roboto", sans-serif;
+  font: 500 15px/23px "Poppins", sans-serif;
   color: #5f6771;
   padding: 0;
 }
@@ -209,7 +209,7 @@
   width: 168px;
   border-radius: 5px;
   cursor: pointer;
-  font: 700 14px/40px "Roboto", sans-serif;
+  font: 700 14px/40px "Poppins", sans-serif;
   border: 1px solid white;
   text-align: center;
   transition: all 300ms linear 0s;
@@ -233,7 +233,7 @@
   padding-bottom: 60px;
 }
 .multi_step_form #msform fieldset .file_added li {
-  font: 400 15px/28px "Roboto", sans-serif;
+  font: 400 15px/28px "Poppins", sans-serif;
   color: #5f6771;
 }
 .multi_step_form #msform fieldset .file_added li a {
@@ -261,16 +261,21 @@
   width: calc(100%/4);
   float: left;
   position: relative;
-  font: 500 13px/1 "Roboto", sans-serif;
+  font: 500 13px/1 "Poppins", sans-serif;
 }
+
+
 .multi_step_form #msform #progressbar li:nth-child(2):before {
   content: "\f12f";
 }
 .multi_step_form #msform #progressbar li:nth-child(3):before {
-  content: "\f457";
+  content: "\f453";
 }
+.multi_step_form #msform #progressbar li:nth-child(4):before {
+    content: "\f119";
+  }
 .multi_step_form #msform #progressbar li:before {
-  content: "\f1fa";
+  content: "\f48c";
   font: normal normal normal 30px/50px Ionicons;
   width: 50px;
   height: 50px;
@@ -307,7 +312,7 @@
   border-radius: 5px;
   cursor: pointer;
   min-width: 130px;
-  font: 700 14px/40px "Roboto", sans-serif;
+  font: 700 14px/40px "Poppins", sans-serif;
   border: 1px solid #EFE6C5;
   margin: 0 5px;
   text-transform: uppercase;
