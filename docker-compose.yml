@@ -5,5 +5,9 @@ services:
         build:
             context: ./
             dockerfile: send_sms.Dockerfile
-        image: 889090/send_sms:1.0
+        image: reikolee/send_sms:1.0
         restart: always
+        environment:
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5566:5566"
