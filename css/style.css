@@ -322,6 +322,10 @@ a:focus {
   padding:0;
 }
 
+.nav-link{
+  color:black
+}
+
 .action-button:hover, .action-button:focus {
   background: #DBC490;
   border-color: #DBC490;
@@ -1019,7 +1023,7 @@ a:focus {
   color: black;
 }
 
-.color-urgent{
+.color-urgent, .nav-link:hover{
   color:#A67A61;
 }
 
