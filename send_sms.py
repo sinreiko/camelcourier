@@ -16,14 +16,14 @@ def hello():
 @app.route("/update")
 def sendClientUpdate():
     # Your Account SID from twilio.com/console
-    account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+    account_sid = os.getenv('AC872941965f08ba52b89f8698deae23ab')
     # Your Auth Token from twilio.com/console
-    auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+    auth_token = os.getenv('c13b675c9e1067ba77d259a1824498d9')
 
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
-        to="+6593877839",
+        to="+6592340039",
         from_="+15405965349",
         body="Hello from Python!")
     return message.sid
