@@ -19,7 +19,7 @@ def sendClientUpdate():
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
-        # to="+6592340039",
+        # to="+6593877839",
         to="+6592340039",
         from_="+15405965349",
         body="Hello from Python!")
