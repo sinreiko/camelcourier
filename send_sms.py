@@ -1,10 +1,6 @@
 from twilio.rest import Client
 from flask import Flask
 
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 app = Flask(__name__)
 
 
@@ -16,14 +12,15 @@ def hello():
 @app.route("/update")
 def sendClientUpdate():
     # Your Account SID from twilio.com/console
-    account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+    account_sid = "AC872941965f08ba52b89f8698deae23ab"
     # Your Auth Token from twilio.com/console
-    auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+    auth_token = "33a25826b94a13ea6c340e92e1ad503b"
 
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
-        to="+6593877839",
+        # to="+6592340039",
+        to="+6592340039",
         from_="+15405965349",
         body="Hello from Python!")
     return message.sid
