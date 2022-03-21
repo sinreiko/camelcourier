@@ -283,21 +283,6 @@ a:focus {
   margin-bottom: 15px;
   padding-left: 15px;
 }
-
-/* .action-button {
-  background: #EFE6C5;
-  color: black;
-  border: 0 none;
-  border-radius: 5px;
-  cursor: pointer;
-  min-width: 130px;
-  font: 700 14px/40px "Poppins", sans-serif;
-  border: 1px solid #EFE6C5;
-  margin: 0 5px;
-  text-transform: uppercase;
-  display: inline-block;
-} */
-
 .slider_form form .btm_input {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -320,6 +305,19 @@ a:focus {
   background-color: #EFE6C5;
   font: 700 14px/40px "Poppins", sans-serif;
   text-transform: uppercase;
+  color: black;
+  padding:0;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link{
+  min-width: 120px;
+  border: none;
+  border-radius: 0.25rem;
+  outline: none;
+  background-color: #EFE6C5;
+  font: 700 14px/40px "Poppins", sans-serif;
+  text-transform: uppercase;
+  text-align: center;
   color: black;
   padding:0;
 }
@@ -1048,21 +1046,14 @@ a:focus {
   border: 1px #DBC490 solid !important;
   color: #fff;
 }
-/* 
-@media (max-width: 768px) {
-  .pickup-card{
-    max-width: calc(100%/2);
-  }
-}
-
-@media (max-width: 576px) {  
-  .pickup-card{
-    max-width: 100%;
-  }
-} */
 
 .navbar-toggler-icon:before{
   content: "\f394";
   font: normal normal normal 24px/7px Ionicons;
   vertical-align: middle;
 }
+
+/* .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #007bff;
+} */
