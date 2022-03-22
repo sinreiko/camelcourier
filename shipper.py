@@ -8,12 +8,14 @@ import json
 from os import environ
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL') or 'mysql+mysqlconnector://root@localhost:3306/order'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
+    'dbURL') or 'mysql+mysqlconnector://root:root@localhost:3306/order'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-CORS(app)  
+CORS(app)
+
 
 class Shipper(db.Model):
     __tablename__ = 'shipper'
@@ -23,7 +25,8 @@ class Shipper(db.Model):
     shipperPhone = db.Column(db.Integer, nullable=False)
     shipperEmail = db.Column(db.String(64), nullable=False)
     createdDate = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    modifiedDate = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    modifiedDate = db.Column(db.DateTime, nullable=False,
+                             default=datetime.now, onupdate=datetime.now)
 
     def __init__(self, shipperID, shipperName, shipperAddress, shipperPhone, shipperEmail, createdDate, modifiedDate):
         self.shipperID = shipperID
@@ -35,13 +38,14 @@ class Shipper(db.Model):
         self.modifiedDate = modifiedDate
 
     def json(self):
-        return {"shipperName": self.shipperID, 
+        return {"shipperName": self.shipperID,
                 "shipperName": self.shipperName,
                 "shipperAddress": self.shipperAddress,
                 "shipperPhone": self.shipperPhone,
                 "shipperEmail": self.shipperEmail,
                 "createdDate": self.createdDate,
                 "modifiedDate": self.modifiedDate}
+
 
 @app.route("/shipper")
 def get_all():
@@ -83,7 +87,9 @@ def find_by_shipperID(shipperID):
         }
     ), 404
 
-#try to implement facebook unrestful api for shipper account sign in
+# try to implement facebook unrestful api for shipper account sign in
+
+
 @app.route("/shipper/<string:shipperID>", methods=['POST'])
 def create_shipper(shipperID):
     if (Shipper.query.filter_by(shipperID=shipperID).first()):
@@ -96,10 +102,10 @@ def create_shipper(shipperID):
                 "message": "Shipper already exists in the database."
             }
         ), 400
- 
+
     data = request.get_json()
     shipper = Shipper(shipperID, **data)
- 
+
     try:
         db.session.add(shipper)
         db.session.commit()
@@ -113,7 +119,7 @@ def create_shipper(shipperID):
                 "message": "An error occurred creating the shipper account entry."
             }
         ), 500
- 
+
     return jsonify(
         {
             "code": 201,
@@ -121,6 +127,8 @@ def create_shipper(shipperID):
         }
     ), 201
 
+
 if __name__ == '__main__':
-    print("This is flask for " + os.path.basename(__file__) + ": manage shippers ...")
+    print("This is flask for " +
+          os.path.basename(__file__) + ": manage shippers ...")
     app.run(host='0.0.0.0', port=5001, debug=True)

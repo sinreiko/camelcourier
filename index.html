@@ -60,11 +60,11 @@
                             <form class="form-inline" action="create-delivery.html" method="post">
                                 <div class="form-group col-sm-6 col-md-4">
                                     <label for="email" class="sr-only">Email address</label>
-                                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                                    <input v-model="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
                                 </div>
                                 <div class="form-group col-sm-6 col-md-4">
                                     <label for="password" class="sr-only">Password</label>
-                                    <input type="password" class="form-control" id="password" aria-describedby="emailHelp" placeholder="Enter password">
+                                    <input v-model="password" type="password" class="form-control" id="password" aria-describedby="emailHelp" placeholder="Enter password">
                                 </div>
                                 <div class="form-group col-sm-6 col-md-3 mt-md-2">
                                     <button type="submit" class="action-button btn btn-primary mb-2 w-100" style="padding:0">Login</button>
@@ -143,11 +143,11 @@
                     </h4>
                     <form action="" method="">
                         <label for="pickup">Pick Up Location</label>
-                        <input type="text" class="form-control" id="pickup" placeholder="Postcode">
+                        <input v-model="pickupPostal" type="text" class="form-control" id="pickup" placeholder="Postcode">
                         <label for="dropoff">Drop Off Location</label>
-                        <input type="text" class="form-control" id="dropoff" placeholder="Postcode">
+                        <input v-model="dropoffPostal" type="text" class="form-control" id="dropoff" placeholder="Postcode">
                         <div class="btm_input">
-                        <input type="number" class="form-control" placeholder="Weight">
+                        <input v-model="weight" type="number" class="form-control" placeholder="Weight">
                         <button class="action-button">Quote & Book</button>
                         </div>
                     </form>
@@ -159,6 +159,8 @@
             </section>
     </div>
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.js'></script>
     <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>
