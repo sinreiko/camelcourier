@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+    send_sms:
+        build:
+            context: ./
+            dockerfile: send_sms.Dockerfile
+        image: reikolee/send_sms:1.0
+        restart: always
+        environment:
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5566:5566"
