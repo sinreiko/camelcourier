@@ -35,7 +35,28 @@ channel.queue_declare(queue=queue_name, durable=True)
 channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='#') 
     # bind the queue to the exchange via the key
     # 'routing_key=#' => any routing_key would be matched
-    
+
+############   Email queue    #############
+#delcare Activity_Log queue
+queue_name = 'Email'
+channel.queue_declare(queue=queue_name, durable=True)
+    # 'durable' makes the queue survive broker restarts
+
+#bind Activity_Log queue
+channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.email') 
+    # bind the queue to the exchange via the key
+    # 'routing_key=#' => any routing_key would be matched 
+
+############   SMS queue    #############
+#delcare Activity_Log queue
+queue_name = 'SMS'
+channel.queue_declare(queue=queue_name, durable=True)
+    # 'durable' makes the queue survive broker restarts
+
+#bind Activity_Log queue
+channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.sms') 
+    # bind the queue to the exchange via the key
+    # 'routing_key=#' => any routing_key would be matched    
 
 """
 This function in this module sets up a connection and a channel to a local AMQP broker,
