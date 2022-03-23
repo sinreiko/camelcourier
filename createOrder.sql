@@ -19,10 +19,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `orderTests`
+-- Database: `orderDB`
 --
-CREATE DATABASE IF NOT EXISTS `orderTests` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `orderTests`;
+CREATE DATABASE IF NOT EXISTS `orderDB` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `orderDB`;
 
 -- --------------------------------------------------------
 -- Order
@@ -33,11 +33,11 @@ USE `orderTests`;
 -- deliveryDate (TIMESTAMP)
 -- ---------------------------------------------------------
 --
--- Table structure for table `test_order`
+-- Table structure for table `order`
 --
 
-DROP TABLE IF EXISTS `test_order`;
-CREATE TABLE IF NOT EXISTS `test_order` (
+DROP TABLE IF EXISTS `order`;
+CREATE TABLE IF NOT EXISTS `order` (
   `trackingID` int(64) NOT NULL AUTO_INCREMENT,
   `driverID` varchar(13),
   `shipperID` varchar(13) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `test_order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `test_order`
+-- Dumping data for table `order`
   -- trackingID(INT) (autoincrement)
   -- driverID (VARCHAR)
   -- shipperID (VARCHAR)
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `test_order` (
 
 --
 
-INSERT INTO `test_order` (`trackingID`, `driverID`, `shipperID`,`receiverName`,`receiverAddress`,`receiverPhone`,`receiverEmail`,`pickupAddress`) VALUES
+INSERT INTO `order` (`trackingID`, `driverID`, `shipperID`,`receiverName`,`receiverAddress`,`receiverPhone`,`receiverEmail`,`pickupAddress`) VALUES
 
 (NULL, "D000000000001", "S000000000001", "Vasilis Ng", "Blk 987 Family Mart", "+65 21598384", "123@smu.sg","20 Canson Road"),
 (NULL, "D000000000002", "S000000000002", "Lee Shao Ming", "Blk 987 Family Mart", "+65 93983698", "124@smu.sg","20 Canson Road"),
@@ -113,7 +113,7 @@ INSERT INTO `test_order` (`trackingID`, `driverID`, `shipperID`,`receiverName`,`
 (NULL, "D000000000007", "S000000000047", "Lee Jun Hui", "Blk 135 Dog Boulevard", "+65 42322635", "169@smu.sg","20 Anson Road"),
 (NULL, "D000000000008", "S000000000048", "Vasilis Ng", "Blk 135 Dog Boulevard", "+65 77854324", "170@smu.sg","20 Anson Road"),
 (NULL, "D000000000009", "S000000000049", "Lee Shao Ming", "Blk 789 Cherry Drive", "+65 4918214", "171@smu.sg","20 Benson Road"),
-(NULL, "D000000000010", "S000000000050", "Reiko Lee", "Blk 135 Dog Boulevard", "+65 67875626", "172@smu.sg","20 Danson Road")
+(NULL, "D000000000010", "S000000000050", "Reiko Lee", "Blk 135 Dog Boulevard", "+65 67875626", "172@smu.sg","20 Danson Road");
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

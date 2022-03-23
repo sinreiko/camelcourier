@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date, timedelta
 from flask_cors import CORS
 import json, requests
+from os import environ
 
 from sqlalchemy import null, func
  
@@ -18,7 +19,7 @@ from sqlalchemy import null, func
 
 #----------------
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/orderTests'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
@@ -34,7 +35,7 @@ class Order(db.Model):
         - deliveryDate -> generated when adding a new order
 
     '''
-    __tablename__ = 'test_order'
+    __tablename__ = 'order'
  
     trackingID = db.Column(db.Integer, primary_key=True,nullable=True)
     driverID = db.Column(db.String(13), nullable=True)
@@ -69,7 +70,7 @@ class Order(db.Model):
 # ----------------------------------
 
     # ---------------[START: get_all]-------------------
-    # [TESTED] This url returns all test_order database info in json format
+    # [TESTED] This url returns all order database info in json format
     # This is used to troubleshoot and see if the data in db is ok
     # Uncomment line below to test this function
 
@@ -79,7 +80,7 @@ def get_all():
         [{trackingID, driverID, shipperID, receiverName, receiverAddress, receiverPhone, receiverEmail, pickupAddress},
         {},{}...]
     '''
-    # SELECT * from test_order
+    # SELECT * from order
     order = Order.query.all()
     
     if len(order):
@@ -106,7 +107,7 @@ def get_all():
 # @app.route("/checkdriver")
 def find_driver():
     ''' returns <string:driverID> with the least orders 
-        SQL Equivalent: SELECT count(*),driverID FROM `test_order` group by driverID ORDER BY count(*)
+        SQL Equivalent: SELECT count(*),driverID FROM `order` group by driverID ORDER BY count(*)
     '''
     order = Order.query.with_entities(func.count(Order.trackingID),Order.driverID).group_by(Order.driverID).order_by(func.count(Order.trackingID)).first()
     if len(order):
@@ -206,7 +207,7 @@ def create_order():
 def update_order():
     '''
         This function finds the order query, changes the pickupAddress and commits to db using ORM to update the row entry
-        SQL equivalent: UPDATE test_order SET pickupAddress = [USER_INPUT] WHERE trackingID = [USER_INPUT]
+        SQL equivalent: UPDATE order SET pickupAddress = [USER_INPUT] WHERE trackingID = [USER_INPUT]
     '''
     pickupAddress=request.args.get('pickupAddress')
     trackingID=request.args.get('trackingID')
@@ -236,4 +237,4 @@ def update_order():
 
 # Alternative app call failsafe
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

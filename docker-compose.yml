@@ -5,9 +5,18 @@ services:
         build:
             context: ./
             dockerfile: send_sms.Dockerfile
-        image: reikolee/send_sms:1.0
+        image: reikolee/send_sms:2.0
         restart: always
         environment:
             PYTHONUNBUFFERED: 1
         ports:
             - "5566:5566"
+    user_auth:
+        build:
+            context: ./
+            dockerfile: user_auth.Dockerfile
+        image: reikolee/user_auth:1.0
+        restart: always
+        environment:
+            dbURL: https://esd-camelcourier-default-rtdb.asia-southeast1.firebasedatabase.app/
+            PYTHONUNBUFFERED: 1
