@@ -113,7 +113,7 @@ INSERT INTO `order` (`trackingID`, `driverID`, `shipperID`,`receiverName`,`recei
 (NULL, "D000000000007", "S000000000047", "Lee Jun Hui", "Blk 135 Dog Boulevard", "+65 42322635", "169@smu.sg","20 Anson Road"),
 (NULL, "D000000000008", "S000000000048", "Vasilis Ng", "Blk 135 Dog Boulevard", "+65 77854324", "170@smu.sg","20 Anson Road"),
 (NULL, "D000000000009", "S000000000049", "Lee Shao Ming", "Blk 789 Cherry Drive", "+65 4918214", "171@smu.sg","20 Benson Road"),
-(NULL, "D000000000010", "S000000000050", "Reiko Lee", "Blk 135 Dog Boulevard", "+65 67875626", "172@smu.sg","20 Danson Road")
+(NULL, "D000000000010", "S000000000050", "Reiko Lee", "Blk 135 Dog Boulevard", "+65 67875626", "172@smu.sg","20 Danson Road");
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
