@@ -20,29 +20,31 @@
 
 #   Imports
 # ------------
+import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from datetime import datetime
 
 import os, sys
 
 import requests
 from invokes import invoke_http
+import amqp_setup
 
 app = Flask(__name__)
 CORS(app)
 
 # [TO REPLACE] URLs to call
-book_URL = "http://localhost:5000/book"
-order_URL = "http://localhost:5001/order"
-shipping_record_URL = "http://localhost:5002/shipping_record"
-activity_log_URL = "http://localhost:5003/activity_log"
-error_URL = "http://localhost:5004/error"
-
+order_URL = "http://localhost:5000/order"
+# activity_URL = "http://localhost:5001/activity"
+shipper_URL = "http://localhost:5002/shipper"
+email_URL = "http://localhost:5003/email"
+sms_URL = "http://localhost:5004/update"
 
 @app.route("/create_order", methods=['POST'])
 def place_order():
     '''
-        Takes in POST inputs for
+        Takes in POST inputs for json object order with the following:
             - shipperID
             - receiverName
             - receiverAddress
@@ -53,13 +55,8 @@ def place_order():
     # Check input format and data of the request are JSON
 
     try:
-        shipperID = request.args.get("shipperID")
-        receiverName = request.args.get("receiverName")
-        receiverAddress = request.args.get("receiverAddress")
-        receiverPhone = request.args.get("receiverPhone")
-        receiverEmail = request.args.get("receiverEmail")
         print("\nReceived an order in JSON:", order)
-        result = processCreateOrder(shipperID,receiverName,receiverAddress, receiverPhone,receiverEmail)
+        result = processCreateOrder(order)
         return jsonify(result), result["code"]
 
     except Exception as e:
@@ -81,27 +78,88 @@ def place_order():
     }), 400
 
 
-def processCreateOrder(shipperID,receiverName,receiverAddress, receiverPhone,receiverEmail):
-    # 1. create an error message log
-    err_msg = ""
-    # 2. Send the order info (all params) into order microservice
+def processCreateOrder(order):
+    # 1. Send the order info (all params) into order microservice
     # Invoke the order microservice
-
-        # if error is thrown, append to err_msg
-
-    # 3. Create order in activity log
+    print('\n-----Invoking order microservice-----')
+    order_result = invoke_http(order_URL, method='POST', json=order)
+    print('order_result:', order_result)
+        
+    # 2. Create order in activity log
         # create the activity log
+    code=order_result["code"]
+    info_json=order_result['data']
+    info=json.loads(info_json)
 
+    tracking_id=info.trackingID
+
+    if code in range(200, 300):
+        message = jsonify(
+            {
+                "code":200,
+                "data":{
+                    "activity_id": None,
+                    "tracking_id": tracking_id,
+                    "timestamp": datetime.now(),
+                    "delivery_status": "Order created",
+                    "delivery_desc": "Order has been created by shipper"
+                    }
+            }
+        )
+        print('\n\n-----Publishing the (order info) message with routing_key=order.info-----')        
+        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.order", 
+            body=message)
+        print("\nOrder published to RabbitMQ Exchange.\n")
+    else:
+        print('\nFailed to create order')
     # 4. Retrieve shipper Email
-
+    email_result=invoke_http(shipper_URL, method="POST", json=order_result)            
+    if code in range(200, 300):
+        info_email_json=email_result["data"]
+        info_email=json.loads(info_email_json)
+        shipper_email=info_email.shipperEmail
         # if error is thrown, append to err_msg
-
+    else:
+        return jsonify(
+            {
+                "code": 500,
+                "data":{
+                    "email":email_result
+                    },
+                "message": "An error occurred while retrieving shipper email. "
+            }
+        ), 500
     # 5. Email shipper
+    email_content="This is to inform you that Tracking ID: " +tracking_id+" has been successfully created"
+
+    message=jsonify(
+        {
+            "toEmail":shipper_email,
+            "subject":"New order has been created",
+            "msg":email_content
+        }
+    )
+
+    # Replace with this after AMQP has been set up
+
+    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email", 
+    #         body=message)
 
     # 6. Inform receiver
+    recipient=info.receiverPhone
+    msg="[Camel Couriers] Your order "+tracking_id+" has been created."
 
+    sms_message=jsonify(
+        {
+            "toPhone":recipient,
+            "content":msg
+        }
+    )
+    sms_status=invoke_http(sms_URL, method="POST", json=sms_message)
+
+    print(sms_status)
     # 7. Return created order as a json object with codes
-    return {}
+    return order_result
 
 
 # Execute this program if it is run as a main script (not by 'import')

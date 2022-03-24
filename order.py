@@ -20,6 +20,8 @@ from sqlalchemy import null, func
 #----------------
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL')
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/orderDB'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
@@ -74,7 +76,7 @@ class Order(db.Model):
     # This is used to troubleshoot and see if the data in db is ok
     # Uncomment line below to test this function
 
-# @app.route("/checkall")
+@app.route("/checkall")
 def get_all():
     '''returns a JSON object with list of all order objects 
         [{trackingID, driverID, shipperID, receiverName, receiverAddress, receiverPhone, receiverEmail, pickupAddress},
@@ -155,14 +157,14 @@ def find_by_order_no(trackingID):
 # [TESTED] This URL adds a new order given a shipperID. 
 
 # Creates (trackingID: AUTOINC (server end), driverID: FUNC_CALL, shipperID: SESSION_VARIABLE, receiverName: USER_INPUT, receiverAddress: USER_INPUT, receiverPhone: USER_INPUT, receiverEmail: USER_INPUT, pickupAddress: NULL
-@app.route("/order", methods=['POST','GET'])
+@app.route("/order", methods=['POST'])
 def create_order():
     '''
         This function invokes generate_driver_date() to find the next available date and uses mySQL's autoincrement function to generate a new trackingID.
         returns the created order or error message in JSON format
     '''
     trackingID = None
-    shipperID=request.args.get('shipperID')
+    shipperID=request.json.get('shipperID')
     driver = find_driver()
     if driver:
         driverID=driver
@@ -173,11 +175,12 @@ def create_order():
                 "message":"We do not have drivers for the next two weeks, try again soon!"
             }
         )
-    receiverName=request.args.get('receiverName')
-    receiverAddress=request.args.get('receiverAddress')
-    receiverPhone=request.args.get('receiverPhone')
-    receiverEmail=request.args.get('receiverEmail')
+    receiverName=request.json.get('receiverName')
+    receiverAddress=request.json.get('receiverAddress')
+    receiverPhone=request.json.get('receiverPhone')
+    receiverEmail=request.json.get('receiverEmail')
     pickupAddress=None
+    
     # data = request.get_json() <- fallback
     newOrder = Order(trackingID, driverID, shipperID, receiverName ,receiverAddress,receiverPhone,receiverEmail,pickupAddress)
     try:

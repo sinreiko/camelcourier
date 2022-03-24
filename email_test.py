@@ -3,17 +3,32 @@
 import sendgrid
 import os
 from sendgrid.helpers.mail import Mail, Email, To, Content
-from flask import Flask
+from flask import Flask, request
+import json, requests
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/email", methods=['POST'])
 def sendEmailUpdate():
+    '''
+        Takes in JSON object as input with structure
+        {
+            "toEmail":<email address>,
+            "subject":<email subject>,
+            "content":<email content>
+        }
+    '''
+    # recipient=request.json.get('toEmail')
+    # subject=request.json.get('subject')
+    # msg=request.json.get('content')
+    recipient="smlee.2020@smu.edu.sg"
+    subject="test email"
+    msg="Sending message is fun with Sendgrid!"
+
     sg = sendgrid.SendGridAPIClient(api_key='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')
     from_email = Email("camelcourier06@gmail.com")  # Change to your verified sender
-    to_email = To("leeshaoming78@gmail.com")  # Change to your recipient
-    subject = "Sending with SendGrid is Fun"
-    content = Content("text/plain", "and easy to do anywhere, even with Python")
+    to_email = To(recipient)  # Change to your recipient
+    content = Content("text/plain", msg)
     mail = Mail(from_email, to_email, subject, content)
     
     # Get a JSON-ready representation of the Mail object

@@ -32,28 +32,28 @@ channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
 
 #bind Activity_Log queue
-channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='#') 
+channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.order') 
     # bind the queue to the exchange via the key
     # 'routing_key=#' => any routing_key would be matched
 
 ############   Email queue    #############
-#delcare Activity_Log queue
+#delcare Email queue
 queue_name = 'Email'
 channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
 
-#bind Activity_Log queue
+#bind Email queue
 channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.email') 
     # bind the queue to the exchange via the key
     # 'routing_key=#' => any routing_key would be matched 
 
 ############   SMS queue    #############
-#delcare Activity_Log queue
+#delcare SMS queue
 queue_name = 'SMS'
 channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
 
-#bind Activity_Log queue
+#bind SMS queue
 channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.sms') 
     # bind the queue to the exchange via the key
     # 'routing_key=#' => any routing_key would be matched    
