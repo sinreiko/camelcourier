@@ -47,9 +47,9 @@ CREATE TABLE IF NOT EXISTS `shipper` (
 --
 
 INSERT INTO `shipper` (`shipperID`, `shipperName`, `shipperAddress`, `shipperPhone`, `shipperEmail`, `createdDate`, `modifiedDate`) VALUES
-(000000000001, 'Jun Hui', 'Woodlands', 83113585, 'junhuilee98@yahoo.com.sg', 22-03-22,22-04-22),
-(000000000002, 'Lee Jun Hui', 'Hougang', 83113586, 'junhuilee99@yahoo.com.sg', 22-03-22,22-04-22),
-(000000000003, 'Kevin Lee', 'Tampines', 83113587, 'junhuilee00@yahoo.com.sg', 22-03-22,22-04-22);
+(000000000001, 'Jun Hui', 'Woodlands', 83113585, 'junhuilee98@yahoo.com.sg', 22-03-22, 22-04-22),
+(000000000002, 'Lee Jun Hui', 'Hougang', 83113586, 'junhuilee99@yahoo.com.sg', 22-03-22, 22-04-22),
+(000000000003, 'Kevin Lee', 'Tampines', 83113587, 'junhuilee00@yahoo.com.sg', 22-03-22, 22-04-22);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
