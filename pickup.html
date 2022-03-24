@@ -29,36 +29,8 @@
     <link href="css/style.css" rel="stylesheet" />
     
 </head>
-<body>
-    <header class="header_section">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg custom_nav-container">
-                
-                <a class="navbar-brand" href="index.html">
-                    <span>CAMELCOURIER</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html"> Home</a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="pickup.html">Pickup</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href="delivery-history.html">Delivery History</a>
-                        </li>
-                    </ul>
-                </div>
-                <span class="navbar-text my-1 mx-2">
-                    Welcome, Reiko Lee
-                </span>
-            </nav>
-        </div>
-    </header>
+<body id="app">
+    <driver-header v-bind:user="userName"></driver-header>
     <main class="container">
         <section class="px-3 mb-3">
             <label class="form-check-label mr-1">Urgency: </label>
@@ -168,5 +140,6 @@
     </main>
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>

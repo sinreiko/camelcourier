@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <!-- Bootstrap 4 CSS -->
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.css'>
-        <!-- Telephone Input CSS -->
+        <!-- Vue 3 -->
+        <script src='https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.js'></script>
+    <!-- Telephone Input CSS -->
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.2/css/intlTelInput.css'>
     <!-- Icons CSS -->
     <link rel='stylesheet' href='https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
@@ -16,279 +18,254 @@
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css'>
     <!-- Style CSS -->    
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="css/stepper-style.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body id="app">
-    <header class="header_section">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg custom_nav-container">
-                <ul class="navbar-nav mr-auto">
-                    <a class="navbar-brand" href="index.html">
-                        <span>
-                            CAMELCOURIER
-                        </span>
-                    </a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html"> Home</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="create-delivery.html">Create Delivery</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="order-history.html">Order History</a>
-                    </li>
-                </ul>
-                <span class="navbar-text my-1 mx-2">
-                    Welcome, Reiko Lee
-                </span>
-                    
-            </nav>
+    <shipper-header v-bind:userName="user"></shipper-header>
+    <main class="mb-5">
+    <article>
+    <!-- Start Multiform HTML -->
+    <section class="multi_step_form">  
+    <form id="msform"> 
+        <!-- Tittle -->
+        <div class="tittle">
+            <h2>Send a Single Parcel</h2>
         </div>
-    </header>
-<main class="mb-5">
-<article>
-<!-- Start Multiform HTML -->
-<section class="multi_step_form">  
-<form id="msform"> 
-    <!-- Tittle -->
-    <div class="tittle">
-        <h2>Send a Single Parcel</h2>
-    </div>
-    <!-- progressbar -->
-    <ul id="progressbar">
-        <li class="active">Quotation</li>  
-        <li>Shipment Details</li> 
-        <li>Review Information</li>
-        <li>Check out</li>
-    </ul>
-    <!-- fieldsets -->
-    <fieldset>
-        <div class="slider_form mb-4">
-            <h4>
-                Get Instant Quotes
-            </h4>
-            <div class="form-group text-left">
-                <label for="pickup">Pick Up Location</label>
-                <input type="text" class="form-control" id="pickup" placeholder="Postcode">
+        <!-- progressbar -->
+        <ul id="progressbar">
+            <li class="active">Quotation</li>  
+            <li>Shipment Details</li> 
+            <li>Review Information</li>
+            <li>Check out</li>
+        </ul>
+        <!-- fieldsets -->
+        <fieldset>
+            <div class="slider_form mb-4">
+                <h4>
+                    Get Instant Quotes
+                </h4>
+                <div class="form-group text-left">
+                    <label for="pickup">Pick Up Location</label>
+                    <input type="text" class="form-control" id="pickup" placeholder="Postcode">
+                </div>
+                <div class="form-group text-left">
+                    <label for="dropoff">Drop Off Location</label>
+                    <input type="text" class="form-control" id="dropoff" placeholder="Postcode">
+                </div>
+                
+                <div class="form-group text-left">
+                    <label for="weight">Weight</label>
+                    <input type="number" name="weight" class="form-control" placeholder="E.g. 0.1">
+                </div>
+                
             </div>
-            <div class="form-group text-left">
-                <label for="dropoff">Drop Off Location</label>
-                <input type="text" class="form-control" id="dropoff" placeholder="Postcode">
-            </div>
-            
-            <div class="form-group text-left">
-                <label for="weight">Weight</label>
-                <input type="number" name="weight" class="form-control" placeholder="E.g. 0.1">
-            </div>
-            
-        </div>
-        <button type="button" class="action-button previous_button">Back</button>
-        <button type="button" class="next action-button">Quote & Book</button>  
-    </fieldset>
-    <fieldset>
-        <h3></h3>
-        <div class="row">
-            <div class="col-lg-9 mb-0 text-left">
-                <div class="card border-light mb-3">
-                    <div class="card-header">Fill in shipper details</div>
-                    <div class="card-body">
-                        <div class="card-title">Shipper Address</div>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="shipperName" class="sr-only">Shipper Name</label>
-                                <input type="text" class="form-control" id="shipperName" placeholder="Shipper Name">
+            <button type="button" class="action-button previous_button">Back</button>
+            <button type="button" class="next action-button">Quote & Book</button>  
+        </fieldset>
+        <fieldset>
+            <h3></h3>
+            <div class="row">
+                <div class="col-lg-9 mb-0 text-left">
+                    <div class="card border-light mb-3">
+                        <div class="card-header">Fill in shipper details</div>
+                        <div class="card-body">
+                            <div class="card-title">Shipper Address</div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="shipperName" class="sr-only">Shipper Name</label>
+                                    <input type="text" class="form-control" id="shipperName" placeholder="Shipper Name">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="shipperEmail" class="sr-only">Email Address</label>
+                                    <input type="email" class="form-control" id="shipperEmail" placeholder="Email Address">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="shipperPhone" class="sr-only">Contact Number</label>
+                                    <input type="tel" class="form-control" id="shipperPhone" placeholder="Contact Number">
+                                </div>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="shipperEmail" class="sr-only">Email Address</label>
-                                <input type="email" class="form-control" id="shipperEmail" placeholder="Email Address">
+                            <div class="form-row form-group">
+                                <label for="shipperAddress" class="sr-only">Address</label>
+                                <input type="text" class="form-control" id="shipperAddress" placeholder="Address">
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="shipperPhone" class="sr-only">Contact Number</label>
-                                <input type="tel" class="form-control" id="shipperPhone" placeholder="Contact Number">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="shipperPostal" class="sr-only">Postcode</label>
+                                    <input type="text" class="form-control" id="shipperPostal" placeholder="Postcode">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="shipperUnit" class="sr-only">Unit Number: eg #12-1900</label>
+                                    <input type="text" class="form-control" id="shipperUnit" placeholder="Unit Number: eg #12-1900">
+                                </div>
                             </div>
                         </div>
-                        <div class="form-row form-group">
-                            <label for="shipperAddress" class="sr-only">Address</label>
-                            <input type="text" class="form-control" id="shipperAddress" placeholder="Address">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="shipperPostal" class="sr-only">Postcode</label>
-                                <input type="text" class="form-control" id="shipperPostal" placeholder="Postcode">
+                    </div>
+                    <div class="card border-light mb-3">
+                        <div class="card-header"><i class="fa-solid fa-circle-2"></i>Fill in receiver details</div>
+                        <div class="card-body">
+                            <div class="card-title">Receiver Address</div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="receiverName" class="sr-only">Receiver Name</label>
+                                    <input type="text" class="form-control" id="receiverName" placeholder="Receiver Name">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="receiverEmail" class="sr-only">Email Address</label>
+                                    <input type="email" class="form-control" id="receiverEmail" placeholder="Email Address">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="receiverPhone" class="sr-only">Contact Number</label>
+                                    <input type="tel" class="form-control" id="receiverPhone" placeholder="Contact Number">
+                                </div>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="shipperUnit" class="sr-only">Unit Number: eg #12-1900</label>
-                                <input type="text" class="form-control" id="shipperUnit" placeholder="Unit Number: eg #12-1900">
+                            <div class="form-row form-group">
+                                <label for="receiverAddress" class="sr-only">Address</label>
+                                <input type="text" class="form-control" id="receiverAddress" placeholder="Address">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="receiverPostal" class="sr-only">Postcode</label>
+                                    <input type="text" class="form-control" id="receiverPostal" placeholder="Postcode">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="receiverUnit" class="sr-only">Unit Number: eg #12-1900</label>
+                                    <input type="text" class="form-control" id="receiverUnit" placeholder="Unit Number: eg #12-1900">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card border-light mb-3">
-                    <div class="card-header"><i class="fa-solid fa-circle-2"></i>Fill in receiver details</div>
-                    <div class="card-body">
-                        <div class="card-title">Receiver Address</div>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="receiverName" class="sr-only">Receiver Name</label>
-                                <input type="text" class="form-control" id="receiverName" placeholder="Receiver Name">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="receiverEmail" class="sr-only">Email Address</label>
-                                <input type="email" class="form-control" id="receiverEmail" placeholder="Email Address">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="receiverPhone" class="sr-only">Contact Number</label>
-                                <input type="tel" class="form-control" id="receiverPhone" placeholder="Contact Number">
-                            </div>
-                        </div>
-                        <div class="form-row form-group">
-                            <label for="receiverAddress" class="sr-only">Address</label>
-                            <input type="text" class="form-control" id="receiverAddress" placeholder="Address">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="receiverPostal" class="sr-only">Postcode</label>
-                                <input type="text" class="form-control" id="receiverPostal" placeholder="Postcode">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="receiverUnit" class="sr-only">Unit Number: eg #12-1900</label>
-                                <input type="text" class="form-control" id="receiverUnit" placeholder="Unit Number: eg #12-1900">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="quotation-floating">
-                    <div class="card border-light float-sticky">
-                        <div class="card-header">Quotation Details</div>
-                        <div class="card-body mb-3">
-                            <div class="user-card">
-                                <label for="weight">Weight:</label>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <input type="text" readonly class="form-control-plaintext" id="staticWeight" size='8' value="0.10">
-                                        <span>KG</span>
+                <div class="col-lg-3">
+                    <div class="quotation-floating">
+                        <div class="card border-light float-sticky">
+                            <div class="card-header">Quotation Details</div>
+                            <div class="card-body mb-3">
+                                <div class="user-card">
+                                    <label for="weight">Weight:</label>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <input type="text" readonly class="form-control-plaintext" id="staticWeight" size='8' value="0.10">
+                                            <span>KG</span>
+                                            
+                                        </div>
                                         
                                     </div>
-                                    
+                                    <hr>
+                                    <h3>Total: <strong>$3.00</strong></h3>
                                 </div>
-                                <hr>
-                                <h3>Total: <strong>$3.00</strong></h3>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <button type="button" class="action-button previous previous_button">Back</button>
-        <button type="button" class="next action-button">Continue</button>  
-    </fieldset>  
-    <fieldset>
-        <h3>Review Information</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">General Information</th>
-                    <th scope="col">Parcel Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <small>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Date Created</dt>
-                                <dd class="col-8 col-sm-9">2022-03-20</dd>
-                            </dl>
-                        </small>
+            <button type="button" class="action-button previous previous_button">Back</button>
+            <button type="button" class="next action-button">Continue</button>  
+        </fieldset>  
+        <fieldset>
+            <h3>Review Information</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">General Information</th>
+                        <th scope="col">Parcel Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <small>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Date Created</dt>
+                                    <dd class="col-8 col-sm-9">2022-03-20</dd>
+                                </dl>
+                            </small>
+                            
+                        </td>
+                        <td>
+                            <small>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Delivery Fee</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Price]</dd>
+                                </dl>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Weight</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Weight]</dd>
+                                </dl>
+                            </small>
+                        </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <th scope="col">Shipper Address</th>
+                    <th scope="col">Receiver Address</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <small>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Shipper Name]</dd>
+                                </dl>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Email</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Shipper Email]</dd>
+                                </dl>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Shipper Phone]</dd>
+                                </dl>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Address</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Shipper Address]</dd>
+                                </dl>
+                            </small>
+                        </td>
+                        <td>
+                            <small>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Receiver Name]</dd>
+                                </dl>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Email</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Receiver Email]</dd>
+                                </dl>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Receiver Phone]</dd>
+                                </dl>
+                                <dl class="row mb-0">
+                                    <dt class="col-4 col-sm-3 pr-0">Address</dt>
+                                    <dd class="col-8 col-sm-9">[Enter Receiver Address]</dd>
+                                </dl>
+                            </small>
+                        </td>
                         
-                    </td>
-                    <td>
-                        <small>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Delivery Fee</dt>
-                                <dd class="col-8 col-sm-9">[Enter Price]</dd>
-                            </dl>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Weight</dt>
-                                <dd class="col-8 col-sm-9">[Enter Weight]</dd>
-                            </dl>
-                        </small>
-                    </td>
-                </tr>
-            </tbody>
-            <thead>
-                <th scope="col">Shipper Address</th>
-                <th scope="col">Receiver Address</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <small>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Name</dt>
-                                <dd class="col-8 col-sm-9">[Enter Shipper Name]</dd>
-                            </dl>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Email</dt>
-                                <dd class="col-8 col-sm-9">[Enter Shipper Email]</dd>
-                            </dl>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
-                                <dd class="col-8 col-sm-9">[Enter Shipper Phone]</dd>
-                            </dl>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Address</dt>
-                                <dd class="col-8 col-sm-9">[Enter Shipper Address]</dd>
-                            </dl>
-                        </small>
-                    </td>
-                    <td>
-                        <small>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Name</dt>
-                                <dd class="col-8 col-sm-9">[Enter Receiver Name]</dd>
-                            </dl>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Email</dt>
-                                <dd class="col-8 col-sm-9">[Enter Receiver Email]</dd>
-                            </dl>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
-                                <dd class="col-8 col-sm-9">[Enter Receiver Phone]</dd>
-                            </dl>
-                            <dl class="row mb-0">
-                                <dt class="col-4 col-sm-3 pr-0">Address</dt>
-                                <dd class="col-8 col-sm-9">[Enter Receiver Address]</dd>
-                            </dl>
-                        </small>
-                    </td>
-                    
-                </tr>
-            </tbody>
-        </table>
-        <button type="button" class="action-button previous previous_button">Back</button> 
-        <button type="button"  class="next action-button">Confirm</button> 
-    </fieldset>  
-    <fieldset>
-        <button type="button" class="action-button previous previous_button">Back</button> 
-        <a href="order-history.html" class="action-button">Check Out</a> 
-    </fieldset>
-    </form>  
-    </section> 
-        <!-- END Multiform HTML -->
-    </article>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="action-button previous previous_button">Back</button> 
+            <button type="button"  class="next action-button">Confirm</button> 
+        </fieldset>  
+        <fieldset>
+            <button type="button" class="action-button previous previous_button">Back</button> 
+            <a href="order-history.html" class="action-button">Check Out</a> 
+        </fieldset>
+        </form>  
+        </section> 
+            <!-- END Multiform HTML -->
+        </article>
     </main>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.2/js/intlTelInput.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js'></script>
     <script src="js/script.js"></script>
+    <script src="js/index.js"></script>
 
 </body>
 </html>

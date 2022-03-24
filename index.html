@@ -30,54 +30,7 @@
 </head>
 <body id="app">
     <div class="hero_area">
-        <!-- header section strats -->
-        <header class="header_section">
-            <div class="container-fluid">
-                <!-- <div class="row"> -->
-                    <nav class="navbar navbar-expand-lg custom_nav-container">
-                        <!-- <div class="col-auto"> -->
-                            
-                            <a class="navbar-brand" href="index.html">
-                                <span>
-                                    CAMELCOURIER
-                                </span>
-                            </a>
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                                <ul class="navbar-nav">
-                                    <li class="nav-item active">
-                                        <a class="nav-link" href="index.html"> Home</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="track-order.html"> Track your parcel</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        <!-- </div> -->
-                        <div class=" mr-lg-5 pt-3">
-                            <form class="form-inline" action="create-delivery.html" method="post">
-                                <div class="form-group col-sm-6 col-md-4">
-                                    <label for="email" class="sr-only">Email address</label>
-                                    <input v-model="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-                                </div>
-                                <div class="form-group col-sm-6 col-md-4">
-                                    <label for="password" class="sr-only">Password</label>
-                                    <input v-model="password" type="password" class="form-control" id="password" aria-describedby="emailHelp" placeholder="Enter password">
-                                </div>
-                                <div class="form-group col-sm-6 col-md-3 mt-md-2">
-                                    <button type="submit" class="action-button btn btn-primary mb-2 w-100" style="padding:0">Login</button>
-                                </div>
-                                
-                            </form> 
-                        </div>
-                        
-                </nav>
-                </div>
-                
-            <!-- </div> -->
-        </header>
+        <home-header></home-header>
         <section class=" slider_section ">
             <div class="container-fluid">
                 <div class="row">
