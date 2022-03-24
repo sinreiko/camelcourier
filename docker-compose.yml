@@ -11,16 +11,45 @@ services:
             PYTHONUNBUFFERED: 1
         ports:
             - "5566:5566"
-        #Order: 5000
+    #Order: 5000
+    order:
+        build:
+            context: ./
+            dockerfile: order.Dockerfile
+        image: pochien.lin/order:1.0
+        restart: always
+        environment:
+        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/orderDB
+        ports:
+            - "5000:5000"
+ 
+
         #Activity: 5001
         #Shipper: 5002
         #Rate: 5003
         #DropPoint: 5004
         #Valuing: 5005
         #PickParcel: 5006
-        #CreateDelivery: 5006
-        #UpdateDelivery: 5007
-        #AcceptDelivery: 5008
+    #CreateDelivery: 5007
+    create-order:
+        build:
+            context: ./
+            # To add create_order.Dockerfile
+            dockerfile: create_order.Dockerfile
+        image: pochienlin/create_order:1.0
+        restart: always
+        environment:
+        depends_on:
+            - activity
+            - order
+            - shipper
+            - send_sms
+            - email
+        ports:
+            - "5007:5007"
+
+        #UpdateDelivery: 5008
+        #AcceptDelivery: 5009
 
         #Email: 9000
         #Sms: 5566

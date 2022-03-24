@@ -38,8 +38,8 @@ CORS(app)
 order_URL = "http://localhost:5000/order"
 # activity_URL = "http://localhost:5001/activity"
 shipper_URL = "http://localhost:5002/shipper"
-email_URL = "http://localhost:5003/email"
-sms_URL = "http://localhost:5004/update"
+email_URL = "http://localhost:9000/email"
+sms_URL = "http://localhost:5566/update"
 
 @app.route("/create_order", methods=['POST'])
 def place_order():
@@ -168,7 +168,7 @@ def processCreateOrder(order):
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) +
           " for creating an order...")
-    app.run(host="0.0.0.0", port=5100, debug=True)
+    app.run(host="0.0.0.0", port=5007, debug=True)
     # Notes for the parameters:
     # - debug=True will reload the program automatically if a change is detected;
     #   -- it in fact starts two instances of the same flask program,
