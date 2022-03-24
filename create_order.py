@@ -113,7 +113,9 @@ def processCreateOrder(order):
     else:
         print('\nFailed to create order')
     # 4. Retrieve shipper Email
-    email_result=invoke_http(shipper_URL, method="POST", json=order_result)            
+    shipperID=info.shipperID
+    shipper_URL+='/'+shipperID
+    email_result=invoke_http(shipper_URL, method="GET",json=None)            
     if code in range(200, 300):
         info_email_json=email_result["data"]
         info_email=json.loads(info_email_json)
