@@ -1,6 +1,6 @@
-from crypt import methods
 from twilio.rest import Client
-from flask import Flask
+from flask import Flask, request, jsonify 
+import json, requests
 
 app = Flask(__name__)
 
@@ -22,14 +22,14 @@ def sendClientUpdate():
     # Your Account SID from twilio.com/console
     account_sid = "AC872941965f08ba52b89f8698deae23ab"
     # Your Auth Token from twilio.com/console
-    auth_token = "33a25826b94a13ea6c340e92e1ad503b"
+    auth_token = "b01281d78fe392ab1130cb00745eeef9"
 
     client = Client(account_sid, auth_token)
     
-    # recipient=request.json.get('toPhone')
-    # msg=request.json.get('content')
-    recipient="+6592340039"
-    msg="Hello from Python!"
+    recipient=request.json.get('toPhone')
+    msg=request.json.get('content')
+    #recipient="+6592340039"
+    #msg="Hello from Python!"
     message = client.messages.create(
         # to="+6593877839",
         to=recipient,
