@@ -34,14 +34,14 @@
         <!-- header section strats -->
     <home-header></home-header>
     <section class="multi_step_form container col-md-8">
-        <form id="msform" class="mx-auto" style="min-height:0px"> 
+        <form id="msform" class="mx-auto" method="get" style="min-height:0px"> 
             <!-- Tittle -->
             <div class="tittle">
                 <h2>Track a Parcel</h2>
                     <div class="input-group mb-3">
-                        <textarea class="form-control" placeholder="Enter tracking number" id="tracking" name="tracking"></textarea>
+                        <textarea v-model='inputTracking' class="form-control" placeholder="Enter up to 15 tracking numbers (Split the tracking numbers using , or space)" id="tracking" name="tracking"></textarea>
                     </div>
-                    <a type="button" class="btn action-button" href="#status">Check Parcel</a>
+                    <button type="button" @click="trackParcel()" class="btn action-button" href="#status">Check Parcel</button>
             </div>
         </form>
         <div id="accordion">
