@@ -1,14 +1,22 @@
+import amqp_setup
 from twilio.rest import Client
 from flask import Flask, request, jsonify 
 import json, requests
 
 app = Flask(__name__)
 
+#### Receiving Activity Log ####
+monitorBindingKey = "#.sms"
 
-@app.route("/")
-def hello():
-    return "Hello world!"
+def receiveActivity():
+    amqp_setup.check_setup()
 
+    queue_name = "SMS"
+    
+    # set up a consumer and start to wait for coming messages
+    amqp_setup.channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
+    amqp_setup.channel.start_consuming() # an implicit loop waiting to receive messages; 
+    #it doesn't exit by default. Use Ctrl+C in the command window to terminate it.
 
 @app.route("/update", methods=['POST'])
 def sendClientUpdate():
