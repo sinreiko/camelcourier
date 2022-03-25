@@ -26,11 +26,48 @@ const accept_delivery_URL = "http://localhost:5000/accept"
 const app = Vue.createApp({
     data(){
         return {
-        
+            userName: "",
+            userType: "",
+            inputTracking: ""
         };
     },
     methods: {
-        
+        trackParcel(){
+            var tracking_arr = []
+            if (this.inputTracking != ""){
+                if (this.inputTracking.includes(",")){
+                    tracking_arr = this.inputTracking.split(",")
+                } else if (this.inputTracking.includes(" ")){
+                    tracking_arr = this.inputTracking.split(" ")
+                } else {
+                    tracking_arr.push(this.inputTracking);
+                }
+                console.log(tracking_arr);
+                const response =
+                fetch(`${get_activity_URL}/${tracking_arr}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(response);
+                    if (data.code === 404) {
+                        // no book in db
+                        this.message = data.message;
+                        
+                    } else {
+                        this.books = [data.data];
+                    }
+                })
+                .catch(error => {
+                    // Errors when calling the service; such as network error, 
+                    // service offline, etc
+                    console.log(this.message + error);
+
+                    });
+            } else {
+                alert("Please insert a tracking number.")
+            }
+            
+            
+        }
             // const response =
             //     fetch(auth).then(response => response.json()).then(data => {
             //         console.log(response);
@@ -44,7 +81,7 @@ const app = Vue.createApp({
             //         console.log(this.message + error)
             //     })
         },
-        beforeMounted(){
+        beforeMount(){
             if (localStorage.userName || localStorage.userType){
                 this.userName = localStorage.userName
                 this.userType = localStorage.userType
@@ -154,7 +191,6 @@ app.component('driver-header',{
 
     },
     props: ['user'],
-    // template: `<div>{{}}</div>`
     template: `
     <header class="header_section">
         <div class="container-fluid">
@@ -196,7 +232,7 @@ app.component('shipper-header',{
     methods: {
 
     },
-    props: ['user'],
+    props: ['userT'],
     // template: `<div>{{}}</div>`
     template: `
     <header class="header_section">
@@ -222,7 +258,7 @@ app.component('shipper-header',{
                     </ul>
                 </div>
                 <span class="navbar-text my-1 mx-2">
-                    Welcome, {{user}}
+                    Welcome, {{userT}}
                 </span>
             </nav>
         </div>

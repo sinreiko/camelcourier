@@ -19,7 +19,8 @@ services:
         image: pochien.lin/order:1.0
         restart: always
         environment:
-        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/orderDB
+        #let's change the main db to name camelcourier
+        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelcourier
         ports:
             - "5000:5000"
  
