@@ -1,5 +1,6 @@
 # using SendGrid's Python Library
 # https://github.com/sendgrid/sendgrid-python
+import amqp_setup
 import sendgrid
 import os
 from sendgrid.helpers.mail import Mail, Email, To, Content
@@ -7,6 +8,16 @@ from flask import Flask, request, jsonify
 import json, requests
 
 app = Flask(__name__)
+
+def receiveActivity():
+    amqp_setup.check_setup()
+
+    queue_name = "Email"
+    
+    # set up a consumer and start to wait for coming messages
+    amqp_setup.channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
+    amqp_setup.channel.start_consuming() # an implicit loop waiting to receive messages; 
+    #it doesn't exit by default. Use Ctrl+C in the command window to terminate it.
 
 @app.route("/email", methods=['POST'])
 def sendEmailUpdate():
