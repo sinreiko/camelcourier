@@ -2,13 +2,13 @@ import amqp_setup
 from twilio.rest import Client
 from flask import Flask, request, jsonify 
 import json, requests
+import os
 
 app = Flask(__name__)
 
-#### Receiving Activity Log ####
 monitorBindingKey = "#.sms"
 
-def receiveActivity():
+def receiveSMS():
     amqp_setup.check_setup()
 
     queue_name = "SMS"
@@ -17,6 +17,11 @@ def receiveActivity():
     amqp_setup.channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
     amqp_setup.channel.start_consuming() # an implicit loop waiting to receive messages; 
     #it doesn't exit by default. Use Ctrl+C in the command window to terminate it.
+
+def callback(channel, method, properties, body): # required signature for the callback; no return
+    print("\nReceived an sms by " + __file__)
+    sendClientUpdate()
+    print()
 
 @app.route("/update", methods=['POST'])
 def sendClientUpdate():
@@ -47,4 +52,6 @@ def sendClientUpdate():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='5566', debug=True)
+    print("\nThis is " + os.path.basename(__file__), end='')
+    print(": monitoring routing key '{}' in exchange '{}' ...".format(monitorBindingKey, amqp_setup.exchangename))
+    receiveSMS()
