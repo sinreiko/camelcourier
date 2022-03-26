@@ -142,6 +142,31 @@ INSERT INTO `shipper` (`shipperID`, `shipperName`, `shipperAddress`, `shipperPho
 (2, 'Lee Jun Hui', 'Hougang', 83113586, 'junhuilee99@yahoo.com.sg', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (3, 'Kevin Lee', 'Tampines', 83113587, 'junhuilee00@yahoo.com.sg', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `droppoint`
+--
+
+CREATE TABLE `droppoint` (
+  `latitude` float NOT NULL,
+  `longitude` float NOT NULL,
+  `region` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `droppoint`
+--
+
+INSERT INTO `droppoint` (`latitude`, `longitude`, `region`) VALUES
+(1.285710443426781, 103.84394318783733, 'South'),
+(1.2873912711321067, 103.83038699037779, 'South'),
+(1.2652501481293283, 103.82045618343764, 'South'),
+(1.446181576052929, 103.81975637505069, 'North'),
+(1.4363720994679852, 103.78683027012158, 'North');
+
+-- --------------------------------------------------------
+
 --
 -- Indexes for dumped tables
 --
@@ -163,6 +188,13 @@ ALTER TABLE `order`
 --
 ALTER TABLE `shipper`
   ADD PRIMARY KEY (`shipperID`);
+
+--
+-- Indexes for table `droppoint`
+--
+ALTER TABLE `droppoint`
+  ADD PRIMARY KEY (`latitude`),
+  ADD PRIMARY KEY (`longitude`);
 
 --
 -- AUTO_INCREMENT for dumped tables
