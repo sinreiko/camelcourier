@@ -71,7 +71,9 @@ def processActivity(activity):
 
     # Creating new row in db
     if activity['code'] == 201:
-        activityr = Activity(trackingID=data['tracking_id'], deliveryStatus=data['delivery_status'], deliveryDesc=data['delivery_desc'])
+        activityr = Activity(trackingID=data['tracking_id'],
+            deliveryStatus=data['delivery_status'], 
+            deliveryDesc=data['delivery_desc'])
     
     try:
         db.session.add(activityr)
