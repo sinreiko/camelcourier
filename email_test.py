@@ -20,7 +20,7 @@ def receiveEmail():
     #it doesn't exit by default. Use Ctrl+C in the command window to terminate it.
 
 def callback(channel, method, properties, body): # required signature for the callback; no return
-    print("\nReceived an sms by " + __file__)
+    print("\nReceived an email by " + __file__)
     sendEmailUpdate()
     print()
 
