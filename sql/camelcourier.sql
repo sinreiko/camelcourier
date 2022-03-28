@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `order` (
   `pickupAddress` varchar(100) NULL,
   PRIMARY KEY(`trackingID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+ALTER TABLE `order` AUTO_INCREMENT=587405231466;
 
 --
 -- Dumping data for table `order`
@@ -190,7 +190,7 @@ INSERT INTO `droppoint` (`latitude`, `longitude`, `region`) VALUES
 ALTER TABLE `activity`
   MODIFY `activityID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
-ALTER TABLE `order` AUTO_INCREMENT=587405231466;
+
 
 COMMIT;
 

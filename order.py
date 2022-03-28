@@ -224,11 +224,21 @@ def update_order():
         This function finds the order query, changes the pickupAddress and commits to db using ORM to update the row entry
         SQL equivalent: UPDATE order SET pickupAddress = [USER_INPUT] WHERE trackingID = [USER_INPUT]
     '''
-    pickupAddress = request.args.get('pickupAddress')
-    trackingID = request.args.get('trackingID')
-    order = Order.query.filter_by(trackingID=trackingID).first()
-    order.pickupAddress = pickupAddress
-
+    # pickupAddress = request.args.get('pickupAddress')
+    # trackingID = request.args.get('trackingID')
+    # order = Order.query.filter_by(trackingID=trackingID).first()
+    # order.pickupAddress = pickupAddress
+# Inquire which type of update the user attempts to make
+    info_json = request.json
+    trackingID = info_json.get("trackingID")
+    if ("driverID" in info_json):
+        driverID = info_json.get("driverID")
+        order = Order.query.filter_by(trackingID=trackingID).first()
+        order.driverID = driverID
+    else:
+        pickupAddress = info_json.get("pickupAddress")
+        order = Order.query.filter_by(trackingID=trackingID).first()
+        order.pickupAddress = pickupAddress
     try:
         status = db.session.commit()
         print(status)
