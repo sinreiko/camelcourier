@@ -50,6 +50,24 @@ services:
             - "5007:5007"
 
         #UpdateDelivery: 5008
+    update_order:
+        build:
+            context: ./
+            # To add create_order.Dockerfile
+            dockerfile: update_order.Dockerfile
+        image: pochienlin/update_order:1.0
+        restart: always
+        environment:
+        depends_on:
+            - activity
+            - order
+            - shipper
+            - send_sms
+            - email
+        ports:
+            - "5008:5008"
+
+
         #AcceptDelivery: 5009
 
         #Email: 9000
