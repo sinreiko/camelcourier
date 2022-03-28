@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `activity`;
 CREATE TABLE IF NOT EXISTS `activity` (
   `activityID` int NOT NULL AUTO_INCREMENT,
-  `trackingID` int NOT NULL,
+  `trackingID` bigint(64) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deliveryStatus` varchar(30) NOT NULL,
   `deliveryDesc` varchar(100) NOT NULL,

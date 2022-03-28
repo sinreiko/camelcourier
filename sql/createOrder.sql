@@ -19,26 +19,15 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `orderDB`
+-- Database: `camelDB`
 --
-CREATE DATABASE IF NOT EXISTS `orderDB` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `orderDB`;
+CREATE DATABASE IF NOT EXISTS `camelDB` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `camelDB`;
 
--- --------------------------------------------------------
--- Order
--- trackingID(INT) (auto increment)
--- driverID (VARCHAR)
--- shipperID (VARCHAR)
--- deliveryStage (VARCHAR)
--- deliveryDate (TIMESTAMP)
--- ---------------------------------------------------------
---
--- Table structure for table `order`
---
-
+-- ================== order table ==========================
 DROP TABLE IF EXISTS `order`;
 CREATE TABLE IF NOT EXISTS `order` (
-  `trackingID` int(64) NOT NULL AUTO_INCREMENT,
+  `trackingID` bigint(64) NOT NULL AUTO_INCREMENT,
   `driverID` varchar(13),
   `shipperID` varchar(13) NOT NULL,
   `receiverName` varchar(30) NOT NULL,
@@ -49,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `order` (
   PRIMARY KEY (`trackingID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `order` AUTO_INCREMENT=587405231466;
 --
 -- Dumping data for table `order`
   -- trackingID(INT) (autoincrement)
