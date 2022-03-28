@@ -28,8 +28,21 @@ const app = Vue.createApp({
         return {
             userName: "",
             userType: "",
-            inputTracking: ""
+            inputTracking: "",
+            trackingResult: []
+
         };
+    },
+    computed: {
+        calculateProgress: function(status){
+            if (status == 'Order Created'){
+                return 10
+            } else if (status == 'Picked up' || status == 'Delayed'){
+                return 50
+            } else if (status == 'Completed'){
+                return 100
+            }
+        }
     },
     methods: {
         trackParcel(){
@@ -47,13 +60,27 @@ const app = Vue.createApp({
                 fetch(`${get_activity_URL}/${tracking_arr}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(response);
                     if (data.code === 404) {
                         // no book in db
                         this.message = data.message;
-                        
+                        // console.log(data);
+
                     } else {
-                        this.books = [data.data];
+                        // this.books = [data.data];
+                        // console.log("Response " + response.data[0]);
+                        // console.log(data.data);
+                        res = data.data;
+                        console.log(res[res.length - 1]);
+                        latestStatus = res[res.length - 1].delivery_status;
+                        this.trackingResult.push({
+                            tracking_id: res.tracking_id,
+                            latest_status: latestStatus,
+                            progress: this.calculateProgress(latestStatus),
+                            activities: res
+                        });
+                        // this.trackingResult.push(corrected_data);
+                        
+
                     }
                 })
                 .catch(error => {
@@ -66,8 +93,8 @@ const app = Vue.createApp({
                 alert("Please insert a tracking number.")
             }
             
-            
-        }
+        },
+        
             // const response =
             //     fetch(auth).then(response => response.json()).then(data => {
             //         console.log(response);
@@ -232,7 +259,7 @@ app.component('shipper-header',{
     methods: {
 
     },
-    props: ['userT'],
+    props: ['user'],
     // template: `<div>{{}}</div>`
     template: `
     <header class="header_section">
@@ -258,11 +285,22 @@ app.component('shipper-header',{
                     </ul>
                 </div>
                 <span class="navbar-text my-1 mx-2">
-                    Welcome, {{userT}}
+                    Welcome, {{user}}
                 </span>
             </nav>
         </div>
     </header>`
 });
 
+app.component('activity', {
+    props: ['deliverydesc','timestamp','deliverystatus'],
+    template:`
+        <li>
+            <dl>
+                <dd>{{deliverydesc}}</dd>
+                <dd class="text-secondary">{{timestamp}} · {{deliverystatus}}</dd>
+            </dl>
+        </li>
+    `
+})
 const vm = app.mount('#app'); 

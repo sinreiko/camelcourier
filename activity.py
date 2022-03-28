@@ -17,8 +17,9 @@ import os
 
 #### Linking to DB ####
 app = Flask(__name__)
-### NOTE! main db name changed to camelcourier. Pls import the new sql called camelcourier!
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('dbURL') or 'mysql+mysqlconnector://root@localhost:3306/camelcourier'
+# NOTE! main db name changed to camelcourier. Pls import the new sql called camelcourier!
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
+    'dbURL') or 'mysql+mysqlconnector://root@localhost:3306/camelcourier'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
@@ -26,15 +27,17 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
+
 class Activity(db.Model):
     __tablename__ = 'activity'
 
     activityID = db.Column(db.Integer, primary_key=True)
     trackingID = db.Column(db.Integer, nullable=False)
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now,        onupdate=datetime.now)
+    timestamp = db.Column(db.DateTime, nullable=False,
+                          default=datetime.now, onupdate=datetime.now)
     deliveryStatus = db.Column(db.String(30), nullable=False)
     deliveryDesc = db.Column(db.String(130), nullable=False)
-    
+
     def json(self):
         dto = {
             'activity_id': self.activityID,
@@ -46,23 +49,30 @@ class Activity(db.Model):
 
         return dto
 
+
 #### Receiving Activity Log ####
 monitorBindingKey = "#.order"
+
 
 def receiveActivity():
     amqp_setup.check_setup()
 
     queue_name = "Activity"
-    
-    # set up a consumer and start to wait for coming messages
-    amqp_setup.channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
-    amqp_setup.channel.start_consuming() # an implicit loop waiting to receive messages; 
-    #it doesn't exit by default. Use Ctrl+C in the command window to terminate it.
 
-def callback(channel, method, properties, body): # required signature for the callback; no return
+    # set up a consumer and start to wait for coming messages
+    amqp_setup.channel.basic_consume(
+        queue=queue_name, on_message_callback=callback, auto_ack=True)
+    # an implicit loop waiting to receive messages;
+    amqp_setup.channel.start_consuming()
+    # it doesn't exit by default. Use Ctrl+C in the command window to terminate it.
+
+
+# required signature for the callback; no return
+def callback(channel, method, properties, body):
     print("\nReceived an activity log by " + __file__)
     processActivity(json.loads(body))
-    print() # print a new line feed
+    print()  # print a new line feed
+
 
 def processActivity(activity):
     print("Recording an order log:")
@@ -71,10 +81,16 @@ def processActivity(activity):
 
     # Creating new row in db
     if activity['code'] == 201:
+<<<<<<< Updated upstream
         activityr = Activity(trackingID=data['tracking_id'],
             deliveryStatus=data['delivery_status'], 
             deliveryDesc=data['delivery_desc'])
     
+=======
+        activityr = Activity(
+            trackingID=data['tracking_id'], deliveryStatus=data['delivery_status'], deliveryDesc=data['delivery_desc'])
+
+>>>>>>> Stashed changes
     try:
         db.session.add(activityr)
         db.session.commit()
@@ -124,7 +140,7 @@ def processActivity(activity):
 #                 "data": [activity.json() for activity in activityList]
 #             }
 #         )
-    
+
 #     return jsonify(
 #         {
 #             "code": 404,
@@ -139,5 +155,6 @@ if __name__ == '__main__':
     # print("This is flask for " + os.path.basename(__file__) + ": log activities ...")
     # app.run(host='0.0.0.0', port=5001, debug=True)
     print("\nThis is " + os.path.basename(__file__), end='')
-    print(": monitoring routing key '{}' in exchange '{}' ...".format(monitorBindingKey, amqp_setup.exchangename))
+    print(": monitoring routing key '{}' in exchange '{}' ...".format(
+        monitorBindingKey, amqp_setup.exchangename))
     receiveActivity()
