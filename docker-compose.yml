@@ -5,7 +5,7 @@ services:
         build:
             context: ./
             dockerfile: send_sms.Dockerfile
-        image: reikolee/send_sms:2.0
+        image: reiko/send_sms:2.0
         restart: always
         environment:
             PYTHONUNBUFFERED: 1
@@ -19,8 +19,8 @@ services:
         image: pochien.lin/order:1.0
         restart: always
         environment:
-        #let's change the main db to name camelcourier
-        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelcourier
+            #let's change the main db to name camelcourier
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelcourier
         ports:
             - "5000:5000"
  
@@ -32,22 +32,22 @@ services:
         #Valuing: 5005
         #PickParcel: 5006
     #CreateDelivery: 5007
-    create-order:
-        build:
-            context: ./
-            # To add create_order.Dockerfile
-            dockerfile: create_order.Dockerfile
-        image: pochienlin/create_order:1.0
-        restart: always
-        environment:
-        depends_on:
-            - activity
-            - order
-            - shipper
-            - send_sms
-            - email
-        ports:
-            - "5007:5007"
+
+    # create_order:
+    #     build:
+    #         context: ./
+    #         # To add create_order.Dockerfile
+    #         dockerfile: create_order.Dockerfile
+    #     image: pochienlin/create_order:1.0
+    #     restart: always
+    #     depends_on:
+    #         - activity
+    #         - order
+    #         - shipper
+    #         - send_sms
+    #         - email
+    #     ports:
+    #         - "5007:5007"
 
         #UpdateDelivery: 5008
     update_order:
@@ -55,15 +55,14 @@ services:
             context: ./
             # To add create_order.Dockerfile
             dockerfile: update_order.Dockerfile
-        image: pochienlin/update_order:1.0
+        image: 889090/update_order:1.0
         restart: always
-        environment:
-        depends_on:
-            - activity
-            - order
-            - shipper
-            - send_sms
-            - email
+        # depends_on:
+        #     - activity
+        #     - order
+        #     - shipper
+        #     - send_sms
+        #     - email
         ports:
             - "5008:5008"
 
