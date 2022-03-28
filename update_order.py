@@ -18,8 +18,69 @@ CORS(app)
 # #book_URL = "http://localhost:5000/book"
 # order_URL = environ.get('order_URL') or "http://localhost:5001/order" 
 # shipping_record_URL = environ.get('shipping_record_URL') or "http://localhost:5002/shipping_record" 
-orderRetrieve_URL = "http://localhost:5000/order/" + trackingID
+order_URL = "http://localhost:5000/order" 
 shipper_URL = "http://localhost:5001/shipper"
+
+
+@app.route("/delay", methods=['PUT'])
+def delay():
+    #invoke ORDER microservice to get its shipperID, trackingID
+    # {
+    #    "shipper_id": "S000000000001",
+    #    "tracking_id": "FDKS09284023"
+    # }
+
+    #invoke ACTIVITY microservice to 
+        # Retrieve trackingID from ORDER microservice
+        # Set delivery_desc to "..." -> driver input in UI 
+        # Set delivery_status to "Delayed" -> automatic input from UI
+    #invoke SHIPPER microservice after getting shipperId and get shipperEmail
+    #Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
+    #Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice\
+    if request.is_json:
+        try:
+            order = request.get_json()
+            print("\nDelayed an order in JSON:", order)
+
+            # 1. Send order info
+            result = delayOrder(order)
+            return jsonify(result), result["code"]
+
+        except Exception as e:
+            # Unexpected error in code
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
+            print(ex_str)
+
+            return jsonify({
+                "code": 500,
+                "message": "update.py internal error: " + ex_str
+            }), 500
+
+    # if reached here, not a JSON request.
+    return jsonify({
+        "code": 400,
+        "message": "Invalid JSON input: " + str(request.get_data())
+    }), 400
+
+def delayOrder(order):
+    print('\n-----Invoking order microservice-----')
+    order_result = invoke_http(order_URL, method='POST', json=order)
+    print('order_result:', order_result)
+    return
+
+@app.route("/complete", methods=['PUT'])
+def complete():
+    #invoke ORDER microservice to get its shipperID, trackingID
+    #invoke ACTIVITY microservice to 
+        # Retrieve trackingID from ORDER microservice
+        # Set delivery_desc to "..." -> driver input in UI 
+        # Set delivery_status to "Complete" -> automatic input from UI
+    #invoke SHIPPER microservice after getting shipperId and get shipperEmail
+    #Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
+    #Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
+    return
 
 @app.route("/accept", methods=['PUT'])
 def accept():
@@ -118,27 +179,7 @@ def acceptOrder(order):
         }
     }
 
-
-@app.route("/delay", methods=['PUT'])
-def delay():
-    #invoke ORDER microservice to get its shipperID, trackingID
-    #invoke ACTIVITY microservice to 
-        # Retrieve trackingID from ORDER microservice
-        # Set delivery_desc to "..." -> driver input in UI 
-        # Set delivery_status to "Delayed" -> automatic input from UI
-    #invoke SHIPPER microservice after getting shipperId and get shipperEmail
-    #Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
-    #Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
-    return
-
-@app.route("/complete", methods=['PUT'])
-def complete():
-    #invoke ORDER microservice to get its shipperID, trackingID
-    #invoke ACTIVITY microservice to 
-        # Retrieve trackingID from ORDER microservice
-        # Set delivery_desc to "..." -> driver input in UI 
-        # Set delivery_status to "Complete" -> automatic input from UI
-    #invoke SHIPPER microservice after getting shipperId and get shipperEmail
-    #Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
-    #Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
-    return
+if __name__ == "__main__":
+    print("This is flask " + os.path.basename(__file__) + 
+        " for updating order...")
+    app.run(host="0.0.0.0", port=5008, debug=True)
