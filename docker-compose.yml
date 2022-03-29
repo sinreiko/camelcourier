@@ -25,6 +25,10 @@ services:
         ports:
             - "5000:5000"
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     #Activity: 5001
     activity:
         build:
