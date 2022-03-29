@@ -21,14 +21,33 @@ services:
         image: pochien.lin/order:1.0
         restart: always
         environment:
-            #let's change the main db to name camelcourier
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelcourier
         ports:
             - "5000:5000"
- 
 
-        #Activity: 5001
-        #Shipper: 5002
+
+    #Activity: 5001
+    activity:
+        build:
+            context: ./
+            dockerfile: activity.Dockerfile
+        image: pochien.lin/activity:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelcourier
+        ports:
+            - "5000:5001"
+    #Shipper: 5002
+    shipper:
+    build:
+        context: ./
+        dockerfile: shipper.Dockerfile
+    image: pochien.lin/shipper:1.0
+    restart: always
+    environment:
+        dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelcourier
+    ports:
+        - "5002:5002"
         #Rate: 5003
         #DropPoint: 5004
         #Valuing: 5005

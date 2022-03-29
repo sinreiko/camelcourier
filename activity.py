@@ -19,7 +19,7 @@ import os
 app = Flask(__name__)
 # NOTE! main db name changed to camelcourier. Pls import the new sql called camelcourier!
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
-    'dbURL') or 'mysql+mysqlconnector://root@localhost:3306/camelcourier'
+    'dbURL') or 'mysql+mysqlconnector://root:root@localhost:3306/camelcourier' or 'mysql+mysqlconnector://root@localhost:3306/camelcourier'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
@@ -81,16 +81,9 @@ def processActivity(activity):
 
     # Creating new row in db
     if activity['code'] == 201:
-<<<<<<< Updated upstream
         activityr = Activity(trackingID=data['tracking_id'],
-            deliveryStatus=data['delivery_status'], 
-            deliveryDesc=data['delivery_desc'])
-    
-=======
-        activityr = Activity(
-            trackingID=data['tracking_id'], deliveryStatus=data['delivery_status'], deliveryDesc=data['delivery_desc'])
-
->>>>>>> Stashed changes
+                             deliveryStatus=data['delivery_status'],
+                             deliveryDesc=data['delivery_desc'])
     try:
         db.session.add(activityr)
         db.session.commit()
