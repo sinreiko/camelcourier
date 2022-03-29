@@ -96,18 +96,28 @@ services:
         ports:
             - "5011:5011"
     #rabbitmq
+    # rabbitmq:
+    #     image: rabbitmq:3-management-alpine
+    #     container_name: 'rabbitmq'
+    #     ports:
+    #         - 5672:5672
+    #         - 15672:15672
+    #     volumes:
+    #         - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+    #         - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    #     networks:
+    #         - rabbitmq_go_net
     rabbitmq:
-        image: rabbitmq:3-management-alpine
-        container_name: 'rabbitmq'
+        container_name: "rabbitmq"
+        image: rabbitmq:3.8-management-alpine
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
         ports:
-            - 5672:5672
-            - 15672:15672
-        volumes:
-            - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-            - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-        networks:
-            - rabbitmq_go_net
-
+            # AMQP protocol port
+            - '5672:5672'
+            # HTTP management UI
+            - '15672:15672'
 networks:
   rabbitmq_go_net:
     driver: bridge
