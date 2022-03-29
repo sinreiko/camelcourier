@@ -53,29 +53,30 @@ def place_order():
         and runs the procedure above (line 13-18)
     '''
     # Check input format and data of the request are JSON
+    if request.is_json:
+        try:
+            order = request.get_json()
+            print("\nReceived an order in JSON:", order)
+            result = processCreateOrder(order)
+            return jsonify(result), result["code"]
 
-    try:
-        print("\nReceived an order in JSON:", order)
-        result = processCreateOrder(order)
-        return jsonify(result), result["code"]
+        except Exception as e:
+            # Unexpected error in code
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
+            print(ex_str)
 
-    except Exception as e:
-        # Unexpected error in code
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
-        print(ex_str)
+            return jsonify({
+                "code": 500,
+                "message": "place_order.py internal error: " + ex_str
+            }), 500
 
+        # if reached here, not a JSON request.
         return jsonify({
-            "code": 500,
-            "message": "place_order.py internal error: " + ex_str
-        }), 500
-
-    # if reached here, not a JSON request.
-    return jsonify({
-        "code": 400,
-        "message": "Invalid JSON input: " + str(request.get_data())
-    }), 400
+            "code": 400,
+            "message": "Invalid JSON input: " + str(request.get_data())
+        }), 400
 
 
 def processCreateOrder(order):

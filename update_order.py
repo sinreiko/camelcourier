@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-import os, sys
+import os
+import sys
 from os import environ
 
 import requests
@@ -14,29 +15,29 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-#URL of all the simple microservices that you're contacting
+# URL of all the simple microservices that you're contacting
 # #book_URL = "http://localhost:5000/book"
-# order_URL = environ.get('order_URL') or "http://localhost:5001/order" 
-# shipping_record_URL = environ.get('shipping_record_URL') or "http://localhost:5002/shipping_record" 
-order_URL = "http://localhost:5000/order" 
+# order_URL = environ.get('order_URL') or "http://localhost:5001/order"
+# shipping_record_URL = environ.get('shipping_record_URL') or "http://localhost:5002/shipping_record"
+order_URL = "http://localhost:5000/order"
 shipper_URL = "http://localhost:5001/shipper"
 
 
 @app.route("/delay", methods=['PUT'])
 def delay():
-    #invoke ORDER microservice to get its shipperID, trackingID
+    # UI automatically sends JSON that contains shipperID, trackingID
     # {
     #    "shipper_id": "S000000000001",
     #    "tracking_id": "FDKS09284023"
     # }
 
-    #invoke ACTIVITY microservice to 
-        # Retrieve trackingID from ORDER microservice
-        # Set delivery_desc to "..." -> driver input in UI 
-        # Set delivery_status to "Delayed" -> automatic input from UI
-    #invoke SHIPPER microservice after getting shipperId and get shipperEmail
-    #Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
-    #Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice\
+    # invoke ACTIVITY microservice to
+    # Retrieve trackingID from ORDER microservice
+    # Set delivery_desc to "..." -> driver input in UI
+    # Set delivery_status to "Delayed" -> automatic input from UI
+    # invoke SHIPPER microservice after getting shipperId and get shipperEmail
+    # Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
+    # Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice\
     if request.is_json:
         try:
             order = request.get_json()
@@ -50,12 +51,13 @@ def delay():
             # Unexpected error in code
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
+            ex_str = str(e) + " at " + str(exc_type) + ": " + \
+                fname + ": line " + str(exc_tb.tb_lineno)
             print(ex_str)
 
             return jsonify({
                 "code": 500,
-                "message": "update.py internal error: " + ex_str
+                "message": "update_order.py internal error: " + ex_str
             }), 500
 
     # if reached here, not a JSON request.
@@ -64,33 +66,53 @@ def delay():
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
 
+
 def delayOrder(order):
-    print('\n-----Invoking order microservice-----')
-    order_result = invoke_http(order_URL, method='POST', json=order)
-    print('order_result:', order_result)
-    return
+    # Invoke the activity microservice
+    print('\n-----Invoking activity microservice-----')
+    # order_result = json.dumps(order)
+    message = {
+        "code": 200,
+        "data": {
+            "tracking_id": order['tracking_id'],
+            "delivery_status": "Delayed",
+            "delivery_desc": "Order has been delayed by driver."
+        }
+    }
+    print(message)
+    amqp_setup.check_setup()
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="delay.order",
+                                     body=json.dumps(message), properties=pika.BasicProperties(delivery_mode=2))
+    print("\nDelay status published to the RabbitMQ Exchange:", message)
+    return {
+        "code": 201,
+        "data": {"delay_data": message},
+        "message": "Order delay sent to activity log."
+    }
+
 
 @app.route("/complete", methods=['PUT'])
 def complete():
-    #invoke ORDER microservice to get its shipperID, trackingID
-    #invoke ACTIVITY microservice to 
-        # Retrieve trackingID from ORDER microservice
-        # Set delivery_desc to "..." -> driver input in UI 
-        # Set delivery_status to "Complete" -> automatic input from UI
-    #invoke SHIPPER microservice after getting shipperId and get shipperEmail
-    #Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
-    #Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
+    # invoke ORDER microservice to get its shipperID, trackingID
+    # invoke ACTIVITY microservice to
+    # Retrieve trackingID from ORDER microservice
+    # Set delivery_desc to "..." -> driver input in UI
+    # Set delivery_status to "Complete" -> automatic input from UI
+    # invoke SHIPPER microservice after getting shipperId and get shipperEmail
+    # Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
+    # Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
     return
+
 
 @app.route("/accept", methods=['PUT'])
 def accept():
-    #Invoke ORDER microservice to get tracking ID
-    #Invoke ACTIVITY microservice to create a new activity log
-        # Set delivery_desc to "on the way to pick up" -> driver input in UI
-        # Set delivery_status to "Awaiting Pick Up" -> driver input in UI
-    #Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
-    
-    #Simple check of input format and data of the request are JSON
+    # Invoke ORDER microservice to get tracking ID
+    # Invoke ACTIVITY microservice to create a new activity log
+    # Set delivery_desc to "on the way to pick up" -> driver input in UI
+    # Set delivery_status to "Awaiting Pick Up" -> driver input in UI
+    # Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
+
+    # Simple check of input format and data of the request are JSON
     if request.is_json:
         try:
             order = request.get_json()
@@ -104,7 +126,8 @@ def accept():
             # Unexpected error in code
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
+            ex_str = str(e) + " at " + str(exc_type) + ": " + \
+                fname + ": line " + str(exc_tb.tb_lineno)
             print(ex_str)
 
             return jsonify({
@@ -118,6 +141,7 @@ def accept():
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
 
+
 def acceptOrder(order):
     # Accept the order delivery
     print('\n-----Invoking order microservice-----')
@@ -130,11 +154,11 @@ def acceptOrder(order):
         # Inform the error microservice
         print('\n\n-----Invoking error microservice as order fails-----')
         invoke_http(error_URL, method="POST", json=order_result)
-        # - reply from the invocation is not used; 
+        # - reply from the invocation is not used;
         # continue even if this invocation fails
         print("Order status ({:d}) sent to the error microservice:".format(
             code), order_result)
-        
+
         # 7. Return error
         return {
             "code": 500,
@@ -148,7 +172,6 @@ def acceptOrder(order):
     shipping_result = invoke_http(
         shipping_record_URL, method="POST", json=order_result['data'])
     print("shipping_result:", shipping_result, '\n')
-
 
     # Check the shipping result;
     # if a failure, send it to the error microservice.
@@ -179,7 +202,7 @@ def acceptOrder(order):
         }
     }
 
+
 if __name__ == "__main__":
-    print("This is flask " + os.path.basename(__file__) + 
-        " for updating order...")
+    print("This is flask " + os.path.basename(__file__) + " for updating order...")
     app.run(host="0.0.0.0", port=5008, debug=True)

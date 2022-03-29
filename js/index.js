@@ -1,4 +1,3 @@
-const auth = "http://localhost:5000/auth"
 const get_order_URL = "http://localhost:5000/order"
 const get_activity_URL = "http://localhost:5001/activity"
 const get_shipper_URL = "http://localhost:5002/shipper"
