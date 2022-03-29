@@ -1,4 +1,7 @@
-version: '3'
+version: '3.8'
+
+volumes:
+    rabbitmq_data:
 
 services:
     send_sms:
@@ -23,7 +26,7 @@ services:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelcourier
         ports:
             - "5000:5000"
- 
+
 
         #Activity: 5001
         #Shipper: 5002
@@ -71,3 +74,32 @@ services:
 
         #Email: 9000
         #Sms: 5566
+    
+    ##################################
+    # RabbitMQ: The messaging broker #
+    ##################################
+    rabbitmq:
+        image: rabbitmq:3-management
+        hostname: camel-rabbitmq
+        restart: always
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        volumes: 
+            - rabbitmq_data:/var/lib/rabbitmq
+    
+    #####################################################
+    # Activity: The Activity Log Consumber microservice #
+    #####################################################
+    activity_log:
+        build:
+        context: ./
+        dockerfile: activity.Dockerfile
+        image: vasng/activity:1.0
+        restart: always
+        depends_on:
+        - rabbitmq
+        environment:
+        rabbit_host: rabbitmq
+        rabbit_port: 5672
+        PYTHONUNBUFFERED: 1

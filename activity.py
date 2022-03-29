@@ -81,16 +81,10 @@ def processActivity(activity):
 
     # Creating new row in db
     if activity['code'] == 201:
-<<<<<<< Updated upstream
-        activityr = Activity(trackingID=data['tracking_id'],
+        activityr = Activity(trackingID=data['tracking_id'], 
             deliveryStatus=data['delivery_status'], 
             deliveryDesc=data['delivery_desc'])
-    
-=======
-        activityr = Activity(
-            trackingID=data['tracking_id'], deliveryStatus=data['delivery_status'], deliveryDesc=data['delivery_desc'])
 
->>>>>>> Stashed changes
     try:
         db.session.add(activityr)
         db.session.commit()
