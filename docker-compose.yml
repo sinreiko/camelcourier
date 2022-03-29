@@ -7,6 +7,8 @@ services:
             dockerfile: send_sms.Dockerfile
         image: reiko/send_sms:2.0
         restart: always
+        depends_on:
+            - rabbitmq
         environment:
             PYTHONUNBUFFERED: 1
         ports:
@@ -31,23 +33,25 @@ services:
         #DropPoint: 5004
         #Valuing: 5005
         #PickParcel: 5006
-    #CreateDelivery: 5007
+    #Create Order: 5007
 
-    # create_order:
-    #     build:
-    #         context: ./
-    #         # To add create_order.Dockerfile
-    #         dockerfile: create_order.Dockerfile
-    #     image: pochienlin/create_order:1.0
-    #     restart: always
-    #     depends_on:
-    #         - activity
-    #         - order
-    #         - shipper
-    #         - send_sms
-    #         - email
-    #     ports:
-    #         - "5007:5007"
+    create_order:
+        build:
+            context: ./
+            # To add create_order.Dockerfile
+            dockerfile: create_order.Dockerfile
+        image: pochienlin/create_order:1.0
+        restart: always
+        depends_on:
+            # - activity
+            - order
+            # - shipper
+            - send_sms
+            - email
+            - rabbitmq
+            - sendgrid
+        ports:
+            - "5007:5007"
 
         #UpdateDelivery: 5008
     update_order:
@@ -69,5 +73,41 @@ services:
 
         #AcceptDelivery: 5009
 
-        #Email: 9000
-        #Sms: 5566
+    #Email: 9000
+    email:
+        build:
+            context: ./
+            # To add create_order.Dockerfile
+            dockerfile: email.Dockerfile
+        image: pochien.lin/email_test:1.0
+        restart: always
+        depends_on:
+            - sendgrid
+            - rabbitmq
+        ports:
+            - "9000:9000"
+    #Sms: 5566
+    # sendgrid
+    sendgrid:
+        build:
+            context: ./
+        image: sendgrid/sendgrid-python
+        restart: always
+        ports:
+            - "5011:5011"
+    #rabbitmq
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        container_name: 'rabbitmq'
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+            - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+        networks:
+            - rabbitmq_go_net
+
+networks:
+  rabbitmq_go_net:
+    driver: bridge
