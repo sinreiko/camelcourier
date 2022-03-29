@@ -26,7 +26,7 @@ channel.exchange_declare(exchange=exchangename, exchange_type=exchangetype, dura
 # - instead of setting up the queues using RabbitMQ UI.
 
 ############   Activity_Log queue    #############
-#delcare Activity_Log queue
+#declare Activity_Log queue
 queue_name = 'Activity'
 channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
@@ -37,7 +37,7 @@ channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.order
     # 'routing_key=#' => any routing_key would be matched
 
 ############   Email queue    #############
-#delcare Email queue
+#declare Email queue
 queue_name = 'Email'
 channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
@@ -48,7 +48,7 @@ channel.queue_bind(exchange=exchangename, queue=queue_name, routing_key='*.email
     # 'routing_key=#' => any routing_key would be matched 
 
 ############   SMS queue    #############
-#delcare SMS queue
+#declare SMS queue
 queue_name = 'SMS'
 channel.queue_declare(queue=queue_name, durable=True)
     # 'durable' makes the queue survive broker restarts
