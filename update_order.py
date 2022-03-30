@@ -31,11 +31,13 @@ def delay():
     #    "tracking_id": "FDKS09284023"
     # }
 
-    # invoke ACTIVITY microservice to
-    # Retrieve trackingID from ORDER microservice
-    # Set delivery_desc to "..." -> driver input in UI
-    # Set delivery_status to "Delayed" -> automatic input from UI
-    # invoke SHIPPER microservice after getting shipperId and get shipperEmail
+    # Invoke ACTIVITY microservice to
+    # 1. Retrieve trackingID from ORDER microservice
+    # 2. Set delivery_desc to "..." -> driver input in UI
+    # 3. Set delivery_status to "Delayed" -> automatic input from UI
+    # 4. Sent to activity_log
+
+    # invoke SHIPPER microservice after getting shipperId and shipperEmail
     # Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
     # Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice\
     if request.is_json:
@@ -68,6 +70,16 @@ def delay():
 
 
 def delayOrder(order):
+    # 1. Send the order info (all params) into order microservice
+    # Invoke the order microservice
+    print('\n-----Invoking order microservice-----')
+    order_result = invoke_http(order_URL, method='POST', json=order)
+    print('order_result:', order_result)
+
+    code = order_result["code"]
+    info_json = order_result['data']
+    info = json.loads(info_json)
+
     # Invoke the activity microservice
     print('\n-----Invoking activity microservice-----')
     # order_result = json.dumps(order)
@@ -90,6 +102,57 @@ def delayOrder(order):
         "message": "Order delay sent to activity log."
     }
 
+    shipperID = info.shipperID
+    shipper_URL += '/'+shipperID
+    email_result = invoke_http(shipper_URL, method="GET", json=None)
+    if code in range(200, 300):
+        info_email_json = email_result["data"]
+        info_email = json.loads(info_email_json)
+        shipper_email = info_email.shipperEmail
+        # if error is thrown, append to err_msg
+    else:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "email": email_result
+                },
+                "message": "An error occurred while retrieving shipper email. "
+            }
+        ), 500
+
+    # 5. Email shipper
+    email_content = "This is to inform you that Tracking ID: " + \
+        tracking_id+" has been delayed"
+
+    message = jsonify(
+        {
+            "toEmail": shipper_email,
+            "subject": "Order has been delayed",
+            "msg": email_content
+        }
+    )
+
+    # Replace with this after AMQP has been set up
+
+    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
+    #         body=message)
+
+    # 5. Inform receiver
+    recipient = info.receiverPhone
+    msg = "[Camel Couriers] Your order "+tracking_id+" has been delayed."
+    sms_message = jsonify(
+        {
+            "toPhone": recipient,
+            "content": msg
+        }
+    )
+    sms_status = invoke_http(sms_URL, method="POST", json=sms_message)
+    print(sms_status)
+
+    # 6. Return cancled order as a json object with codes
+    return order_result
+
 
 @app.route("/complete", methods=['PUT'])
 def complete():
@@ -101,25 +164,13 @@ def complete():
     # invoke SHIPPER microservice after getting shipperId and get shipperEmail
     # Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
     # Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
-    return
-
-
-@app.route("/accept", methods=['PUT'])
-def accept():
-    # Invoke ORDER microservice to get tracking ID
-    # Invoke ACTIVITY microservice to create a new activity log
-    # Set delivery_desc to "on the way to pick up" -> driver input in UI
-    # Set delivery_status to "Awaiting Pick Up" -> driver input in UI
-    # Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
-
-    # Simple check of input format and data of the request are JSON
     if request.is_json:
         try:
             order = request.get_json()
-            print("\nAccepted an order in JSON:", order)
+            print("\nCompleted an order in JSON:", order)
 
             # 1. Send order info
-            result = acceptOrder(order)
+            result = completeOrder(order)
             return jsonify(result), result["code"]
 
         except Exception as e:
@@ -132,7 +183,7 @@ def accept():
 
             return jsonify({
                 "code": 500,
-                "message": "update.py internal error: " + ex_str
+                "message": "update_order.py internal error: " + ex_str
             }), 500
 
     # if reached here, not a JSON request.
@@ -142,67 +193,102 @@ def accept():
     }), 400
 
 
-def acceptOrder(order):
-    # Accept the order delivery
+def completeOrder(order):
+    # 1. Send the order info (all params) into order microservice
+    # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    order_result = invoke_http(orderRetrieve_URL, method='POST', json=order)
+    order_result = invoke_http(order_URL, method='POST', json=order)
     print('order_result:', order_result)
 
-    # Check the order result; if a failure, send it to the error microservice.
     code = order_result["code"]
-    if code not in range(200, 300):
-        # Inform the error microservice
-        print('\n\n-----Invoking error microservice as order fails-----')
-        invoke_http(error_URL, method="POST", json=order_result)
-        # - reply from the invocation is not used;
-        # continue even if this invocation fails
-        print("Order status ({:d}) sent to the error microservice:".format(
-            code), order_result)
+    info_json = order_result['data']
+    info = json.loads(info_json)
 
-        # 7. Return error
-        return {
-            "code": 500,
-            "data": {"order_result": order_result},
-            "message": "Order creation failure sent for error handling."
-        }
-
-    # 5. Send new order to shipping
-    # Invoke the shipping record microservice
-    print('\n\n-----Invoking shipping_record microservice-----')
-    shipping_result = invoke_http(
-        shipping_record_URL, method="POST", json=order_result['data'])
-    print("shipping_result:", shipping_result, '\n')
-
-    # Check the shipping result;
-    # if a failure, send it to the error microservice.
-    code = shipping_result["code"]
-    if code not in range(200, 300):
-        # Inform the error microservice
-        print('\n\n-----Invoking error microservice as shipping fails-----')
-        invoke_http(error_URL, method="POST", json=shipping_result)
-        print("Shipping status ({:d}) sent to the error microservice:".format(
-            code), shipping_result)
-
-        # 7. Return error
-        return {
-            "code": 400,
-            "data": {
-                "order_result": order_result,
-                "shipping_result": shipping_result
-            },
-            "message": "Simulated shipping record error sent for error handling."
-        }
-
-    # 7. Return created order, shipping record
-    return {
-        "code": 201,
+    # Invoke the activity microservice
+    print('\n-----Invoking activity microservice-----')
+    # order_result = json.dumps(order)
+    message = {
+        "code": 200,
         "data": {
-            "order_result": order_result,
-            "shipping_result": shipping_result
+            "tracking_id": order['tracking_id'],
+            "delivery_status": "Completed",
+            "delivery_desc": "Order has been completed by driver."
         }
     }
+    print(message)
+    amqp_setup.check_setup()
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="complete.order",
+                                     body=json.dumps(message), properties=pika.BasicProperties(delivery_mode=2))
+    print("\nComplete status published to the RabbitMQ Exchange:", message)
+    return {
+        "code": 201,
+        "data": {"complete_data": message},
+        "message": "Order complete sent to activity log."
+    }
+
+    shipperID = info.shipperID
+    shipper_URL += '/'+shipperID
+    email_result = invoke_http(shipper_URL, method="GET", json=None)
+    if code in range(200, 300):
+        info_email_json = email_result["data"]
+        info_email = json.loads(info_email_json)
+        shipper_email = info_email.shipperEmail
+        # if error is thrown, append to err_msg
+    else:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "email": email_result
+                },
+                "message": "An error occurred while retrieving shipper email. "
+            }
+        ), 500
+
+    # 5. Email shipper
+    email_content = "This is to inform you that Tracking ID: " + \
+        tracking_id + " has been completed"
+
+    message = jsonify(
+        {
+            "toEmail": shipper_email,
+            "subject": "Order has been completed",
+            "msg": email_content
+        }
+    )
+
+    # Replace with this after AMQP has been set up
+
+    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
+    #         body=message)
+
+    # 5. Inform receiver
+    recipient = info.receiverPhone
+    msg = "[Camel Couriers] Your order " + tracking_id + " has been completed."
+    sms_message = jsonify(
+        {
+            "toPhone": recipient,
+            "content": msg
+        }
+    )
+    sms_status = invoke_http(sms_URL, method="POST", json=sms_message)
+    print(sms_status)
+
+    # 6. Return cancled order as a json object with codes
+    return order_result
+
+
+@app.route("/accept", methods=['PUT'])
+def accept():
+    # Invoke ORDER microservice to get tracking ID
+    # Invoke ACTIVITY microservice to create a new activity log
+    # Set delivery_desc to "on the way to pick up" -> driver input in UI
+    # Set delivery_status to "Awaiting Pick Up" -> driver input in UI
+    # Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice
+    # Simple check of input format and data of the request are JSON
+    return
 
 
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) + " for updating order...")
-    app.run(host="0.0.0.0", port=5008, debug=True)
+    app.run(host="0.0.0.0", port=5009, debug=True)

@@ -24,22 +24,22 @@ import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
-
+import json 
 import os, sys
 
 import requests
 from invokes import invoke_http
-import amqp_setup
+# import amqp_setup
 
 app = Flask(__name__)
 CORS(app)
 
 # [TO REPLACE] URLs to call
 order_URL = "http://localhost:5000/order"
-# activity_URL = "http://localhost:5001/activity"
+activity_URL = "http://localhost:5001/activity"
 shipper_URL = "http://localhost:5002/shipper"
-email_URL = "http://localhost:9000/email"
-sms_URL = "http://localhost:5566/update"
+# email_URL = "http://localhost:9000/email"
+# sms_URL = "http://localhost:5566/update"
 
 @app.route("/create_order", methods=['POST'])
 def place_order():
@@ -58,6 +58,7 @@ def place_order():
             order = request.get_json()
             print("\nReceived an order in JSON:", order)
             result = processCreateOrder(order)
+            result = invoke_http(order_URL, method='POST', json=order)
             return jsonify(result), result["code"]
 
         except Exception as e:
@@ -69,31 +70,30 @@ def place_order():
 
             return jsonify({
                 "code": 500,
-                "message": "place_order.py internal error: " + ex_str
+                "message": "create_order.py internal error: " + ex_str
             }), 500
 
-        # if reached here, not a JSON request.
-        return jsonify({
-            "code": 400,
-            "message": "Invalid JSON input: " + str(request.get_data())
-        }), 400
+    # if reached here, not a JSON request.
+    return jsonify({
+        "code": 400,
+        "message": "Invalid JSON input: " + str(request.get_data())
+    }), 400
 
 
 def processCreateOrder(order):
     # 1. Send the order info (all params) into order microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
+    print('\n---order---',order)
     order_result = invoke_http(order_URL, method='POST', json=order)
-    print('order_result:', order_result)
-        
+    print('order_result:', order_result)    
     # 2. Create order in activity log
         # create the activity log
     code=order_result["code"]
-    info_json=order_result['data']
-    info=json.loads(info_json)
-
-    tracking_id=info.trackingID
-
+    info=order_result["data"]
+    
+    tracking_id=info["trackingID"]
+    print('\n=============trackingID is: ',tracking_id)
     if code in range(200, 300):
         message = jsonify(
             {
@@ -116,32 +116,32 @@ def processCreateOrder(order):
     # 4. Retrieve shipper Email
     shipperID=info.shipperID
     shipper_URL+='/'+shipperID
-    email_result=invoke_http(shipper_URL, method="GET",json=None)            
-    if code in range(200, 300):
-        info_email_json=email_result["data"]
-        info_email=json.loads(info_email_json)
-        shipper_email=info_email.shipperEmail
-        # if error is thrown, append to err_msg
-    else:
-        return jsonify(
-            {
-                "code": 500,
-                "data":{
-                    "email":email_result
-                    },
-                "message": "An error occurred while retrieving shipper email. "
-            }
-        ), 500
-    # 5. Email shipper
-    email_content="This is to inform you that Tracking ID: " +tracking_id+" has been successfully created"
+    # email_result=invoke_http(shipper_URL, method="GET",json=None)            
+    # if code in range(200, 300):
+    #     info_email_json=email_result["data"]
+    #     info_email=json.loads(info_email_json)
+    #     shipper_email=info_email.shipperEmail
+    #     # if error is thrown, append to err_msg
+    # else:
+    #     return jsonify(
+    #         {
+    #             "code": 500,
+    #             "data":{
+    #                 "email":email_result
+    #                 },
+    #             "message": "An error occurred while retrieving shipper email. "
+    #         }
+    #     ), 500
+    # # 5. Email shipper
+    # email_content="This is to inform you that Tracking ID: " +tracking_id+" has been successfully created"
 
-    message=jsonify(
-        {
-            "toEmail":shipper_email,
-            "subject":"New order has been created",
-            "msg":email_content
-        }
-    )
+    # message=jsonify(
+    #     {
+    #         "toEmail":shipper_email,
+    #         "subject":"New order has been created",
+    #         "msg":email_content
+    #     }
+    # )
 
     # Replace with this after AMQP has been set up
 
@@ -158,9 +158,10 @@ def processCreateOrder(order):
             "content":msg
         }
     )
-    sms_status=invoke_http(sms_URL, method="POST", json=sms_message)
-
-    print(sms_status)
+    # sms_status=invoke_http(sms_URL, method="POST", json=sms_message)
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.sms", 
+            body=msg)
+    # print(sms_status)
     # 7. Return created order as a json object with codes
     return order_result
 
