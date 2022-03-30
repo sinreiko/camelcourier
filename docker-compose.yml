@@ -148,13 +148,13 @@ services:
             - "9000:9000"
     #Sms: 5566
     # sendgrid
-    # sendgrid:
-    #     build:
-    #         context: ./
-    #     image: sendgrid/sendgrid-python
-    #     restart: always
-    #     ports:
-    #         - "5011:5011"
+    sendgrid:
+        # build:
+        #     context: ./
+        image: sendgrid/sendgrid-python
+        restart: always
+        ports:
+            - "5011:5011"
     #rabbitmq
     # rabbitmq:
     #     image: rabbitmq:3-management-alpine
