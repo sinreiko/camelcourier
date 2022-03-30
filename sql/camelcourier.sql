@@ -184,6 +184,27 @@ INSERT INTO `droppoint` (`latitude`, `longitude`, `region`) VALUES
 (1.4363720994679852, 103.78683027012158, 'North');
 
 -- --------------------------------------------------------
+
+--
+-- Table structure for table `rate`
+--
+DROP TABLE IF EXISTS `rate`;
+CREATE TABLE `rate` (
+  `size` varchar(64) NOT NULL,
+  `priceperkm` float NOT NULL,
+  PRIMARY KEY(`size`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `rate`
+--
+
+INSERT INTO `rate` (`size`, `priceperkm`) VALUES
+('S', 1.0),
+('M', 2.0),
+('L', 3.0);
+
+-- --------------------------------------------------------
 --
 -- AUTO_INCREMENT for table `activity` and table `order`
 --
