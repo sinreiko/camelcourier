@@ -93,7 +93,18 @@ services:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
         ports:
             - "5002:5002"
-        #Rate: 5003
+    
+    #Rate: 5003
+    rate:
+        build:
+            context: ./
+            dockerfile: rate.Dockerfile
+        image: nicwongkw/rate:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+        ports:
+            - "5003:5003"
 
     #DropPoint: 5004
     droppoint:
