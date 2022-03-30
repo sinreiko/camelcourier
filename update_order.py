@@ -250,7 +250,7 @@ def completeOrder(order):
         ), 500
 
     # 5. Email shipper
-    email_content="This is to inform you that Tracking ID: " +tracking_id+" has been completed"
+    email_content="This is to inform you that Tracking ID: " + tracking_id + " has been completed"
 
     message=jsonify(
         {
@@ -267,7 +267,7 @@ def completeOrder(order):
     
     # 5. Inform receiver
     recipient = info.receiverPhone
-    msg="[Camel Couriers] Your order "+tracking_id+" has been completed."
+    msg="[Camel Couriers] Your order "+ tracking_id + " has been completed."
     sms_message=jsonify(
         {
             "toPhone":recipient,
