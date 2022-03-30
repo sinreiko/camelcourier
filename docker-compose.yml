@@ -52,12 +52,25 @@ services:
             dockerfile: activity.Dockerfile
         image: vasng/activity:1.0
         restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+            PYTHONUNBUFFERED: 1
+
+    #########################################################
+    # Activityhttp: The Activity Log Consumber microservice #
+    #########################################################
+    activityhttp:
+        build:
+            context: ./
+            dockerfile: activityhttp.Dockerfile
+        image: vasng/activityhttp:1.0
+        restart: always
         depends_on:
             - rabbitmq
         environment:
             rabbit_host: rabbitmq
             rabbit_port: 5672
-        PYTHONUNBUFFERED: 1
+            PYTHONUNBUFFERED: 1
 
     # activity:
     #     build:
@@ -140,13 +153,13 @@ services:
             - "9000:9000"
     #Sms: 5566
     # sendgrid
-    sendgrid:
-        build:
-            context: ./
-        image: sendgrid/sendgrid-python
-        restart: always
-        ports:
-            - "5011:5011"
+    # sendgrid:
+    #     build:
+    #         context: ./
+    #     image: sendgrid/sendgrid-python
+    #     restart: always
+    #     ports:
+    #         - "5011:5011"
     #rabbitmq
     # rabbitmq:
     #     image: rabbitmq:3-management-alpine
