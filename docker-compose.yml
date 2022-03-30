@@ -66,6 +66,7 @@ services:
         depends_on:
             - rabbitmq
         environment:
+            dbURL: 'mysql+mysqlconnector://is213@localhost:3306/camelDB'
             rabbit_host: rabbitmq
             rabbit_port: 5672
             PYTHONUNBUFFERED: 1
@@ -179,5 +180,5 @@ services:
     #         # HTTP management UI
     #         - '15672:15672'
 networks:
-  rabbitmq_go_net:
-    driver: bridge
+    rabbitmq_go_net:
+        driver: bridge
