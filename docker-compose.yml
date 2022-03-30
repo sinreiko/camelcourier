@@ -40,8 +40,6 @@ services:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
         ports:
             - "5000:5000"
-
-    
     #Activity: 5001
     #####################################################
     # Activity: The Activity Log Consumber microservice #
@@ -118,7 +116,7 @@ services:
         ports:
             - "5007:5007"
 
-        #UpdateDelivery: 5008
+    #update_order: 5008
     update_order:
         build:
             context: ./
@@ -134,10 +132,7 @@ services:
         #     - email
         ports:
             - "5008:5008"
-
-
-        #AcceptDelivery: 5009
-
+    #AcceptDelivery: 5009
     #Email: 9000
     email:
         build:
