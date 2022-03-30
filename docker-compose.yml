@@ -21,7 +21,7 @@ services:
         build:
             context: ./
             dockerfile: send_sms.Dockerfile
-        image: reikolee/send_sms:2.1
+        image: 889090/send_sms:2.1
         restart: always
         depends_on:
             - rabbitmq
@@ -37,7 +37,7 @@ services:
         build:
             context: ./
             dockerfile: order.Dockerfile
-        image: reikolee/order:1.0
+        image: 889090/order:1.0
         restart: always
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
@@ -51,7 +51,7 @@ services:
         build:
             context: ./
             dockerfile: activity.Dockerfile
-        image: reikolee/activity:1.0
+        image: 889090/activity:1.0
         restart: always
         depends_on:
             - rabbitmq
@@ -68,7 +68,7 @@ services:
         build:
             context: ./
             dockerfile: activityhttp.Dockerfile
-        image: reikolee/activityhttp:1.0
+        image: 889090/activityhttp:1.0
         restart: always
         environment:
             dbURL: 'mysql+mysqlconnector://is213@localhost:3306/camelDB'
@@ -79,7 +79,7 @@ services:
         build:
             context: ./
             dockerfile: shipper.Dockerfile
-        image: reikolee/shipper:1.0
+        image: 889090/shipper:1.0
         restart: always
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
@@ -91,7 +91,7 @@ services:
         build:
             context: ./
             dockerfile: rate.Dockerfile
-        image: nicwongkw/rate:1.0
+        image: 889090/rate:1.0
         restart: always
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
@@ -103,7 +103,7 @@ services:
         build:
             context: ./
             dockerfile: droppoint.Dockerfile
-        image: nicwongkw/droppoint:1.0
+        image: 889090/droppoint:1.0
         restart: always
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
@@ -119,7 +119,7 @@ services:
             context: ./
             # To add create_order.Dockerfile
             dockerfile: create_order.Dockerfile
-        image: reikolee/create_order:1.0
+        image: 889090/create_order:1.0
         restart: always
         depends_on:
             - activity
@@ -140,7 +140,7 @@ services:
             context: ./
             # To add create_order.Dockerfile
             dockerfile: update_order.Dockerfile
-        image: reikolee/update_order:1.0
+        image: 889090/update_order:1.0
         restart: always
         depends_on:
             - order
@@ -160,7 +160,7 @@ services:
             context: ./
             # To add create_order.Dockerfile
             dockerfile: email.Dockerfile
-        image: reikolee/email_test:1.0
+        image: 889090/email_test:1.0
         restart: always
         depends_on:
             - rabbitmq
