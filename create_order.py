@@ -29,7 +29,7 @@ import os, sys
 
 import requests
 from invokes import invoke_http
-# import amqp_setup
+import amqp_setup
 
 app = Flask(__name__)
 CORS(app)
@@ -145,8 +145,8 @@ def processCreateOrder(order):
 
     # Replace with this after AMQP has been set up
 
-    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email", 
-    #         body=message)
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email", 
+            body=message)
 
     # 6. Inform receiver
     recipient=info.receiverPhone
