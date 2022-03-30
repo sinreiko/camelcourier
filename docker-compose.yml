@@ -66,6 +66,7 @@ services:
         depends_on:
             - rabbitmq
         environment:
+            dbURL: 'mysql+mysqlconnector://is213@localhost:3306/camelDB'
             rabbit_host: rabbitmq
             rabbit_port: 5672
             PYTHONUNBUFFERED: 1
@@ -93,7 +94,19 @@ services:
         ports:
             - "5002:5002"
         #Rate: 5003
-        #DropPoint: 5004
+
+    #DropPoint: 5004
+    droppoint:
+        build:
+            context: ./
+            dockerfile: droppoint.Dockerfile
+        image: nicwongkw/droppoint:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+        ports:
+            - "5004:5004"
+
         #Valuing: 5005
         #PickParcel: 5006
     #Create Order: 5007
@@ -179,5 +192,5 @@ services:
     #         # HTTP management UI
     #         - '15672:15672'
 networks:
-  rabbitmq_go_net:
-    driver: bridge
+    rabbitmq_go_net:
+        driver: bridge
