@@ -94,7 +94,19 @@ services:
         ports:
             - "5002:5002"
         #Rate: 5003
-        #DropPoint: 5004
+
+    #DropPoint: 5004
+    droppoint:
+        build:
+            context: ./
+            dockerfile: droppoint.Dockerfile
+        image: nicwongkw/droppoint:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+        ports:
+            - "5004:5004"
+
         #Valuing: 5005
         #PickParcel: 5006
     #Create Order: 5007
