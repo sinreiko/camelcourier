@@ -17,10 +17,9 @@ CORS(app)
 
 # URL of all the simple microservices that you're contacting
 # #book_URL = "http://localhost:5000/book"
-# order_URL = environ.get('order_URL') or "http://localhost:5001/order"
-# shipping_record_URL = environ.get('shipping_record_URL') or "http://localhost:5002/shipping_record"
-# order_URL = environ.get('order_URL') or "http://localhost:5000/order"
-# shipper_URL = environ.get('shipper_URL') "http://localhost:5001/shipper"
+order_URL = "http://localhost:5000/order"
+activity_URL = "http://localhost:5001/activity"
+shipper_URL = "http://localhost:5002/shipper"
 
 
 @app.route("/delay", methods=['PUT'])
@@ -80,6 +79,8 @@ def delayOrder(order):
     info_json = order_result['data']
     info = json.loads(info_json)
 
+    tracking_id=info.trackingID
+
     # Invoke the activity microservice
     print('\n-----Invoking activity microservice-----')
     # order_result = json.dumps(order)
@@ -96,14 +97,10 @@ def delayOrder(order):
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="delay.order",
                                      body=json.dumps(message), properties=pika.BasicProperties(delivery_mode=2))
     print("\nDelay status published to the RabbitMQ Exchange:", message)
-    return {
-        "code": 201,
-        "data": {"delay_data": message},
-        "message": "Order delay sent to activity log."
-    }
 
+    # 4. Retrieve shipper Email and ID
     shipperID = info.shipperID
-    shipper_URL += '/'+shipperID
+    shipper_URL += '/' + shipperID
     email_result = invoke_http(shipper_URL, method="GET", json=None)
     if code in range(200, 300):
         info_email_json = email_result["data"]
@@ -122,8 +119,7 @@ def delayOrder(order):
         ), 500
 
     # 5. Email shipper
-    email_content = "This is to inform you that Tracking ID: " + \
-        tracking_id+" has been delayed"
+    email_content = "This is to inform you that Tracking ID: " + tracking_id +" has been delayed"
 
     message = jsonify(
         {
@@ -140,15 +136,15 @@ def delayOrder(order):
 
     # 5. Inform receiver
     recipient = info.receiverPhone
-    msg = "[Camel Couriers] Your order "+tracking_id+" has been delayed."
+    msg = "[Camel Couriers] Your order " + tracking_id + " has been delayed."
     sms_message = jsonify(
         {
             "toPhone": recipient,
             "content": msg
         }
     )
-    sms_status = invoke_http(sms_URL, method="POST", json=sms_message)
-    print(sms_status)
+    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
+    # body=message)
 
     # 6. Return cancled order as a json object with codes
     return order_result
@@ -203,6 +199,7 @@ def completeOrder(order):
     code = order_result["code"]
     info_json = order_result['data']
     info = json.loads(info_json)
+    tracking_id = info.tracking_id
 
     # Invoke the activity microservice
     print('\n-----Invoking activity microservice-----')
@@ -220,11 +217,6 @@ def completeOrder(order):
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="complete.order",
                                      body=json.dumps(message), properties=pika.BasicProperties(delivery_mode=2))
     print("\nComplete status published to the RabbitMQ Exchange:", message)
-    return {
-        "code": 201,
-        "data": {"complete_data": message},
-        "message": "Order complete sent to activity log."
-    }
 
     shipperID = info.shipperID
     shipper_URL += '/'+shipperID
@@ -271,8 +263,8 @@ def completeOrder(order):
             "content": msg
         }
     )
-    sms_status = invoke_http(sms_URL, method="POST", json=sms_message)
-    print(sms_status)
+    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
+    # body=message)
 
     # 6. Return cancled order as a json object with codes
     return order_result
