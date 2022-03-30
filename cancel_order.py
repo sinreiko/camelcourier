@@ -50,9 +50,9 @@ def cancel_order():
 
     if request.is_json:
         try:
-            order = request.get_json()
-            print("\nReceived an order in JSON:", order)
-            result = processCancelOrder(order)
+            trackingID = request.get_json()
+            print("\nReceived a tracking_id in JSON:", trackingID)
+            result = processCancelOrder(trackingID)
             return jsonify(result), result["code"]
 
         except Exception as e:
@@ -64,7 +64,7 @@ def cancel_order():
 
             return jsonify({
                 "code": 500,
-                "message": "place_order.py internal error: " + ex_str
+                "message": "cancel_order.py internal error: " + ex_str
             }), 500
 
         # if reached here, not a JSON request.
@@ -74,7 +74,7 @@ def cancel_order():
         }), 400
 
 
-def processCancelOrder(order):
+def processCancelOrder(trackingID):
     # 1. Send the order info (all params) into order microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
