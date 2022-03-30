@@ -21,11 +21,14 @@ services:
         build:
             context: ./
             dockerfile: send_sms.Dockerfile
-        image: reiko/send_sms:2.0
+        image: reikolee/send_sms:2.1
         restart: always
         depends_on:
             - rabbitmq
+            - activity
         environment:
+            rabbit_host: camel-rabbitmq
+            rabbit_port: 5672
             PYTHONUNBUFFERED: 1
         ports:
             - "5566:5566"
@@ -34,7 +37,7 @@ services:
         build:
             context: ./
             dockerfile: order.Dockerfile
-        image: pochien.lin/order:1.0
+        image: reikolee/order:1.0
         restart: always
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
@@ -48,9 +51,13 @@ services:
         build:
             context: ./
             dockerfile: activity.Dockerfile
-        image: vasng/activity:1.0
+        image: reikolee/activity:1.0
         restart: always
+        depends_on:
+            - rabbitmq
         environment:
+            rabbit_host: camel-rabbitmq
+            rabbit_port: 5672
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
             PYTHONUNBUFFERED: 1
 
@@ -61,33 +68,18 @@ services:
         build:
             context: ./
             dockerfile: activityhttp.Dockerfile
-        image: vasng/activityhttp:1.0
+        image: reikolee/activityhttp:1.0
         restart: always
-        depends_on:
-            - rabbitmq
         environment:
             dbURL: 'mysql+mysqlconnector://is213@localhost:3306/camelDB'
-            rabbit_host: rabbitmq
-            rabbit_port: 5672
             PYTHONUNBUFFERED: 1
-
-    # activity:
-    #     build:
-    #         context: ./
-    #         dockerfile: activity.Dockerfile
-    #     image: reiko/activity:1.0
-    #     restart: always
-    #     environment:
-    #         dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
-    #     ports:
-    #         - "5001:5001"
 
     #Shipper: 5002
     shipper:
         build:
             context: ./
             dockerfile: shipper.Dockerfile
-        image: pochien.lin/shipper:1.0
+        image: reikolee/shipper:1.0
         restart: always
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
@@ -104,7 +96,7 @@ services:
             context: ./
             # To add create_order.Dockerfile
             dockerfile: create_order.Dockerfile
-        image: pochienlin/create_order:1.0
+        image: reikolee/create_order:1.0
         restart: always
         depends_on:
             - activity
@@ -114,6 +106,9 @@ services:
             - email
             - rabbitmq
             - sendgrid
+        environment:
+            rabbit_host: camel-rabbitmq
+            rabbit_port: 5672
         ports:
             - "5007:5007"
 
@@ -123,14 +118,17 @@ services:
             context: ./
             # To add create_order.Dockerfile
             dockerfile: update_order.Dockerfile
-        image: 889090/update_order:1.0
+        image: reikolee/update_order:1.0
         restart: always
-        # depends_on:
-        #     - activity
-        #     - order
-        #     - shipper
-        #     - send_sms
-        #     - email
+        depends_on:
+            - order
+            - activity
+            - rabbitmq
+            - send_sms
+            - email
+        environment:
+            rabbit_host: camel-rabbitmq
+            rabbit_port: 5672
         ports:
             - "5008:5008"
     #AcceptDelivery: 5009
@@ -140,22 +138,25 @@ services:
             context: ./
             # To add create_order.Dockerfile
             dockerfile: email.Dockerfile
-        image: pochien.lin/email_test:1.0
+        image: reikolee/email_test:1.0
         restart: always
         depends_on:
-            - sendgrid
             - rabbitmq
+            - activity
+        environment:
+            rabbit_host: camel-rabbitmq
+            rabbit_port: 5672
         ports:
             - "9000:9000"
     #Sms: 5566
     # sendgrid
-    sendgrid:
-        # build:
-        #     context: ./
-        image: sendgrid/sendgrid-python
-        restart: always
-        ports:
-            - "5011:5011"
+    # sendgrid:
+    #     # build:
+    #     #     context: ./
+    #     image: sendgrid/sendgrid-python
+    #     restart: always
+    #     ports:
+    #         - "5011:5011"
     #rabbitmq
     # rabbitmq:
     #     image: rabbitmq:3-management-alpine

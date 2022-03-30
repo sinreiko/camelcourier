@@ -20,7 +20,7 @@ from sqlalchemy import null, func
 
 # ----------------
 app = Flask(__name__)
-aapp.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
     'dbURL') or 'mysql+mysqlconnector://root@localhost:3306/camelDB'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

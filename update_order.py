@@ -19,8 +19,8 @@ CORS(app)
 # #book_URL = "http://localhost:5000/book"
 # order_URL = environ.get('order_URL') or "http://localhost:5001/order"
 # shipping_record_URL = environ.get('shipping_record_URL') or "http://localhost:5002/shipping_record"
-order_URL = "http://localhost:5000/order"
-shipper_URL = "http://localhost:5001/shipper"
+# order_URL = environ.get('order_URL') or "http://localhost:5000/order"
+# shipper_URL = environ.get('shipper_URL') "http://localhost:5001/shipper"
 
 
 @app.route("/delay", methods=['PUT'])
