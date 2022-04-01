@@ -43,6 +43,7 @@ services:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
         ports:
             - "5000:5000"
+
     #Activity: 5001
     #####################################################
     # Activity: The Activity Log Consumber microservice #
@@ -111,7 +112,37 @@ services:
             - "5004:5004"
 
         #Valuing: 5005
-        #PickParcel: 5006
+    
+    #PickParcel: 5006
+    ###########################################################
+    # Pick Parcel: Picking parcel drop-off point microservice #
+    ###########################################################
+    pick_parcel:
+        build:
+            context: ./
+            dockerfile: pick_parcel.Dockerfile
+        image: 889090/pick_parcel:1.0
+        restart: always
+        depends_on:
+            - droppoint
+            - order
+            - shipper
+            - email
+            - activity
+            - rabbitmq
+        environment:
+            rabbit_host: camel-rabbitmq
+            rabbit_port: 5672
+            # Links to be updated
+            # order_URL: "http://order:5000/order"
+            # shipper_URL: "http://localhost:5002/shipper"
+            # droppoint_URL: "http://localhost:5004/droppoint"
+            # email_URL: "http://localhost:9000/email"
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5006:5006"
+
+
     #Create Order: 5007
 
     create_order:
