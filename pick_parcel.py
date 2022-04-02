@@ -75,10 +75,10 @@ def processPickup(pickup_details):
     # 1-- The microservice receives a dropoff point selected for the parcel with shipperID, trackingID, pickupAddress
     # 2-- The microservice then updates the order with the given trackingID with the pickupAddress.
 
-    tracking_id = pickup_details["data"]["trackingID"]
+    tracking_id = pickup_details["trackingID"]
 
     print('\n-----Invoking order microservice-----')
-    order_result = invoke_http(order_URL + "/" + tracking_id, method='PUT', json=pickup_details)
+    order_result = invoke_http(order_URL + "/" + str(tracking_id), method='PUT', json=pickup_details)
     print('order_result:', order_result)
 
     code = order_result["code"]
@@ -100,7 +100,7 @@ def processPickup(pickup_details):
         print('\n\n----- Succcess in updating order with pickupAddress')
         
     # 3-- Shipper's email is obtained through the Shipper microservice
-    shipper_result = invoke_http(shipper_URL + "/" + pickup_details["data"]["shipperID"], method='GET')
+    shipper_result = invoke_http(shipper_URL + "/" + str(pickup_details["shipperID"]), method='GET')
     print('shipper_result:', shipper_result)
     code = shipper_result["code"]
 
