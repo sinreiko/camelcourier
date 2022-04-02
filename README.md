@@ -24,18 +24,22 @@
 <br />
 <div align="center">
   <a href="https://github.com/sinreiko/camelcourier">
-    <h2 style=";font-size:40px">CamelCourier</p>
+    <img src="images/camel.png" alt="Logo" width="100" height="100">
   </a>
 
-<h3 align="center">CamelCourier</h3>
+<h2 align="center">CamelCourier</h3>
 
   <p align="center">
     <i>IS213 Enterprise Solution Development Project for Singapore Management University</i>
     <br />
-    CamelCourier is a courier company, similar to Ninja Van. This project is to build a courier service with various business scenarios/processes leveraging a microservices architecture rather than a monolithic one.
+    CamelCourier is a courier/logistics company, similar to Ninja Van. In this project, we are building a courier service with various relevant business scenarios/processes leveraging a microservices architecture rather than a monolithic one as well as other appropriate tools and technology.
     <br />
-    <a href="https://github.com/sinreiko/camelcourier"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/sinreiko/camelcourier"><strong>Explore GitHub Repository »</strong></a>
     <br />
+    <br />
+    <a href="https://docs.google.com/document/d/1oEI87EQHZk3OUR1rv38nPEV825Y1M5VQf3DGttq0Xgg/edit?usp=sharing">View API Documentation</a>
+    ·
+    <a href="https://docs.google.com/document/d/1dJoWSUa3_W_yBXOmVrcms0zxBURCweqW/edit?usp=sharing&ouid=103579897753241852301&rtpof=true&sd=true">View Report</a>
   </p>
 </div>
 
