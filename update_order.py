@@ -1,3 +1,4 @@
+from email import message
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -17,9 +18,9 @@ CORS(app)
 
 # URL of all the simple microservices that you're contacting
 # #book_URL = "http://localhost:5000/book"
-order_URL = "http://localhost:5000/order"
-activity_URL = "http://localhost:5001/activity"
-shipper_URL = "http://localhost:5002/shipper"
+order_URL = environ.get('order_URL') or "http://order:5000/order"
+# activity_URL = environ.get('activity_URL') or "http://activity:5001/activity"
+shipper_URL = environ.get('shipper_URL') or "http://shipper:5002/shipper"
 
 
 @app.route("/delay", methods=['POST'])
@@ -78,8 +79,7 @@ def delayOrder(order):
     # Invoke the activity microservice
     print('\n-----Invoking activity microservice-----')
     # order_result = json.dumps(order)
-    message = jsonify(
-        {
+    order_message={
             "code": 200,
             "data":{
                 "tracking_id": order['trackingID'],
@@ -87,11 +87,11 @@ def delayOrder(order):
                 "delivery_desc": "Order has been delayed by driver."
                 }
         }
-    )
+    msg=json.dumps(order_message)
     amqp_setup.check_setup()
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="delay.order",
-                                     body=message, properties=pika.BasicProperties(delivery_mode=2))
-    print("\nDelay status published to the RabbitMQ Exchange:", message)
+                                     body=msg, properties=pika.BasicProperties(delivery_mode=2))
+    print("\nDelay status published to the RabbitMQ Exchange:", msg)
 
     # 4. Retrieve shipper Email and ID
     shipperID = info["shipperID"]
@@ -116,14 +116,13 @@ def delayOrder(order):
     # 5. Email shipper
     email_content = "This is to inform you that Tracking ID: " + order["trackingID"] +" has been delayed"
 
-    email_message = jsonify(
-        {
+    email_msg = {
             "toEmail": shipper_email,
             "subject": "Order has been delayed",
-            "msg": email_content
+            "content": email_content
         }
-    )
-
+    
+    email_message=json.dumps(email_msg)
     # Replace with this after AMQP has been set up
 
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
@@ -132,12 +131,11 @@ def delayOrder(order):
     # 6. Inform receiver
     recipient = info["receiverPhone"]
     msg = "[Camel Couriers] Your order " + order["trackingID"] + " has been delayed."
-    sms_message = jsonify(
-        {
+    sms_msg ={
             "toPhone": recipient,
             "content": msg
         }
-    )
+    sms_message=json.dumps(sms_msg)
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.sms",
     body=sms_message)
 
@@ -238,13 +236,12 @@ def completeOrder(order):
     email_content = "This is to inform you that Tracking ID: " + \
         tracking_id + " has been completed"
 
-    email_message = jsonify(
-        {
+    email_msg ={
             "toEmail": shipper_email,
             "subject": "Order has been completed",
             "msg": email_content
         }
-    )
+    email_message=json.dumps(email_msg)
 
     # Replace with this after AMQP has been set up
 
