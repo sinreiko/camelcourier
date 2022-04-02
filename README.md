@@ -200,8 +200,13 @@ This is an example of how to list things you need to use the software and how to
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Vasilis - [@vasng](https://www.instagram.com/vasnjq/) - vasilis.ng.2020@scis.smu.edu.sg</br>
+Po Chien - [@handle](link here) - email here</br>
+Jun Hui - [@handle](link here) - email here</br>
+Nicholas - [@handle](link here) - email here</br>
+Reiko - [@handle](link here) - email here</br>
+Shao Ming - [@handle](link here) - email here</br>
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/sinreiko/camelcourier](https://github.com/sinreiko/camelcourier)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
