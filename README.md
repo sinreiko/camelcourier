@@ -61,6 +61,7 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#microservices">Microservices</a></li>
     <li><a href="#beyond-the-lab">Beyond The Lab</a></li>
+    <li><a href="#other-tasks">Other Tasks</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -171,6 +172,22 @@ This is an example of how to list things you need to use the software and how to
 | :white_large_square: | API Gateway | Vasilis | Implementing KONG/KONGA Gateway |
 | :white_large_square: | Facebook Login | Jun Hui | Implement Graph API |
 | :white_large_square: | Multiple Programming Language | Po Chien | Implement Drop Point MS in PHP |
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- Other Tasks -->
+## Other Tasks
+
+<!-- DONE - :white_check_mark: -->
+<!-- NOT DONE - :white_large_square: -->
+
+| Done | Name | Responsible | Description |
+|----|----|----|----|
+| :white_large_square: | Front End UI | Reiko | HTML, CSS, Javascript |
+| :white_large_square: | Consuming | Reiko | Connecting UI with Microservices |
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
