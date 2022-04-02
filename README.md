@@ -144,7 +144,8 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 | Finished | Name | File Name | Table Name | Dependencies |
 |----|----|----|----|----|
-|<ul><li>- [x]</li></ul> | Activity | activity.py | activity | NIL |
+| :white_check_mark: | Activity | activity.py | activity | NIL |
+| :white_large_square: | Activity | activity.py | activity | NIL |
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
