@@ -160,8 +160,8 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 | Done | Name | File Name | Author |  
 |----|----|----|----|
-| :white_large_square: | Cancel Delivery | cancel_order.py | Po Chien |
-| :white_check_mark: | Create Delivery | create_order.py | Jun Hui |
+| :white_large_square: | Cancel Delivery | cancel_order.py | Jun Hui |
+| :white_check_mark: | Create Delivery | create_order.py | Po Chien |
 | :white_check_mark: | Pick Parcel | pick_parcel.py | Vasilis |
 | :white_large_square: | Update Delivery | update_order.py | Shao Ming |
 | :white_large_square: | Valuing | ?? | Nicholas |
