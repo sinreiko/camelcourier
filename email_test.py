@@ -44,7 +44,7 @@ def sendEmailUpdate(request):
     # msg="Sending message is fun with Sendgrid!"
 
     sg = sendgrid.SendGridAPIClient(
-        api_key='')
+        api_key='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')
     # Change to your verified sender
     from_email = Email("camelcourier06@gmail.com")
     to_email = To(recipient)  # Change to your recipient

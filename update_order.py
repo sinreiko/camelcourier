@@ -22,21 +22,17 @@ activity_URL = "http://localhost:5001/activity"
 shipper_URL = "http://localhost:5002/shipper"
 
 
-@app.route("/delay", methods=['PUT'])
+@app.route("/delay", methods=['POST'])
 def delay():
-    # UI automatically sends JSON that contains shipperID, trackingID
-    # {
-    #    "shipper_id": "S000000000001",
-    #    "tracking_id": "FDKS09284023"
-    # }
-
+    '''
+        Taking in tracking ID from UI
+    '''
     # Invoke ACTIVITY microservice to
-    # 1. Retrieve trackingID from ORDER microservice
-    # 2. Set delivery_desc to "..." -> driver input in UI
-    # 3. Set delivery_status to "Delayed" -> automatic input from UI
-    # 4. Sent to activity_log
+    # 1. Set delivery_desc to "..." -> driver input in UI
+    # 2. Set delivery_status to "Delayed" -> automatic input from UI
+    # 3. Sent to activity_log
 
-    # invoke SHIPPER microservice after getting shipperId and shipperEmail
+    # invoke SHIPPER microservice to get shipperId and shipperEmail
     # Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
     # Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice\
     if request.is_json:
@@ -69,37 +65,36 @@ def delay():
 
 
 def delayOrder(order):
-    # 1. Send the order info (all params) into order microservice
+    # 1. Get tracking id from order microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    order_result = invoke_http(order_URL, method='POST', json=order)
+    tracking_URL = order_URL + '/' + order["trackingID"]
+    order_result = invoke_http(tracking_URL, method='GET', json=None)
     print('order_result:', order_result)
 
     code = order_result["code"]
-    info_json = order_result['data']
-    info = json.loads(info_json)
-
-    tracking_id=info.trackingID
+    info = order_result["data"]
 
     # Invoke the activity microservice
     print('\n-----Invoking activity microservice-----')
     # order_result = json.dumps(order)
-    message = {
-        "code": 200,
-        "data": {
-            "tracking_id": order['tracking_id'],
-            "delivery_status": "Delayed",
-            "delivery_desc": "Order has been delayed by driver."
+    message = jsonify(
+        {
+            "code": 200,
+            "data":{
+                "tracking_id": order['trackingID'],
+                "delivery_status": "Delayed",
+                "delivery_desc": "Order has been delayed by driver."
+                }
         }
-    }
-    print(message)
+    )
     amqp_setup.check_setup()
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="delay.order",
-                                     body=json.dumps(message), properties=pika.BasicProperties(delivery_mode=2))
+                                     body=message, properties=pika.BasicProperties(delivery_mode=2))
     print("\nDelay status published to the RabbitMQ Exchange:", message)
 
     # 4. Retrieve shipper Email and ID
-    shipperID = info.shipperID
+    shipperID = info["shipperID"]
     shipper_URL += '/' + shipperID
     email_result = invoke_http(shipper_URL, method="GET", json=None)
     if code in range(200, 300):
@@ -119,9 +114,9 @@ def delayOrder(order):
         ), 500
 
     # 5. Email shipper
-    email_content = "This is to inform you that Tracking ID: " + tracking_id +" has been delayed"
+    email_content = "This is to inform you that Tracking ID: " + order["trackingID"] +" has been delayed"
 
-    message = jsonify(
+    email_message = jsonify(
         {
             "toEmail": shipper_email,
             "subject": "Order has been delayed",
@@ -131,26 +126,28 @@ def delayOrder(order):
 
     # Replace with this after AMQP has been set up
 
-    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
-    #         body=message)
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
+    body=email_message)
 
-    # 5. Inform receiver
-    recipient = info.receiverPhone
-    msg = "[Camel Couriers] Your order " + tracking_id + " has been delayed."
+    # 6. Inform receiver
+    recipient = info["receiverPhone"]
+    msg = "[Camel Couriers] Your order " + order["trackingID"] + " has been delayed."
     sms_message = jsonify(
         {
             "toPhone": recipient,
             "content": msg
         }
     )
-    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
-    # body=message)
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.sms",
+    body=sms_message)
 
     # 6. Return cancled order as a json object with codes
     return order_result
 
 
-@app.route("/complete", methods=['PUT'])
+
+
+@app.route("/complete", methods=['POST'])
 def complete():
     # invoke ORDER microservice to get its shipperID, trackingID
     # invoke ACTIVITY microservice to
@@ -241,7 +238,7 @@ def completeOrder(order):
     email_content = "This is to inform you that Tracking ID: " + \
         tracking_id + " has been completed"
 
-    message = jsonify(
+    email_message = jsonify(
         {
             "toEmail": shipper_email,
             "subject": "Order has been completed",
@@ -251,8 +248,8 @@ def completeOrder(order):
 
     # Replace with this after AMQP has been set up
 
-    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
-    #         body=message)
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
+    body=email_message)
 
     # 5. Inform receiver
     recipient = info.receiverPhone
@@ -263,8 +260,9 @@ def completeOrder(order):
             "content": msg
         }
     )
-    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
-    # body=message)
+
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.sms",
+    body=sms_message)
 
     # 6. Return cancled order as a json object with codes
     return order_result
