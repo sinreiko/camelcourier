@@ -142,9 +142,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <br/>
 <u><b>Atomic/Simple Microservices</b></u>
 
-| Done? | Name | File Name | Table Name | Dependencies |
+| Finished | Name | File Name | Table Name | Dependencies |
 |----|----|----|----|----|
-| [X] | Activity | activity.py | activity | NIL |
+|<ul><li>[x] item1</li></ul> | Activity | activity.py | activity | NIL |
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
