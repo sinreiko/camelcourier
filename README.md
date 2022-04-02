@@ -60,6 +60,7 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#microservices">Microservices</a></li>
+    <li><a href="#beyond-the-lab">Beyond The Lab</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -126,17 +127,6 @@ This is an example of how to list things you need to use the software and how to
 
 
 
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
 <!-- MICROSERVICES/TRACKING SHEET -->
 ## Microservices
 
@@ -165,6 +155,23 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 | :white_check_mark: | Pick Parcel | pick_parcel.py | Vasilis |
 | :white_large_square: | Update Delivery | update_order.py | Shao Ming |
 | :white_large_square: | Valuing | ?? | Nicholas |
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- BEYOND THE LAB -->
+## Beyond The Lab
+
+<!-- DONE - :white_check_mark: -->
+<!-- NOT DONE - :white_large_square: -->
+
+| Done | Name | Responsible | Description |
+|----|----|----|----|
+| :white_large_square: | Multiple Programming Language | Po Chien | Implement Drop Point MS in PHP |
+| :white_large_square: | API Gateway | Vasilis | Implementing KONG/KONGA Gateway |
+| :white_large_square: | Facebook Login | Jun Hui | Implement Graph API |
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
