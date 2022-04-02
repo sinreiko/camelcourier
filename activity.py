@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # activity log service
 
-
 # for database
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
