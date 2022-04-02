@@ -142,10 +142,19 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <br/>
 <u><b>Atomic/Simple Microservices</b></u>
 
-| Finished | Name | File Name | Table Name | Dependencies |
+<!-- DONE - :white_check_mark: -->
+<!-- NOT DONE - :white_large_square: -->
+
+| Done | Name | File Name | Table Name | Author |  
 |----|----|----|----|----|
-| :white_check_mark: | Activity | activity.py | activity | NIL |
-| :white_large_square: | Activity | activity.py | activity | NIL |
+| :white_check_mark: | Activity | activity.py | activity | Vasilis |
+| :white_check_mark: | Activity HTTP | activityhttp.py | activity | Vasilis |
+| :white_large_square: | Drop Point | droppoint.py | droppoint | Nicholas |
+| :white_check_mark: | Email | email_test.py | - | Shao Ming |
+| :white_check_mark: | Order | order.py | order | Po Chien |
+| :white_large_square: | Rates | rate.py | rate | Nicholas |
+| :white_large_square: | Shipper | shipper.py | shipper | Jun Hui |
+| :white_large_square: | SMS | send_sms.py | - | Shao Ming |
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
