@@ -134,8 +134,8 @@ services:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
             # Links to be updated
-            # order_URL: "http://order:5000/order"
-            # shipper_URL: "http://localhost:5002/shipper"
+            order_URL: "http://order:5000/order"
+            shipper_URL: "http://localhost:5002/shipper"
             # droppoint_URL: "http://localhost:5004/droppoint"
             # email_URL: "http://localhost:9000/email"
             PYTHONUNBUFFERED: 1
