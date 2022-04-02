@@ -21,7 +21,7 @@ from sqlalchemy import null, func
 # ----------------
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
-    'dbURL') or 'mysql+mysqlconnector://root@localhost:3306/camelDB'
+    'dbURL') or 'mysql+mysqlconnector://root:root@localhost:3306/camelDB'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -218,8 +218,8 @@ def create_order():
     # [TESTED] This path updates the pickup address of a given order.
 
 
-@app.route("/order/update", methods=['PUT'])
-def update_order():
+@app.route("/order/<string:trackingID>", methods=['PUT'])
+def update_order(trackingID):
     '''
         This function finds the order query, changes the pickupAddress and commits to db using ORM to update the row entry
         SQL equivalent: UPDATE order SET pickupAddress = [USER_INPUT] WHERE trackingID = [USER_INPUT]
@@ -230,12 +230,12 @@ def update_order():
     # order.pickupAddress = pickupAddress
 # Inquire which type of update the user attempts to make
     info_json = request.json
-    trackingID = info_json.get("trackingID")
     if ("driverID" in info_json):
         driverID = info_json.get("driverID")
         order = Order.query.filter_by(trackingID=trackingID).first()
         order.driverID = driverID
-    else:
+    
+    if("pickupAddress" in info_json):
         pickupAddress = info_json.get("pickupAddress")
         order = Order.query.filter_by(trackingID=trackingID).first()
         order.pickupAddress = pickupAddress

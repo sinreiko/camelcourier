@@ -49,7 +49,7 @@ class Activity(db.Model):
 
 
 #### Receiving Activity Log ####
-monitorBindingKey = "#.order"
+monitorBindingKey = "*.order"
 
 
 def receiveActivity():

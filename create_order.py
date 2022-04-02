@@ -29,14 +29,15 @@ import os, sys
 
 import requests
 from invokes import invoke_http
-import amqp_setup
+# import amqp_setup
+import pika
 
 app = Flask(__name__)
 CORS(app)
 
 # [TO REPLACE] URLs to call
 order_URL = "http://localhost:5000/order"
-activity_URL = "http://localhost:5001/activity"
+# activity_URL = "http://localhost:5001/activity"
 shipper_URL = "http://localhost:5002/shipper"
 # email_URL = "http://localhost:9000/email"
 # sms_URL = "http://localhost:5566/update"
@@ -107,60 +108,62 @@ def processCreateOrder(order):
                     }
             }
         )
-        print('\n\n-----Publishing the (order info) message with routing_key=order.info-----')        
-        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.order", 
-            body=message)
+        print('\n\n-----Publishing the (order info) message with routing_key=order.info-----')   
+        print("\n========= message check =========\n",message)    
+        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename,
+                routing_key="new.order", body=message, properties=pika.BasicProperties(delivery_mode = 2))
+
         print("\nOrder published to RabbitMQ Exchange.\n")
     else:
         print('\nFailed to create order')
     # 4. Retrieve shipper Email
-    shipperID=info.shipperID
-    shipper_URL+='/'+shipperID
-    # email_result=invoke_http(shipper_URL, method="GET",json=None)            
-    # if code in range(200, 300):
-    #     info_email_json=email_result["data"]
-    #     info_email=json.loads(info_email_json)
-    #     shipper_email=info_email.shipperEmail
-    #     # if error is thrown, append to err_msg
-    # else:
-    #     return jsonify(
-    #         {
-    #             "code": 500,
-    #             "data":{
-    #                 "email":email_result
-    #                 },
-    #             "message": "An error occurred while retrieving shipper email. "
-    #         }
-    #     ), 500
+    shipperID=info["shipperID"]
+    shipperURL=shipper_URL+'/'+str(shipperID)
+    shipper_result=invoke_http(shipperURL, method="GET",json=None)
+    code=shipper_result["code"]  
+    print("\n========shipper result code is: =======\n",code) 
+    if code in range(200, 300):
+        shipper=shipper_result["data"]
+        print("\n========shipper result data is: =======\n",shipper_result['data'])  
+        shipper_email=shipper["shipperEmail"]
+        email_content="This is to inform you that Tracking ID: " +str(tracking_id)+" has been successfully created"
+    else:
+        return jsonify(
+            {
+                "code": 500,
+                "data":{
+                    "email":shipper_result
+                    },
+                "message": "An error occurred while retrieving shipper email. "
+            }
+        ), 500
     # # 5. Email shipper
-    # email_content="This is to inform you that Tracking ID: " +tracking_id+" has been successfully created"
 
-    # message=jsonify(
-    #     {
-    #         "toEmail":shipper_email,
-    #         "subject":"New order has been created",
-    #         "msg":email_content
-    #     }
-    # )
-
-    # Replace with this after AMQP has been set up
-
+    message=jsonify(
+        {
+            "toEmail":shipper_email,
+            "subject":"New order has been created",
+            "msg":email_content
+        }
+    )
+    print("\n====email message=====\n",message)
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email", 
             body=message)
-
+    print("\n----- email microservice end ------")
     # 6. Inform receiver
-    recipient=info.receiverPhone
-    msg="[Camel Couriers] Your order "+tracking_id+" has been created."
+    recipient=info["receiverPhone"]
+    msg="[Camel Couriers] Your order "+str(tracking_id)+" has been created."
 
-    sms_message=jsonify(
+    sms_msg=jsonify(
         {
             "toPhone":recipient,
             "content":msg
         }
     )
+    print("\n=====sms_msg: ========\n",sms_msg)
     # sms_status=invoke_http(sms_URL, method="POST", json=sms_message)
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.sms", 
-            body=msg)
+            body=sms_msg)
     # print(sms_status)
     # 7. Return created order as a json object with codes
     return order_result
