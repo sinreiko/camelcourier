@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # activity log service
 
-
 # for database
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -50,7 +49,7 @@ class Activity(db.Model):
 
 
 #### Receiving Activity Log ####
-monitorBindingKey = "#.order"
+monitorBindingKey = "*.order"
 
 
 def receiveActivity():
@@ -79,7 +78,7 @@ def processActivity(activity):
     data = activity["data"]
 
     # Creating new row in db
-    if activity['code'] == 201:
+    if activity['code'] in range(200,300):
         activityr = Activity(trackingID=data['tracking_id'],
                              deliveryStatus=data['delivery_status'],
                              deliveryDesc=data['delivery_desc'])
