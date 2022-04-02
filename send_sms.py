@@ -38,7 +38,7 @@ def sendClientUpdate(req):
     # Your Account SID from twilio.com/console
     account_sid = "AC872941965f08ba52b89f8698deae23ab"
     # Your Auth Token from twilio.com/console
-    auth_token = "b01281d78fe392ab1130cb00745eeef9"
+    auth_token = "5dbd8dbd97b0aceab93de491485f3ca7"
 
     client = Client(account_sid, auth_token)
 
