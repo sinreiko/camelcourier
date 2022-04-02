@@ -1,6 +1,6 @@
-## API used and paths
+<!-- ## API used and paths -->
 <!-- ### Microservices -->
-| Microservice name | Source | Related files |
+<!-- | Microservice name | Source | Related files |
 |----|----|----
 | Order | Self coded | test_order.py, createOrderTest.sql |
 
@@ -15,7 +15,7 @@
 | File Name | Description | Author |
 |-----|----|----|
 | test_order.py | prototype for the Order microservice | Po Chien |
-| createOrderTest.sql | test data for test_order.py | Po Chien |
+| createOrderTest.sql | test data for test_order.py | Po Chien | -->
 
 
 
