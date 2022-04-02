@@ -168,10 +168,9 @@ This is an example of how to list things you need to use the software and how to
 
 | Done | Name | Responsible | Description |
 |----|----|----|----|
-| :white_large_square: | Multiple Programming Language | Po Chien | Implement Drop Point MS in PHP |
 | :white_large_square: | API Gateway | Vasilis | Implementing KONG/KONGA Gateway |
 | :white_large_square: | Facebook Login | Jun Hui | Implement Graph API |
-
+| :white_large_square: | Multiple Programming Language | Po Chien | Implement Drop Point MS in PHP |
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
