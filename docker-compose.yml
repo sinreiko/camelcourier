@@ -148,7 +148,6 @@ services:
     create_order:
         build:
             context: ./
-            # To add create_order.Dockerfile
             dockerfile: create_order.Dockerfile
         image: 889090/create_order:1.0
         restart: always
@@ -162,6 +161,9 @@ services:
         environment:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
+            book_URL: http://order:5000/order
+            shipper_URL: http://shipper:5002/shipper
+            PYTHONUNBUFFERED: 1
         ports:
             - "5007:5007"
 

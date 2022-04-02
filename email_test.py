@@ -4,7 +4,7 @@ from sendgrid.helpers.mail import Mail, Email, To, Content
 import json
 import amqp_setup
 
-monitorBindingKey = "#.email"
+monitorBindingKey = "*.email"
 
 
 def receiveEmail():

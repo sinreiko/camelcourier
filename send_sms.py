@@ -4,7 +4,7 @@ import requests
 import os
 import amqp_setup
 
-monitorBindingKey = "#.sms"
+monitorBindingKey = "*.sms"
 
 
 def receiveSMS():
