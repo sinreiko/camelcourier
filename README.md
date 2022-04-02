@@ -1,12 +1,7 @@
-# Camel Couriers - Documentation
-
-## Overview
-Camel Couriers is a courier company, similar to Ninja Van. This git hosts an enterprise solution to this hypothetical company 
-
 ## API used and paths
-### Microservices
+<!-- ### Microservices -->
 | Microservice name | Source | Related files |
-|----|----|----|
+|----|----|----
 | Order | Self coded | test_order.py, createOrderTest.sql |
 
 ### Paths and descriptions
@@ -37,6 +32,8 @@ Camel Couriers is a courier company, similar to Ninja Van. This git hosts an ent
   <p align="center">
     <i>IS213 Enterprise Solution Development Project for Singapore Management University</i>
     <br />
+    CamelCourier is a courier company, similar to Ninja Van. This project is to build a courier service with various business scenarios/processes leveraging a microservices architecture rather than a monolithic one.
+    <br />
     <a href="https://github.com/sinreiko/camelcourier"><strong>Explore the docs »</strong></a>
     <br />
   </p>
@@ -62,7 +59,7 @@ Camel Couriers is a courier company, similar to Ninja Van. This git hosts an ent
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#microservices">Microservices</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -140,15 +137,15 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 
 
-<!-- ROADMAP -->
-## Roadmap
+<!-- MICROSERVICES/TRACKING SHEET -->
+## Microservices
+<br/>
+<u><b>Atomic/Simple Microservices</b></u>
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+| Done? | Name | File Name | Table Name | Dependencies |
+|----|----|----|----|----|
+| [X] | Activity | activity.py | activity | NIL |
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
