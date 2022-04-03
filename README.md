@@ -148,7 +148,7 @@ This is an example of how to list things you need to use the software and how to
 | :white_check_mark: | Email | email_test.py | - | Shao Ming |
 | :white_check_mark: | Order | order.py | order | Po Chien |
 | :white_large_square: | Rates | rate.py | rate | Nicholas |
-| :white_large_square: | Shipper | shipper.py | shipper | Jun Hui |
+| :white_check_mark: | Shipper | shipper.py | shipper | Jun Hui |
 | :white_large_square: | SMS | send_sms.py | - | Shao Ming |
 
 <u><b>Composite/Complex Microservices</b></u>
