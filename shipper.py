@@ -105,8 +105,6 @@ def get_all():
 #           A P I   F U N C T I O N S
     # -----------
     # find_by_shipperID(): fulfills app route /shipper/<shipperID> to return information of a given shipper ID with method GET
-    # create_shipper(): fulfills app route /shipper to add a new shipper, generate a shipperID and assign a shipper with method POST
-    # update_order(): fulfills app route /order/update to update the pickupAddress of an entry given a trackingID with method PUT
     # -----------
 
 # ----------------------------------
@@ -135,49 +133,6 @@ def find_by_shipperID(shipperID):
     ), 404
 
     # ---------------[END: find_by_shipperID]-------------------
-
-    # ----------------[START: create_shipper]------------------
-# [TESTED] This URL adds a new shipper into the db.
-
-@app.route("/shipper/<string:shipperID>", methods=['POST'])
-def create_shipper(shipperID):
-    if (Shipper.query.filter_by(shipperID=shipperID).first()):
-        return jsonify(
-            {
-                "code": 400,
-                "data": {
-                    "shipperID": shipperID
-                },
-                "message": "Shipper already exists in the database."
-            }
-        ), 400
-
-    data = request.get_json()
-    shipper = Shipper(shipperID, **data)
-
-    try:
-        db.session.add(shipper)
-        status = db.session.commit()
-        print(status)
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "data": {
-                    "shipperID": shipperID
-                },
-                "message": "An error occurred creating the shipper account entry."
-            }
-        ), 500
-
-    return jsonify(
-        {
-            "code": 201,
-            "data": shipper.json()
-        }
-    ), 201
-
-    # ----------------[END: create_shipper]------------------
 
 # ===========================================
 
