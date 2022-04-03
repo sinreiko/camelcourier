@@ -60,7 +60,7 @@ def request_price():
 
             return jsonify({
                 "code": 500,
-                "message": "create_order.py internal error: " + ex_str
+                "message": "valuing.py internal error: " + ex_str
             }), 500
 
     # if reached here, not a JSON request.
