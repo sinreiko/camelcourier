@@ -74,7 +74,8 @@ services:
         environment:
             dbURL: 'mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB'
             PYTHONUNBUFFERED: 1
-
+        ports:
+            - "5001:5001"
     #Shipper: 5002
     shipper:
         build:
@@ -251,35 +252,36 @@ services:
     #         - '5672:5672'
     #         # HTTP management UI
     #         - '15672:15672'
-    phpDB:
-        image: mysql:8.0.0
-        container_name: mysql8
-        environment:
-        MYSQL_DATABASE: camelDB
-        MYSQL_USER: is213
-        volumes:
-            - datafiles:/var/lib/mysql
-        restart: always
-        ports:
-            - "9906:3306"
+    # phpDB:
+    #     image: mysql:8.0.0
+    #     container_name: mysql8
+    #     environment:
+    #     MYSQL_DATABASE: camelDB
+    #     MYSQL_USER: is213
+    #     volumes:
+    #         - datafiles:/var/lib/mysql
+    #     restart: always
+    #     ports:
+    #         - "9906:3306"
 
-    droppoint_php:
-        container_name: droppointphp
-        build:
-        context: .
-        dockerfile: camelcourier/droppointPHP.Dockerfile
-        environment:
-            - MYSQL_DBHOST=phpDB
-            - MYSQL_DBPORT=3306
-            - MYSQL_DBUSER=is213
-            - MYSQL_DBNAME=camelDB
-        ports:
-            - 8080:80
-            - 8083:443
-        depends_on:
-            - phpDB
-        stdin_open: true
-        tty: true
+    # droppoint_php:
+    #     container_name: droppointphp
+    #     build:
+    #     context: .
+    #     dockerfile: camelcourier/droppointPHP.Dockerfile
+    #     environment:
+    #         - MYSQL_DBHOST=phpDB
+    #         - MYSQL_DBPORT=3306
+    #         - MYSQL_DBUSER=is213
+    #         - MYSQL_DBNAME=camelDB
+    #     ports:
+    #         - 8080:80
+    #         - 8083:443
+    #     depends_on:
+    #         - phpDB
+    #     stdin_open: true
+    #     tty: true
+    
 networks:
     rabbitmq_go_net:
         driver: bridge

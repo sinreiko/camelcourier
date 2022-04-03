@@ -1,90 +1,124 @@
-const get_order_URL = "http://localhost:5000/order"
+const get_order_URL = "http://localhost:5000"
 const get_activity_URL = "http://localhost:5001/activity"
 const get_shipper_URL = "http://localhost:5002/shipper"
 const get_rate_URL = "http://localhost:5003/rate"
 const get_droppoint_URL = "http://localhost:5004/droppoint"
 const valuing_URL = "http://localhost:5005/valuing"
 const pick_parcel_URL = "http://localhost:5006/pickparcel"
-const create_delivery_URL = "http://localhost:5007/createdelivery"
+const create_order_URL = "http://localhost:5007/create_order"
 const update_delivery_URL = "http://localhost:5008/update"
 const accept_delivery_URL = "http://localhost:5000/accept"
-
-// #Order: 5000
-// #Activity: 5001
-// #Shipper: 5002
-// #Rate: 5003
-// #DropPoint: 5004
-// #Valuing: 5005
-// #PickParcel: 5006
-// #CreateDelivery: 5007
-// #UpdateDelivery: 5008
-// #AcceptDelivery: 5009
-// #Email: 9000
-// #Sms: 5566
 
 const app = Vue.createApp({
     data(){
         return {
             userName: localStorage.getItem("userName"),
             userType: localStorage.getItem("userType"),
-            inputTracking: "",
-            trackingResult: [],
+            trackingResult: {
+                tracking_id: '',
+                latest_status: '',
+                latest_timestamp: '',
+                progress: '',
+                activities: []
+            },
             userDetail: JSON.parse(localStorage.getItem("userDetail")),
             dropOff: "",
-            dropPoints:{},
+            dropPoints:[],
+            orderCreation:{
+                //shipper
+                shipperPostal: "",
+                shipperAddress: "",
+                shipperUnit:"",
+                shipperName: "",
+                shipperEmail: "",
+                shipperPhone: "",
+                //receiver
+                receiverAddress: "",
+                receiverUnit: "",
+                receiverPostal: "",
+                receiverName: "",
+                receiverEmail: "",
+                receiverPhone: "",
+                //others
+                dropOffOption: "custom", //custom or dropPoint
+                weight: "",
+                price: "3.00",
+            },
+            inputTracking: "",
+            orderList:[],
+            fetchResults:{
+                orderCreation: false,
+            },
+            errorMessages:{
+                orderCreation: "",
+            }
         };
     },
-    computed: {
-        calculateProgress: function(status){
-            if (status == 'Order Created'){
+    methods: {
+        calculateProgress(status){
+            if (status == 'Order created'){
                 return 10
-            } else if (status == 'Picked up' || status == 'Delayed'){
+            } else if (status == 'Pickup' || status == 'Delayed'){
                 return 50
             } else if (status == 'Completed'){
                 return 100
             }
         },
-    },
-    methods: {
-        trackParcel(){
-            var tracking_arr = []
-            if (this.inputTracking != ""){
-                if (this.inputTracking.includes(",")){
-                    tracking_arr = this.inputTracking.split(",")
-                } else if (this.inputTracking.includes(" ")){
-                    tracking_arr = this.inputTracking.split(" ")
-                } else {
-                    tracking_arr.push(this.inputTracking);
-                }
-                console.log(tracking_arr);
-                const response =
-                fetch(`${get_activity_URL}/${tracking_arr}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.code === 404) {
-                        // no book in db
-                        this.message = data.message;
-                    } else {
-                        res = data.data;
-                        console.log(res[res.length - 1]);
-                        latestStatus = res[res.length - 1].delivery_status;
-                        this.trackingResult.push({
-                            tracking_id: res.tracking_id,
-                            latest_status: latestStatus,
-                            progress: this.calculateProgress(latestStatus),
-                            activities: res
-                        });
-                    }
-                })
-                .catch(error => {
-                    // Errors when calling the service; such as network error, 
-                    // service offline, etc
-                    console.log(this.message + error);
-
-                    });
+        trackParcel(tracking){
+            // var tracking_arr = []
+            // if (this.inputTracking != ""){
+            //     if (this.inputTracking.includes(",")){
+            //         tracking_arr = this.inputTracking.split(",")
+            //     } else if (this.inputTracking.includes(" ")){
+            //         tracking_arr = this.inputTracking.split(" ")
+            //     } else {
+            //         tracking_arr.push(this.inputTracking);
+            //     }
+            var real_tracking = ''
+            if (tracking != ''){
+                real_tracking = tracking
             } else {
-                alert("Please insert a tracking number.")
+                real_tracking = this.inputTracking
             }
+            const response =
+            fetch(`${get_activity_URL}/${real_tracking}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 404) {
+                    // no book in db
+                    this.message = data.message;
+                } else {
+                    res = data.data;
+                    // console.log(res);
+                    // console.log(res[res.length - 1]);
+                    
+                    latestStatus = res[res.length - 1].delivery_status;
+                    latestTimestamp = res[res.length - 1].timestamp;
+                    // this.trackingResult.push({
+                    //     tracking_id: res[0].tracking_id,
+                    //     latest_status: latestStatus,
+                    //     progress: this.calculateProgress(latestStatus),
+                    //     activities: res
+                    // });
+                    this.trackingResult = {
+                        tracking_id: real_tracking,
+                        latest_status: latestStatus,
+                        latest_timestamp: latestTimestamp,
+                        progress: this.calculateProgress(latestStatus),
+                        activities: res
+                    };
+                    console.log(this.trackingResult);
+                }
+            })
+            .catch(error => {
+                // Errors when calling the service; such as network error, 
+                // service offline, etc
+                // console.log(this.message + error);
+
+            });
+            // } else {
+            //     alert("Please insert a tracking number.")
+            // }
             
         },
         updateUser(e){
@@ -181,6 +215,7 @@ const app = Vue.createApp({
             });
 
             $(".submit").click(function () {
+                this.createOrder();
                 return false;
             })
         },
@@ -193,8 +228,10 @@ const app = Vue.createApp({
                         // no book in db
                         this.message = data.message;
                     } else {
-                        res = data.data;
-                        console.log(res)
+                        res = data.data.droppoints;
+                        console.log(res.latitude)
+                        this.dropPoints.push(res);
+                        console.log(this.dropPoints);
                     }
                 })
                 .catch(error => {
@@ -203,11 +240,158 @@ const app = Vue.createApp({
                     console.log(this.message + error);
 
                 });
-        }
+        },
+        getPickUpAddress(pickup){
+            this.orderCreation.shipperPostal = pickup.shipperPostal;
+            this.orderCreation.shipperAddress = pickup.shipperAddress;
+            this.orderCreation.shipperName = this.userName;
+            this.orderCreation.shipperEmail = this.userDetail.shipperEmail;
+            this.orderCreation.shipperPhone = this.userDetail.shipperPhone;
+            // console.log(JSON.stringify(this.orderCreation));
+        },
+        getDropOffAddress(dropoff){
+            this.orderCreation.receiverPostal = dropoff.receiverPostal;
+            this.orderCreation.receiverAddress = dropoff.receiverAddress;
+            // console.log(JSON.stringify(this.orderCreation));
+
+        },
+        getPrice(){
+            // const response =
+            //     fetch(`${valuing_URL}`)
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         if (data.code === 404) {
+            //             // no book in db
+            //             this.message = data.message;
+            //         } else {
+            //             res = data.data.droppoints;
+            //             console.log(res.latitude)
+            //             this.dropPoints.push(res);
+            //             console.log(this.dropPoints);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         // Errors when calling the service; such as network error, 
+            //         // service offline, etc
+            //         console.log(this.message + error);
+
+            //     });
+        },
+        createOrder(){
+            this.fetchResults.orderCreation = false;
+            this.errorMessages.orderCreation = "";
+
+            let jsonData = JSON.stringify({
+                shipperID: this.userDetail.shipperID, //shipperID
+                receiverName: this.orderCreation.receiverName,
+                receiverAddress: this.orderCreation.receiverUnit + " " + this.orderCreation.receiverAddress + " " + this.orderCreation.receiverPostal,
+                receiverPhone: "+65" + this.orderCreation.receiverPhone,
+                receiverEmail: this.orderCreation.receiverEmail
+            });
+            alert(jsonData);
+            fetch(`${create_order_URL}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: jsonData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data);
+                result = data.data;
+                alert(result);
+                // 3 cases
+                switch (data.code) {
+                    case 201:
+                        this.fetchResults.orderCreation = true;
+                        break;
+                    case 400:
+                    case 500:
+                        this.errorMessages.orderCreation = data.message;
+                        break;
+                    default:
+                        throw `${data.code}: ${data.message}`;
+                }
+            })
+
+            // fetch(`${get_order_URL}`,
+            // {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-type": "application/json"
+            //     },
+            //     body: jsonData
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     console.log(data);
+            //     result = data.data;
+            //     console.log(result);
+            //     // 3 cases
+            //     switch (data.code) {
+            //         case 201:
+            //             this.fetchResults.orderCreation = true;
+            //             break;
+            //         case 400:
+            //         case 500:
+            //             this.errorMessages.orderCreation = data.message;
+            //             break;
+            //         default:
+            //             throw `${data.code}: ${data.message}`;
+            //     }
+            // })
+        },
+        retrieveOrderByShipperId(){
+            if (this.userType == 'driver'){
+                fetch(`${get_order_URL}/checkall`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 404) {
+                        // no book in db
+                        this.message = data.message;
+                    } else {
+                        res = data.data;
+                        console.log(res);
+                    }
+                })
+                .catch(error => {
+                    // Errors when calling the service; such as network error, 
+                    // service offline, etc
+                    console.log(this.message + error);
+                });
+            } else {
+            fetch(`${get_order_URL}/checkall`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 404) {
+                        // no book in db
+                        this.message = data.message;
+                    } else {
+                        res = data.data.orders;
+                        this.orderList = res;
+                        console.log(this.orderList);
+                    }
+                })
+                .catch(error => {
+                    // Errors when calling the service; such as network error, 
+                    // service offline, etc
+                    console.log(this.message + error);
+
+                });
+            }
+            
+        },
+        
+    },
+    beforeMount(){
+        this.retrieveOrderByShipperId();
     },
     mounted(){
         console.log(this.userDetail)
         this.verificationForm();
+        
     }
 })
 app.component('home-header',{
@@ -406,7 +590,7 @@ app.component('shipper-header',{
 });
 
 app.component('activity', {
-    props: ['deliverydesc','timestamp','deliverystatus'],
+    props: ['trackingid','deliverydesc','timestamp','deliverystatus'],
     template:`
         <li>
             <dl>
@@ -422,8 +606,78 @@ app.component('custom-select',{
     ,
     template:`
     <select class="form-select" name="dropOff">
-        <option v-for="dp in dropPoints" :value="dp">{{dp}}</option>
+        <option v-for="dp in dropPoints" :value="dp.region" v-model="orderCreation.receiverAddress">{{dp.region}}</option>
     </select>
     `
 })
+app.component('order-info',{
+    props:['order'],
+    template:`
+    `
+})
+
 const vm = app.mount('#app'); 
+
+var options = {
+    // fields: ["formatted_address", 'geometry', 'name'],
+    componentRestrictions: { country: "sg" }
+}
+var placeSearch, autocomplete, shipper_autocomplete, receiver_autocomplete;
+
+
+function initAutocomplete() {
+// Create the autocomplete object, restricting the search to geographical
+// location types.
+    var shipper_autocomplete = new google.maps.places.Autocomplete((document.getElementById('shipperPostal')), options);
+    var receiver_autocomplete = new google.maps.places.Autocomplete((document.getElementById('receiverPostal')), options);
+
+    shipper_autocomplete.addListener('place_changed', function() {
+        var place = shipper_autocomplete.getPlace();
+
+        var shipperAddress = {
+            shipperPostal: "",
+            shipperAddress: ""
+        }
+        for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (addressType == 'postal_code'){
+                shipperAddress.shipperPostal = place.address_components[i]['long_name'];
+            }
+        }
+        shipperAddress.shipperAddress = place.formatted_address;
+        vm.getPickUpAddress(shipperAddress);        
+    });
+    receiver_autocomplete.addListener('place_changed', function() {
+        var place = receiver_autocomplete.getPlace();
+        var receiverAddress = {
+            receiverPostal: "",
+            receiverAddress: ""
+        }
+        for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (addressType == 'postal_code'){
+                receiverAddress.receiverPostal = place.address_components[i]['long_name'];
+            }
+        }
+        receiverAddress.receiverAddress = place.formatted_address;
+        vm.getDropOffAddress(receiverAddress);        
+    });
+}
+
+// Bias the autocomplete object to the user's geographical location,
+// as supplied by the browser's 'navigator.geolocation' object.
+function geolocate() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+        var geolocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+        var circle = new google.maps.Circle({
+            center: geolocation,
+            radius: position.coords.accuracy
+        });
+        autocomplete.setBounds(circle.getBounds());
+        });
+    }
+}

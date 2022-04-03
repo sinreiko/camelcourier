@@ -79,6 +79,7 @@ class Order(db.Model):
     # This is used to troubleshoot and see if the data in db is ok
     # Uncomment line below to test this function
 
+
 @app.route("/checkall")
 def get_all():
     '''returns a JSON object with list of all order objects 
@@ -110,8 +111,6 @@ def get_all():
     # Uncomment line below to test this function in Postman
 
 
-
-
 def find_driver():
     ''' returns <string:driverID> with the least orders 
         SQL Equivalent: SELECT count(*),driverID FROM `order` group by driverID ORDER BY count(*)
@@ -138,6 +137,8 @@ def find_driver():
 
     # -----------------[START: find_order_by_driver]-------------------
 # [TESTED] This url fulfills order checking.
+
+
 @app.route("/driver/<string:trackingID>")
 def find_by_driver(driverID):
     '''
@@ -160,8 +161,9 @@ def find_by_driver(driverID):
         }
     ), 404
     # ----------------[END: find_order_by_driver]------------------
-    
+
     # -----------------[START: find_order_by_driver]-------------------
+
 
 @app.route("/order/<string:trackingID>")
 def find_by_order_no(trackingID):
@@ -257,7 +259,7 @@ def update_order(trackingID):
         driverID = info_json.get("driverID")
         order = Order.query.filter_by(trackingID=trackingID).first()
         order.driverID = driverID
-    
+
     if("pickupAddress" in info_json):
         pickupAddress = info_json.get("pickupAddress")
         order = Order.query.filter_by(trackingID=trackingID).first()
