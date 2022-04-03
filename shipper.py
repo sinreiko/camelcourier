@@ -57,7 +57,7 @@ class Shipper(db.Model):
         self.modifiedDate = modifiedDate
 
     def json(self):
-        return {"shipperName": self.shipperID,
+        return {"shipperID": self.shipperID,
                 "shipperName": self.shipperName,
                 "shipperAddress": self.shipperAddress,
                 "shipperPhone": self.shipperPhone,

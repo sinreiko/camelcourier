@@ -273,4 +273,4 @@ def completeOrder(order):
 
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) + " for updating order...")
-    app.run(host="0.0.0.0", port=5009, debug=True)
+    app.run(host="0.0.0.0", port=5008, debug=True)
