@@ -2,6 +2,8 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
+from os import environ
+
 app = Flask(__name__)
 # NOTE! main db name changed to camelcourier. Pls import the new sql called camelcourier!
 
