@@ -30,11 +30,6 @@ from os import environ
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-<< << << < Updated upstream
-== == == =
->>>>>> > Stashed changes
-
-
 app = Flask(__name__)
 CORS(app)
 

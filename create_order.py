@@ -1,5 +1,5 @@
 # ------------
-#                   O v e r v i e w 
+#                   O v e r v i e w
 # This is the complex microservice for creating an order in the Shipper's UI
 # =======================================
 # ------    C o m p o n e n t s
@@ -10,7 +10,7 @@
 # --- activity.py
 
 # ------    P r o c e d u r e
-# 1-- The microservice receives an order form with ShipperID, receiver info {name, address, phone, email} 
+# 1-- The microservice receives an order form with ShipperID, receiver info {name, address, phone, email}
 # 2-- The microservice then creates a new order by calling order api via [POST]
 # 3-- Activity Log is called for order creation
 # 4-- Shipper's email is obtained through the Shipper microservice
@@ -24,8 +24,9 @@ import json
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
-import json 
-import os, sys
+import json
+import os
+import sys
 from os import environ
 
 import requests
@@ -37,11 +38,12 @@ app = Flask(__name__)
 CORS(app)
 
 # [TO REPLACE] URLs to call
-order_URL = environ.get('order_URL') or "http://order:5000/order"
+order_URL = environ.get('order_URL') or "http://localhost:5000/order"
 # activity_URL = "http://localhost:5001/activity"
-shipper_URL = environ.get('shipper_URL') or "http://shipper:5002/shipper"
+shipper_URL = environ.get('shipper_URL') or "http://localhost:5002/shipper"
 # email_URL = "http://localhost:9000/email"
 # sms_URL = "http://localhost:5566/update"
+
 
 @app.route("/create_order", methods=['POST'])
 def place_order():
@@ -66,7 +68,8 @@ def place_order():
             # Unexpected error in code
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
+            ex_str = str(e) + " at " + str(exc_type) + ": " + \
+                fname + ": line " + str(exc_tb.tb_lineno)
             print(ex_str)
 
             return jsonify({
@@ -85,78 +88,82 @@ def processCreateOrder(order):
     # 1. Send the order info (all params) into order microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    print('\n---order---',order)
+    print('\n---order---', order)
     order_result = invoke_http(order_URL, method='POST', json=order)
-    print('order_result:', order_result)    
+    print('order_result:', order_result)
     # 2. Create order in activity log
-        # create the activity log
-    code=order_result["code"]
-    
+    # create the activity log
+    code = order_result["code"]
+
     if code in range(200, 300):
-        info=order_result["data"]
-        tracking_id=info["trackingID"]
-        print('\n=============trackingID is: ',tracking_id)
-        now=datetime.now()
-        msg ={
-                "code":201,
-                "data":{
-                    "activity_id": None,
-                    "tracking_id": tracking_id,
-                    "timestamp": now.strftime("%m-%d-%Y, %H:%M:%S"),
-                    "delivery_status": "Order created",
-                    "delivery_desc": "Order has been created by shipper"
-                    }
-                }
-        message=json.dumps(msg)
-        print('\n\n-----Publishing the (order info) message with routing_key=order.info-----')   
-        print("\n========= message check =========\n",message)    
-        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.order", body=message, properties=pika.BasicProperties(delivery_mode = 2))
+        info = order_result["data"]
+        tracking_id = info["trackingID"]
+        print('\n=============trackingID is: ', tracking_id)
+        now = datetime.now()
+        msg = {
+            "code": 201,
+            "data": {
+                "activity_id": None,
+                "tracking_id": tracking_id,
+                "timestamp": now.strftime("%m-%d-%Y, %H:%M:%S"),
+                "delivery_status": "Order created",
+                "delivery_desc": "Order has been created by shipper"
+            }
+        }
+        message = json.dumps(msg)
+        print(
+            '\n\n-----Publishing the (order info) message with routing_key=order.info-----')
+        print("\n========= message check =========\n", message)
+        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.order",
+                                         body=message, properties=pika.BasicProperties(delivery_mode=2))
 
         print("\nOrder published to RabbitMQ Exchange.\n")
     else:
         print('\nFailed to create order')
     # 4. Retrieve shipper Email
-    shipperID=info["shipperID"]
-    shipperURL=shipper_URL+'/'+str(shipperID)
-    shipper_result=invoke_http(shipperURL, method="GET",json=None)
-    code=shipper_result["code"]  
-    print("\n========shipper result code is: =======\n",code) 
+    shipperID = info["shipperID"]
+    shipperURL = shipper_URL+'/'+str(shipperID)
+    shipper_result = invoke_http(shipperURL, method="GET", json=None)
+    code = shipper_result["code"]
+    print("\n========shipper result code is: =======\n", code)
     if code in range(200, 300):
-        shipper=shipper_result["data"]
-        print("\n========shipper result data is: =======\n",shipper_result['data'])  
-        shipper_email=shipper["shipperEmail"]
-        email_content="This is to inform you that Tracking ID: " +str(tracking_id)+" has been successfully created"
+        shipper = shipper_result["data"]
+        print("\n========shipper result data is: =======\n",
+              shipper_result['data'])
+        shipper_email = shipper["shipperEmail"]
+        email_content = "This is to inform you that Tracking ID: " + \
+            str(tracking_id)+" has been successfully created"
     else:
         return{
-                "code": 500,
-                "data":{"email":shipper_result},
-                "message": "An error occurred while retrieving shipper email. "
-                }
+            "code": 500,
+            "data": {"email": shipper_result},
+            "message": "An error occurred while retrieving shipper email. "
+        }
     # # 5. Email shipper
 
-    msg={
-            "toEmail":shipper_email,
-            "subject":"New order has been created",
-            "content":email_content
-        }
-    message=json.dumps(msg)
-    print("\n====email message=====\n",message)
-    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email", 
-            body=message, properties=pika.BasicProperties(delivery_mode=2))
+    msg = {
+        "toEmail": shipper_email,
+        "subject": "New order has been created",
+        "content": email_content
+    }
+    message = json.dumps(msg)
+    print("\n====email message=====\n", message)
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email",
+                                     body=message, properties=pika.BasicProperties(delivery_mode=2))
     print("\n----- email microservice end ------")
     # 6. Inform receiver
-    recipient=info["receiverPhone"]
-    msg="[Camel Couriers] Your order "+str(tracking_id)+" has been created."
+    recipient = info["receiverPhone"]
+    msg = "[Camel Couriers] Your order "+str(tracking_id)+" has been created."
 
-    sms_msg={
-            "toPhone":recipient,
-            "content":msg
-        }
-    message=json.dumps(sms_msg)
-    print("\n=====sms_msg: ========\n",message)
+    sms_msg = {
+        "toPhone": recipient,
+        "content": msg
+    }
+    message = json.dumps(sms_msg)
+    print("\n=====sms_msg: ========\n", message)
     # sms_status=invoke_http(sms_URL, method="POST", json=sms_message)
-    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.sms", 
-            body=message, properties=pika.BasicProperties(delivery_mode=2))
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.sms",
+                                     body=message, properties=pika.BasicProperties(delivery_mode=2))
     # print(sms_status)
     # 7. Return created order as a json object with codes
     return order_result

@@ -74,7 +74,8 @@ services:
         environment:
             dbURL: 'mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB'
             PYTHONUNBUFFERED: 1
-
+        ports:
+            - "5001:5001"
     #Shipper: 5002
     shipper:
         build:
