@@ -1,36 +1,39 @@
 # ------------
-#                   O v e r v i e w 
+#                   O v e r v i e w
 # This is the complex microservice for shipper to select a drop off point for his/her parcel in the Shipper's UI
 # =======================================
 # ------    C o m p o n e n t s
 # --- droppoint.py
 # --- order.py
 # --- shipper.py
-# --- email_test.py 
+# --- email_test.py
 # --- activity.py
 
-# ------    P r o c e d u r e 
+# ------    P r o c e d u r e
 # 1-- The microservice receives a dropoff point selected for the parcel with shipperID, trackingID, pickupAddress
 # 2-- The microservice then updates the order with the given trackingID with the pickupAddress.
 # 3-- Shipper's email is obtained through the Shipper microservice
-# 4-- Shipper is emailed via Email microservice -AMQP-> sendgrid
+# 4-- Shipper is emailed via Email microservice - AMQP -> sendgrid
 # 5-- Activity microservice is called to insert activity of pickup
 # =======================================
 
 #   Imports
 # ------------
+import json
+import pika
+import amqp_setup
+from invokes import invoke_http
+import requests
+import sys
+import os
+from os import environ
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-import os, sys
-from os import environ
+<< << << < Updated upstream
+== == == =
+>>>>>> > Stashed changes
 
-import requests
-from invokes import invoke_http
-
-import amqp_setup
-import pika
-import json
 
 app = Flask(__name__)
 CORS(app)
@@ -40,6 +43,7 @@ order_URL = environ.get('order_URL') or "http://localhost:5000/order"
 shipper_URL = environ.get('shipper_URL') or "http://localhost:5002/shipper"
 # droppoint_URL = "http://localhost:5004/droppoint"
 # email_URL = "http://localhost:9000/email"
+
 
 @app.route("/pickup", methods=['POST'])
 def pickup():
@@ -57,19 +61,21 @@ def pickup():
             # Unexpected error in code
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
+            ex_str = str(e) + " at " + str(exc_type) + ": " + \
+                fname + ": line " + str(exc_tb.tb_lineno)
             print(ex_str)
 
             return jsonify({
                 "code": 500,
                 "message": "pick_parcel.py internal error: " + ex_str
             }), 500
-    
+
     # if reached here, not a JSON request.
     return jsonify({
         "code": 400,
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
+
 
 def processPickup(pickup_details):
     # 1-- The microservice receives a dropoff point selected for the parcel with shipperID, trackingID, pickupAddress
@@ -78,7 +84,8 @@ def processPickup(pickup_details):
     tracking_id = pickup_details["trackingID"]
 
     print('\n-----Invoking order microservice-----')
-    order_result = invoke_http(order_URL + "/" + str(tracking_id), method='PUT', json=pickup_details)
+    order_result = invoke_http(
+        order_URL + "/" + str(tracking_id), method='PUT', json=pickup_details)
     print('order_result:', order_result)
 
     code = order_result["code"]
@@ -98,9 +105,10 @@ def processPickup(pickup_details):
     else:
         # no error
         print('\n\n----- Succcess in updating order with pickupAddress')
-        
+
     # 3-- Shipper's email is obtained through the Shipper microservice
-    shipper_result = invoke_http(shipper_URL + "/" + str(pickup_details["shipperID"]), method='GET')
+    shipper_result = invoke_http(
+        shipper_URL + "/" + str(pickup_details["shipperID"]), method='GET')
     print('shipper_result:', shipper_result)
     code = shipper_result["code"]
 
@@ -128,24 +136,24 @@ def processPickup(pickup_details):
         "content": email_content
     })
 
-    print("\n==== Publishing to email with routing_key=email =====\n",message)
-    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="email", 
-            body=message, properties=pika.BasicProperties(delivery_mode=2))
+    print("\n==== Publishing to email with routing_key=email =====\n", message)
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="email",
+                                     body=message, properties=pika.BasicProperties(delivery_mode=2))
     print("\n----- End of publishing to email ------")
 
     # 5-- Activity microservice is called to insert activity of pickup
 
-    print("\n==== Publishing to activity with routing_key=order =====\n",message)
+    print("\n==== Publishing to activity with routing_key=order =====\n", message)
     message = json.dumps({
-        "code":201,
-        "data":{
+        "code": 201,
+        "data": {
             "tracking_id": tracking_id,
             "delivery_status": "Waiting for pickup",
             "delivery_desc": "Pick up location has been updated, awaiting for parcel pickup."
         }
     })
-    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order", 
-            body=message, properties=pika.BasicProperties(delivery_mode=2))
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order",
+                                     body=message, properties=pika.BasicProperties(delivery_mode=2))
     print("\n----- End of publishing to activity ------")
 
     return {
@@ -155,6 +163,7 @@ def processPickup(pickup_details):
             "shipper_result": shipper_result
         }
     }
+
 
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) + " for pick parcel...")
