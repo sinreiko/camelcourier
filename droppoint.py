@@ -1,17 +1,22 @@
 # imports
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+from os import environ
 
 app = Flask(__name__)
-# NOTE! main db name changed to camelcourier. Pls import the new sql called camelcourier!
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/camelcourier'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
+    'dbURL') or 'mysql+mysqlconnector://root@localhost:3306/camelDB'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
 db = SQLAlchemy(app)
-
+CORS(app)
 
 # database setup
+
+
 class Droppoint(db.Model):
     __tablename__ = 'droppoint'
 

@@ -79,7 +79,6 @@ class Order(db.Model):
     # This is used to troubleshoot and see if the data in db is ok
     # Uncomment line below to test this function
 
-
 @app.route("/checkall")
 def get_all():
     '''returns a JSON object with list of all order objects 
@@ -110,7 +109,7 @@ def get_all():
     # [TESTED] Finds the driver with the least orders to assign the new order to
     # Uncomment line below to test this function in Postman
 
-# @app.route("/checkdriver")
+
 
 
 def find_driver():
@@ -132,13 +131,37 @@ def find_driver():
     # find_order_by_no(): fulfills app route /order/<trackingID> to return information of a given tracking ID with method GET
     # create_order(): fulfills app route /order to add a new order, generate a trackingID and assign a driver with method POST
     # update_order(): fulfills app route /order/update to update the pickupAddress of an entry given a trackingID with method PUT
+    # driver(driverID): returns all orders by a given driver ID
     # -----------
 
 # ----------------------------------
 
-    # -----------------[START: find_order_by_no]-------------------
+    # -----------------[START: find_order_by_driver]-------------------
 # [TESTED] This url fulfills order checking.
-
+@app.route("/driver/<string:trackingID>")
+def find_by_driver(driverID):
+    '''
+        returns the order information (trackingID, driverID, shipperID, deliveryStage, deliveryDate) given a trackingID
+    '''
+    order = Order.query.filter_by(driverID=driverID).all()
+    if len(order):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    'orders': [ord.json() for ord in order]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no orders."
+        }
+    ), 404
+    # ----------------[END: find_order_by_driver]------------------
+    
+    # -----------------[START: find_order_by_driver]-------------------
 
 @app.route("/order/<string:trackingID>")
 def find_by_order_no(trackingID):

@@ -30,8 +30,8 @@
 </head>
 <body id="app">
     <div class="hero_area">
-        <home-header></home-header>
-        <section class=" slider_section ">
+        <home-header :userdetail="userDetail" v-on:update-user="updateUser"></home-header>
+        <section class="slider_section">
             <div class="container-fluid">
                 <div class="row">
                 <div class="col-md-7 ">
