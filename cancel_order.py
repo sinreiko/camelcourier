@@ -20,6 +20,7 @@
 
 #   Imports
 # ------------
+from email import message
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
@@ -37,21 +38,28 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-# URLs to call
-order_URL = "http://localhost:5000/order"
-activity_URL = "http://localhost:5001/activity"
-shipper_URL = "http://localhost:5002/shipper"
-email_URL = "http://localhost:9000/email"
-sms_URL = "http://localhost:5566/update"
-
+# URL of all the simple microservices that you're contacting
+order_URL = environ.get('order_URL') or "http://order:5000/order"
+shipper_URL = environ.get('shipper_URL') or "http://shipper:5002/shipper"
 
 @app.route("/cancel_order", methods=['POST'])
 def cancel_order():
+    '''
+        Taking in trackingID from UI
+    '''
+    # Invoke ACTIVITY microservice to
+    # 1. Set delivery_desc to "..." -> shipper input in UI
+    # 2. Set delivery_status to "Canceled" -> automatic input from UI
+    # 3. Sent to activity_log
 
+    # invoke SHIPPER microservice to get shipperId and shipperEmail to inform them of the canceled order.
+    # Use AMQP to invoke SEND_SMS microservice after retrieving receiverPhone from ORDER microservice.
+    # Use AMQP to invoke EMAIL microservice after retrieving shipper's email from SHIPPER microservice.
     if request.is_json:
         try:
             trackingID = request.get_json()
-            print("\nReceived a tracking_id in JSON:", trackingID)
+            print("\nReceived a tracking_id to be canceled in JSON:", trackingID)
+
             result = processCancelOrder(trackingID)
             return jsonify(result), result["code"]
 
@@ -67,104 +75,101 @@ def cancel_order():
                 "message": "cancel_order.py internal error: " + ex_str
             }), 500
 
-        # if reached here, not a JSON request.
-        return jsonify({
-            "code": 400,
-            "message": "Invalid JSON input: " + str(request.get_data())
-        }), 400
+    # if reached here, not a JSON request.
+    return jsonify({
+        "code": 400,
+        "message": "Invalid JSON input: " + str(request.get_data())
+    }), 400
 
 
 def processCancelOrder(trackingID):
-    # 1. Send the order info (all params) into order microservice
+    # 1. Get trackingID from order microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    order_result = invoke_http(order_URL, method='POST', json=order)
+    tracking_URL = order_URL + '/' + trackingID["trackingID"]
+    order_result = invoke_http(tracking_URL, method='GET', json=None)
     print('order_result:', order_result)
         
-    # 2. Cancel order in activity log
+    # 2. Display canceled order in activity log
     # Create the activity log for canceled order
     code=order_result["code"]
-    info_json=order_result['data']
-    info=json.loads(info_json)
-    tracking_id=info.trackingID
+
     if code in range(200, 300):
+        # Invoke the activity microservice
+        print('\n-----Invoking activity microservice-----')
         message = jsonify(
             {
                 "code":200,
                 "data":{
-                    "activity_id": None,
-                    "tracking_id": tracking_id,
-                    "timestamp": datetime.now(),
-                    "delivery_status": "Order canceled",
-                    "delivery_desc": "Order has been canceled by the shipper"
+                    "tracking_id": trackingID['trackingID'],
+                    "order_status": "Canceled",
+                    "order_desc": "Order has been canceled by the shipper."
                     }
             }
         )
-        print('\n\n-----Publishing the (canceled order info) message with routing_key=order.info-----')        
-        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.order", 
-            body=message)
-        print("\nCanceled Order published to RabbitMQ Exchange.\n")
+        msg=json.dumps(message)
+        amqp_setup.check_setup()
+        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="canceled.order",
+                                     body=msg, properties=pika.BasicProperties(delivery_mode=2))
+        print("\nCanceled status published to the RabbitMQ Exchange:", msg)
     else:
         return jsonify(
             {
-                "code": 500,
+                "code":500,
                 "data":{
-                    "tracking_id":tracking_id
+                    "tracking_id": trackingID['trackingID']
                     },
                 "message": "An error occurred while trying to cancel the order. "
             }
         ), 500
    
-    # 3. Retrieve shipper Email
-    shipperID=info.shipperID
-    shipper_URL+='/'+shipperID
-    email_result=invoke_http(shipper_URL, method="GET",json=None)  
+    # 3. Retrieve shipper Email and ID
     if code in range(200, 300):
-        info_email_json=email_result["data"]
-        info_email=json.loads(info_email_json)
-        shipper_email=info_email.shipperEmail
+        info = order_result["data"]
+        shipperID = info["shipperID"]
+        retrieve_ShipperURL = shipper_URL +  '/' + str(shipperID)
+        shipper_result = invoke_http(retrieve_ShipperURL, method="GET", json=None)
+        shipper = shipper_result["data"]
+        print("\n========shipper result data is: =======\n",shipper_result['data'])  
+        shipper_email = shipper["shipperEmail"]
         # if error is thrown, append to error_msg
     else:
         return jsonify(
             {
                 "code": 500,
                 "data":{
-                    "email":email_result
+                    "email": shipper_email
                     },
                 "message": "An error occurred while retrieving shipper email. "
             }
         ), 500
 
     # 4. Email shipper
-    email_content="This is to inform you that Tracking ID: " +tracking_id+" has been successfully canceled"
-    message=jsonify(
-        {
-            "toEmail":shipper_email,
-            "subject":"Order has been canceled",
-            "msg":email_content
+    email_content = "This is to inform you that Tracking ID: " + trackingID["tracking_id"] +" has been canceled."
+    email_msg = {
+            "toEmail": shipper_email,
+            "subject": "Order has been canceled",
+            "content": email_content
         }
-    )
-    # Replace with this after AMQP has been set up
-    # amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="new.email", 
-    #         body=message)
+    email_message=json.dumps(email_msg)
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="canceled.email",
+    body=email_message)
 
     # 5. Inform receiver
-    recipient=info.receiverPhone
-    msg="[Camel Couriers] Your order "+tracking_id+" has been canceled."
-    sms_message=jsonify(
-        {
-            "toPhone":recipient,
-            "content":msg
+    recipient = info["receiverPhone"]
+    msg = "[Camel Couriers] Your order " + trackingID["trackingID"] + " has been canceled."
+    sms_msg ={
+            "toPhone": recipient,
+            "content": msg
         }
-    )
-    sms_status=invoke_http(sms_URL, method="POST", json=sms_message)
-    print(sms_status)
+    sms_message=json.dumps(sms_msg)
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="canceled.sms",
+    body=sms_message)
 
-    # 6. Return cancled order as a json object with codes
+    # 6. Return order as a json object with codes
     return order_result
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
-    print("This is flask " + os.path.basename(__file__) +
-          " for canceling an order...")
+    print("This is flask " + os.path.basename(__file__) + " for canceling an order...")
     app.run(host="0.0.0.0", port=5008, debug=True)
