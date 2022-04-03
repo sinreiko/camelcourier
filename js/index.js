@@ -9,7 +9,7 @@ const create_delivery_URL = "http://localhost:5007/createdelivery"
 const update_delivery_URL = "http://localhost:5008/update"
 const accept_delivery_URL = "http://localhost:5000/accept"
 
-//  #Order: 5000
+// #Order: 5000
 // #Activity: 5001
 // #Shipper: 5002
 // #Rate: 5003
@@ -25,11 +25,13 @@ const accept_delivery_URL = "http://localhost:5000/accept"
 const app = Vue.createApp({
     data(){
         return {
-            userName: "",
-            userType: "",
+            userName: localStorage.getItem("userName"),
+            userType: localStorage.getItem("userType"),
             inputTracking: "",
-            trackingResult: []
-
+            trackingResult: [],
+            userDetail: JSON.parse(localStorage.getItem("userDetail")),
+            dropOff: "",
+            dropPoints:{},
         };
     },
     computed: {
@@ -41,7 +43,7 @@ const app = Vue.createApp({
             } else if (status == 'Completed'){
                 return 100
             }
-        }
+        },
     },
     methods: {
         trackParcel(){
@@ -62,12 +64,7 @@ const app = Vue.createApp({
                     if (data.code === 404) {
                         // no book in db
                         this.message = data.message;
-                        // console.log(data);
-
                     } else {
-                        // this.books = [data.data];
-                        // console.log("Response " + response.data[0]);
-                        // console.log(data.data);
                         res = data.data;
                         console.log(res[res.length - 1]);
                         latestStatus = res[res.length - 1].delivery_status;
@@ -77,9 +74,6 @@ const app = Vue.createApp({
                             progress: this.calculateProgress(latestStatus),
                             activities: res
                         });
-                        // this.trackingResult.push(corrected_data);
-                        
-
                     }
                 })
                 .catch(error => {
@@ -93,70 +87,131 @@ const app = Vue.createApp({
             }
             
         },
-        
-            // const response =
-            //     fetch(auth).then(response => response.json()).then(data => {
-            //         console.log(response);
-            //         if (data.code === 404){
-            //             this.message = data.message
-            //         } else {
-            //             this.userType = data.data.userType;
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.log(this.message + error)
-            //     })
+        updateUser(e){
+            this.userDetail = e
+        }, 
+        verificationForm(){
+            var current_fs, next_fs, previous_fs; //fieldsets
+            var left, opacity, scale; //fieldset properties which we will animate
+            var animating; //flag to prevent quick multi-click glitches
+
+            $(".next").click(function () {
+                if (animating) return false;
+                animating = true;
+
+                current_fs = $(this).parent();
+                next_fs = $(this).parent().next();
+
+                //activate next step on progressbar using the index of next_fs
+                $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+                //show the next fieldset
+                next_fs.show();
+                //hide the current fieldset with style
+                current_fs.animate({
+                    opacity: 0
+                }, {
+                    step: function (now, mx) {
+                        //as the opacity of current_fs reduces to 0 - stored in "now"
+                        //1. scale current_fs down to 80%
+                        scale = 1 - (1 - now) * 0.2;
+                        //2. bring next_fs from the right(50%)
+                        left = (now * 50) + "%";
+                        //3. increase opacity of next_fs to 1 as it moves in
+                        opacity = 1 - now;
+                        current_fs.css({
+                            'transform': 'scale(' + scale + ')',
+                            'position': 'absolute'
+                        });
+                        next_fs.css({
+                            'left': left,
+                            'opacity': opacity
+                        });
+                    },
+                    duration: 800,
+                    complete: function () {
+                        current_fs.hide();
+                        animating = false;
+                    },
+                    //this comes from the custom easing plugin
+                    easing: 'easeInOutBack'
+                });
+            });
+
+            $(".previous").click(function () {
+                if (animating) return false;
+                animating = true;
+
+                current_fs = $(this).parent();
+                previous_fs = $(this).parent().prev();
+
+                //de-activate current step on progressbar
+                $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+                //show the previous fieldset
+                previous_fs.show();
+                //hide the current fieldset with style
+                current_fs.animate({
+                    opacity: 0
+                }, {
+                    step: function (now, mx) {
+                        //as the opacity of current_fs reduces to 0 - stored in "now"
+                        //1. scale previous_fs from 80% to 100%
+                        scale = 0.8 + (1 - now) * 0.2;
+                        //2. take current_fs to the right(50%) - from 0%
+                        left = ((1 - now) * 50) + "%";
+                        //3. increase opacity of previous_fs to 1 as it moves in
+                        opacity = 1 - now;
+                        current_fs.css({
+                            'left': left
+                        });
+                        previous_fs.css({
+                            'transform': 'scale(' + scale + ')',
+                            'opacity': opacity
+                        });
+                    },
+                    duration: 800,
+                    complete: function () {
+                        current_fs.hide();
+                        animating = false;
+                    },
+                    //this comes from the custom easing plugin
+                    easing: 'easeInOutBack'
+                });
+            });
+
+            $(".submit").click(function () {
+                return false;
+            })
         },
-        beforeMount(){
-            if (localStorage.userName || localStorage.userType){
-                this.userName = localStorage.userName
-                this.userType = localStorage.userType
-            }
-        }
-})
-app.component('home-header',{
-    data(){
-        return{
-            driverLogin:{
-                name: "Jun Hui 💩",
-                email: "driver@driver.com",
-                password: "driver123",
-                type: "driver"
-            },
-            shipperLogin:{
-                name: "Po Chien",
-                email: "shipper@shipper.com",
-                password: "shipper123",
-                type: "shipper"
-            },
-            userEmail: "",
-            userPassword: "",
-            userType: "",
-        }
-    }, 
-    methods:{
-        userAuthenticate (formType) {
-            if (this.userEmail != "" || this.userPassword != ""){
-                if (this.userEmail == this.driverLogin.email && this.userPassword == this.driverLogin.password){
-                    localStorage.setItem("userName", this.driverLogin.name)
-                    localStorage.setItem("userType", this.driverLogin.type)
-                    form = document.getElementById(formType)
-                    form.action = "pickup.html"
-                    form.submit()
-                } else if (this.userEmail == this.shipperLogin.email && this.userPassword == this.shipperLogin.password){
-                    localStorage.setItem("userName", this.shipperLogin.name)
-                    localStorage.setItem("userType", this.shipperLogin.type)
-                    form = document.getElementById(formType)
-                    form.action = "create-delivery.html"
-                    form.submit()
-                } else {
-                    alert("Email and/or password is incorrect. Please try again.")
-                }
-            } else {
-                alert("Email and/or password is empty. Please fill in.")
-            }
+        getDropPoints(){
+            const response =
+                fetch(`${get_droppoint_URL}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 404) {
+                        // no book in db
+                        this.message = data.message;
+                    } else {
+                        res = data.data;
+                        console.log(res)
+                    }
+                })
+                .catch(error => {
+                    // Errors when calling the service; such as network error, 
+                    // service offline, etc
+                    console.log(this.message + error);
+
+                });
         }
     },
+    mounted(){
+        console.log(this.userDetail)
+        this.verificationForm();
+    }
+})
+app.component('home-header',{
+    props:['userdetail'],
     template:
     `<header class="header_section">
         <div class="container-fluid">
@@ -196,15 +251,75 @@ app.component('home-header',{
                             <div class="form-group col-sm-6 col-md-3 mt-md-2">
                                 <button @click.prevent="userAuthenticate('form-login')" type="submit" class="action-button btn btn-primary mb-2 w-100" style="padding:0">Login</button>
                             </div>
-                            
-                        </form> 
+                        </form>
                     </div>
-                    
             </nav>
             </div>
-            
-        <!-- </div> -->
     </header>`
+    ,
+    data(){
+        return{
+            driverLogin:{
+                name: "Jun Hui 💩",
+                email: "driver@driver.com",
+                password: "driver123",
+                type: "driver"
+            },
+            shipperLogin: [],
+            shipperPass: "shipper123",
+            userEmail: "",
+            userPassword: "",
+            userType: "",
+        }
+    },
+    
+    computed:{
+        getShipper(){
+            const response =
+                fetch(`${get_shipper_URL}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 404) {
+                        this.message = data.message;
+                    } else {
+                        res = data.data.shippers;
+                        for (let i = 0; i < res.length; i++) {
+                            this.shipperLogin.push(res[i])
+                        }
+                    }
+                })
+        }
+    },
+    methods:{
+        userAuthenticate (formType) {
+            if (this.userEmail != "" || this.userPassword != ""){
+                if (this.userEmail == this.driverLogin.email && this.userPassword == this.driverLogin.password){
+                    localStorage.setItem("userName", this.driverLogin.name)
+                    localStorage.setItem("userType", "driver");
+                    form = document.getElementById(formType)
+                    form.action = "pickup.html"
+                    form.submit()
+                } else if (this.shipperLogin.some(e => e.shipperEmail === this.userEmail) && this.userPassword == this.shipperPass){
+                    shipperObj = this.shipperLogin.find(e => e.shipperEmail === this.userEmail);
+                    this.$emit('update-user', shipperObj)
+                    localStorage.setItem("userDetail", JSON.stringify(shipperObj))
+                    localStorage.setItem("userName", shipperObj.shipperName);
+                    localStorage.setItem("userType", "shipper");
+                    form = document.getElementById(formType)
+                    form.action = "create-delivery.html"
+                    form.submit()
+                } else {
+                    alert("Email and/or password is incorrect. Please try again.")
+                }
+            } else {
+                alert("Email and/or password is empty. Please fill in.")
+            }
+        },
+    },
+    
+    beforeMount(){
+        this.getShipper;
+    },
 })
 
 app.component('driver-header',{
@@ -214,9 +329,8 @@ app.component('driver-header',{
         }
     }, 
     methods: {
-
     },
-    props: ['user'],
+    props: ['username'],
     template: `
     <header class="header_section">
         <div class="container-fluid">
@@ -242,7 +356,7 @@ app.component('driver-header',{
                     </ul>
                 </div>
                 <span class="navbar-text my-1 mx-2">
-                    Welcome, {{user}}
+                    Welcome, {{username}}
                 </span>
             </nav>
         </div>
@@ -258,7 +372,7 @@ app.component('shipper-header',{
     methods: {
 
     },
-    props: ['user'],
+    props: ['username'],
     // template: `<div>{{}}</div>`
     template: `
     <header class="header_section">
@@ -284,7 +398,7 @@ app.component('shipper-header',{
                     </ul>
                 </div>
                 <span class="navbar-text my-1 mx-2">
-                    Welcome, {{user}}
+                    Welcome, <a href="user_details.html">{{username}}</a>
                 </span>
             </nav>
         </div>
@@ -300,6 +414,16 @@ app.component('activity', {
                 <dd class="text-secondary">{{timestamp}} · {{deliverystatus}}</dd>
             </dl>
         </li>
+    `
+})
+
+app.component('custom-select',{
+    props:['droppoint']
+    ,
+    template:`
+    <select class="form-select" name="dropOff">
+        <option v-for="dp in dropPoints" :value="dp">{{dp}}</option>
+    </select>
     `
 })
 const vm = app.mount('#app'); 
