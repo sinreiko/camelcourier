@@ -111,7 +111,21 @@ services:
         ports:
             - "5004:5004"
 
-        #Valuing: 5005
+    #Valuing: 5005
+    valuing:
+        build:
+            context: ./
+            dockerfile: valuing.Dockerfile
+        image: 889090/valuing:1.0
+        restart: always
+        depends_on:
+            - order
+            - rate
+        environment:
+            order_URL: http://order:5000/order
+            rate_URL: http://rate:5003/rate
+        ports:
+            - "5005:5005"
     
     #PickParcel: 5006
     ###########################################################
