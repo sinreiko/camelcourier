@@ -44,7 +44,6 @@ services:
         ports:
             - "5000:5000"
 
-    #Activity: 5001
     #####################################################
     # Activity: The Activity Log Consumber microservice #
     #####################################################
@@ -62,6 +61,7 @@ services:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
             PYTHONUNBUFFERED: 1
 
+    #Activity: 5001
     #########################################################
     # Activityhttp: The Activity Log Consumber microservice #
     #########################################################
@@ -159,7 +159,6 @@ services:
 
 
     #Create Order: 5007
-
     create_order:
         build:
             context: ./
@@ -225,7 +224,6 @@ services:
         ports:
             - "5009:5009"
 
-    
     #AcceptDelivery: 5009
     #Email: 9000
     email:
@@ -243,6 +241,11 @@ services:
             rabbit_port: 5672
         ports:
             - "9000:9000"
+
+networks:
+    rabbitmq_go_net:
+        driver: bridge
+
     #Sms: 5566
     # sendgrid
     # sendgrid:
@@ -304,6 +307,3 @@ services:
     #         - phpDB
     #     stdin_open: true
     #     tty: true
-networks:
-    rabbitmq_go_net:
-        driver: bridge
