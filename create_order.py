@@ -54,6 +54,7 @@ def place_order():
             - receiverAddress
             - receiverPhone
             - receiverEmail
+            - pickupAddress
         and runs the procedure above (line 13-18)
     '''
     # Check input format and data of the request are JSON
