@@ -40,7 +40,7 @@ shipper_URL = environ.get('shipper_URL') or "http://localhost:5002/shipper"
 # email_URL = "http://localhost:9000/email"
 
 
-@app.route("/pickup", methods=['POST'])
+@app.route("/pick_parcel", methods=['POST'])
 def pickup():
     if request.is_json:
         try:
