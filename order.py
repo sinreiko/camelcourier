@@ -218,7 +218,7 @@ def create_order():
     receiverAddress = request.json.get('receiverAddress')
     receiverPhone = request.json.get('receiverPhone')
     receiverEmail = request.json.get('receiverEmail')
-    pickupAddress = None
+    pickupAddress = request.json.get('pickupAddress')
 
     # data = request.get_json() <- fallback
     newOrder = Order(trackingID, driverID, shipperID, receiverName,

@@ -61,10 +61,12 @@
                         <label for="flexRadioDefault1">Drop off Points </label>
                     </div>
                     
-                    <custom-select v-if="dropOffOption=='dropPoint'" :droppoint="dropPoints"></custom-select>
+                    <select class="form-select" v-if="orderCreation.dropOffOption=='dropPoint'" v-model="orderCreation.receiverAddress">
+                        <option  v-for="dp in dropPoints" :value="dp.region">{{dp.region}}</option>
+                    </select>
                     <input v-else type="text" class="form-control" id="receiverPostal" placeholder="Address">
                 </div>
-                
+
                 <div class="form-group text-left">
                     <label for="weight">Weight</label>
                     <input type="number" name="weight" v-model="orderCreation.weight" class="form-control" placeholder="E.g. 0.1" v-on:keyUp="getPrice">

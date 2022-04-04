@@ -6,7 +6,7 @@ const get_droppoint_URL = "http://localhost:5004/droppoint"
 const valuing_URL = "http://localhost:5005/valuing"
 const pick_parcel_URL = "http://localhost:5006/pickparcel"
 const create_order_URL = "http://localhost:5007/create_order"
-const update_delivery_URL = "http://localhost:5008/update"
+const update_order_URL = "http://localhost:5008"
 const accept_delivery_URL = "http://localhost:5000/accept"
 
 const app = Vue.createApp({
@@ -22,7 +22,6 @@ const app = Vue.createApp({
                 activities: []
             },
             userDetail: JSON.parse(localStorage.getItem("userDetail")),
-            dropOff: "",
             dropPoints:[],
             orderCreation:{
                 //shipper
@@ -46,11 +45,14 @@ const app = Vue.createApp({
             },
             inputTracking: "",
             orderList:[],
+            customOrderList:[],
             fetchResults:{
                 orderCreation: false,
+                orderUpdate: false,
             },
             errorMessages:{
                 orderCreation: "",
+                getDeliveryStatus: ""
             }
         };
     },
@@ -107,7 +109,7 @@ const app = Vue.createApp({
                         progress: this.calculateProgress(latestStatus),
                         activities: res
                     };
-                    console.log(this.trackingResult);
+                    this.trackingResult.activities.reverse();
                 }
             })
             .catch(error => {
@@ -229,8 +231,7 @@ const app = Vue.createApp({
                         this.message = data.message;
                     } else {
                         res = data.data.droppoints;
-                        console.log(res.latitude)
-                        this.dropPoints.push(res);
+                        this.dropPoints = res;
                         console.log(this.dropPoints);
                     }
                 })
@@ -286,7 +287,8 @@ const app = Vue.createApp({
                 receiverName: this.orderCreation.receiverName,
                 receiverAddress: this.orderCreation.receiverUnit + " " + this.orderCreation.receiverAddress + " " + this.orderCreation.receiverPostal,
                 receiverPhone: "+65" + this.orderCreation.receiverPhone,
-                receiverEmail: this.orderCreation.receiverEmail
+                receiverEmail: this.orderCreation.receiverEmail,
+                pickupAddress: this.orderCreation.shipperAddress
             });
             alert(jsonData);
             fetch(`${create_order_URL}`,
@@ -315,7 +317,6 @@ const app = Vue.createApp({
                         throw `${data.code}: ${data.message}`;
                 }
             })
-
             // fetch(`${get_order_URL}`,
             // {
             //     method: "POST",
@@ -343,35 +344,63 @@ const app = Vue.createApp({
             //     }
             // })
         },
-        retrieveOrderByShipperId(){
-            if (this.userType == 'driver'){
-                fetch(`${get_order_URL}/checkall`)
+        retrieveOrderByUserId(user, userid){
+            fetch(`${get_order_URL}/${user}/${userid}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 404) {
                         // no book in db
                         this.message = data.message;
                     } else {
-                        res = data.data;
-                        console.log(res);
+                        orders = data.data.orders;
+                        console.log(orders);
+                        for (var i = 0; i < orders.length; i++){
+                            this.orderList.push({
+                                trackingID: orders[i].trackingID,
+                                driverID: orders[i].driverID,
+                                pickupAddress: orders[i].pickupAddress,
+                                receiverAddress: orders[i].receiverAddress,
+                                receiverEmail: orders[i].receiverEmail,
+                                receiverName: orders[i].receiverName,
+                                receiverPhone: orders[i].receiverPhone,
+                                shipperID: orders[i].shipperID,
+                                shipperAddress: '',
+                                latestStatus: '',
+                                latestTimestamp: ''
+                            })
+                            this.retrieveShipper(orders[i].shipperID, orders[i].trackingID)
+                            this.getDeliveryStatusByTrackingID(orders[i].trackingID)
+                        };
+                        console.log(this.orderList);
                     }
                 })
                 .catch(error => {
                     // Errors when calling the service; such as network error, 
                     // service offline, etc
-                    console.log(this.message + error);
+                    // console.log(this.message + error);
+
                 });
-            } else {
-            fetch(`${get_order_URL}/checkall`)
+        },
+        getDeliveryStatusByTrackingID(trackingid){
+            fetch(`${get_activity_URL}/${trackingid}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 404) {
                         // no book in db
-                        this.message = data.message;
+                        this.deliveryStatus = data.message;
                     } else {
-                        res = data.data.orders;
-                        this.orderList = res;
-                        console.log(this.orderList);
+                        res = data.data;
+                        latestStatus = res[res.length - 1].delivery_status;
+                        latestTimestamp = res[res.length - 1].timestamp;
+                        for (var i = 0; i < this.orderList.length; i++){
+                            if (this.orderList[i].trackingID == trackingid){
+                                this.orderList[i].latestStatus = latestStatus;
+                                this.orderList[i].latestTimestamp = latestTimestamp
+                                break;
+                            }
+                        }
+                        
+                            
                     }
                 })
                 .catch(error => {
@@ -380,17 +409,85 @@ const app = Vue.createApp({
                     console.log(this.message + error);
 
                 });
-            }
-            
+        }
+        ,
+        retrieveShipper(shipperid, trackingid){
+            fetch(`${get_shipper_URL}/${shipperid}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 404) {
+                        // no book in db
+                        this.message = data.message;
+                    } else {
+                        res = data.data;
+                        for (var i = 0; i < this.orderList.length; i++){
+                            if (this.orderList[i].trackingID == trackingid){
+                                this.orderList[i].shipperAddress = res.shipperAddress;
+                                break;
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    // Errors when calling the service; such as network error, 
+                    // service offline, etc
+                    // console.log(this.message + error);
+                })
+            // return shipperAddress
         },
-        
+        updateOrder(status,trackingid){
+
+            let jsonData = JSON.stringify({
+                trackingID: JSON.stringify(trackingid)
+            });
+            fetch(`${update_order_URL}/${status}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: jsonData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(JSON.stringify(data));
+                result = data.data;
+                alert(result);
+                // 3 cases
+                switch (data.code) {
+                    case 201:
+                        this.fetchResults.orderUpdate = true;
+                        break;
+                    case 400:
+                    case 500:
+                        this.errorMessages.orderUpdate = data.message;
+                        break;
+                    default:
+                        throw `${data.code}: ${data.message}`;
+                }
+            })
+        },
+        customOrderList(status){
+            for (var i = 0; i < this.orderList.length; i++){
+                console.log(this.orderList[i].latestStatus, status)
+                if(this.orderList[i].latestStatus == status){
+                    this.customOrderList.push(this.orderList[i])
+                }
+            }
+        }
     },
     beforeMount(){
-        this.retrieveOrderByShipperId();
+        if (this.userType == 'driver'){
+            this.retrieveOrderByUserId('driver',this.userDetail.driverID);
+        } else if (this.userType == 'shipper'){
+            this.retrieveOrderByUserId('shipper', this.userDetail.shipperID)
+        }
+        
     },
     mounted(){
         console.log(this.userDetail)
         this.verificationForm();
+        
         
     }
 })
@@ -472,13 +569,18 @@ app.component('home-header',{
                         }
                     }
                 })
+        },
+        getDriver(){
+
         }
     },
     methods:{
         userAuthenticate (formType) {
             if (this.userEmail != "" || this.userPassword != ""){
-                if (this.userEmail == this.driverLogin.email && this.userPassword == this.driverLogin.password){
-                    localStorage.setItem("userName", this.driverLogin.name)
+                if (this.userPassword == this.driverLogin.password){
+                    let userDetail = {'driverID':this.userEmail}
+                    localStorage.setItem("userDetail", JSON.stringify(userDetail))
+                    localStorage.setItem("userName", this.userEmail)
                     localStorage.setItem("userType", "driver");
                     form = document.getElementById(formType)
                     form.action = "pickup.html"
@@ -605,8 +707,8 @@ app.component('custom-select',{
     props:['droppoint']
     ,
     template:`
-    <select class="form-select" name="dropOff">
-        <option v-for="dp in dropPoints" :value="dp.region" v-model="orderCreation.receiverAddress">{{dp.region}}</option>
+    <select class="form-select" name="dropOffPoints">
+        <option v-for="dp in droppoint" :value="dp.region" v-model="orderCreation.receiverAddress">{{dp.region}}</option>
     </select>
     `
 })
