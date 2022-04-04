@@ -242,10 +242,6 @@ services:
         ports:
             - "9000:9000"
 
-networks:
-    rabbitmq_go_net:
-        driver: bridge
-
     #Sms: 5566
     # sendgrid
     # sendgrid:
@@ -307,3 +303,7 @@ networks:
     #         - phpDB
     #     stdin_open: true
     #     tty: true
+
+# networks:
+#     rabbitmq_go_net:
+#         driver: bridge
