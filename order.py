@@ -139,12 +139,15 @@ def find_driver():
 # [TESTED] This url fulfills order checking.
 
 
-@app.route("/driver/<string:trackingID>")
-def find_by_driver(driverID):
+@app.route("/<string:userType>/<string:userID>")
+def find_by_driver(userType,userID):
     '''
         returns the order information (trackingID, driverID, shipperID, deliveryStage, deliveryDate) given a trackingID
     '''
-    order = Order.query.filter_by(driverID=driverID).all()
+    if userType=="driver":
+        order = Order.query.filter_by(driverID=userID).all()
+    if userType=="shipper":
+        order = Order.query.filter_by(shipperID=userID).all()
     if len(order):
         return jsonify(
             {
@@ -154,6 +157,7 @@ def find_by_driver(driverID):
                 }
             }
         )
+        
     return jsonify(
         {
             "code": 404,

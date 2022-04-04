@@ -297,7 +297,7 @@ networks:
     #     dockerfile: camelcourier/droppointPHP.Dockerfile
     #     environment:
     #         - MYSQL_DBHOST=phpDB
-    #         - MYSQL_DBPORT=3306
+    #         - MYSQL_DBPORT=9906
     #         - MYSQL_DBUSER=is213
     #         - MYSQL_DBNAME=camelDB
     #     ports:
