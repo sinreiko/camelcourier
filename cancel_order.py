@@ -42,7 +42,7 @@ CORS(app)
 order_URL = environ.get('order_URL') or "http://localhost:5000/order"
 shipper_URL = environ.get('shipper_URL') or "http://localhost:5002/shipper"
 
-@app.route("/cancel", methods=['POST'])
+@app.route("/cancel_order", methods=['POST'])
 def cancel_order():
     '''
         Taking in trackingID from UI
@@ -81,7 +81,6 @@ def cancel_order():
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
 
-
 def processCancelOrder(trackingID):
     # 1. Get trackingID from order microservice
     # Invoke the order microservice
@@ -110,8 +109,7 @@ def processCancelOrder(trackingID):
         amqp_setup.check_setup()
         amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="cancel.order",
                                      body=msg, properties=pika.BasicProperties(delivery_mode=2))
-        print("\nCanceled status published to the RabbitMQ Exchange:", msg)
-        
+        print("\nCanceled status published to the RabbitMQ Exchange:", msg)      
     else:
         print('\nFailed to cancel order in activity')
    
