@@ -10,7 +10,7 @@ networks:
         driver: bridge
 
 # To be added to each service
-# network=<filename>_kong-net
+# 
 
 # Services [ <service name> : <port(s)> ]:
 #     - rabbitmq:5672:15672 (RabbitMQ)
@@ -21,22 +21,22 @@ networks:
 
 # HTTP-based services:
 #     Atomic:
-#         - order:5000
-#         - activityhttp:5001
-#         - shipper:5002
-#         - rate:5003
-#         - droppoint:5004
-#         - valuing:5005
-#     Composite:
+#         - order:5000 (used)
+#         - activityhttp:5001 (Used) D
+#         - shipper:5002 (Used)
+#         - rate:5003 (wont use)
+#         - droppoint:5004 (Used)
+#         - valuing:5005 (Used)
+#     Composite: (Used)
 #         - pick_parcel:5006
 #         - create_order:5007
 #         - update_order:5008
 #         - cancel_order:5009
 
 # AMQP-based services (Atomic):
-#     - activity
-#     - send_sms:5566
-#     - email:9000
+#     - activity (wont use)
+#     - send_sms:5566 (wont use)
+#     - email:9000 (wont use)
 
 services:
     ##################################
@@ -138,6 +138,8 @@ services:
             dockerfile: order.Dockerfile
         image: 889090/order:1.0
         restart: always
+        networks:
+            - kong-net
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
         ports:
@@ -152,6 +154,8 @@ services:
             dockerfile: activityhttp.Dockerfile
         image: 889090/activityhttp:1.0
         restart: always
+        networks:
+            - kong-net
         environment:
             dbURL: 'mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB'
             PYTHONUNBUFFERED: 1
