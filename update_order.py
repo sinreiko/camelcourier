@@ -23,7 +23,7 @@ order_URL = environ.get('order_URL') or "http://order:5000/order"
 shipper_URL = environ.get('shipper_URL') or "http://shipper:5002/shipper"
 
 
-@app.route("/delay", methods=['POST'])
+@app.route("/update/delay", methods=['POST'])
 def delay():
     '''
         Taking in tracking ID from UI
@@ -147,7 +147,7 @@ def delayOrder(order):
     return order_result
 
 
-@app.route("/complete", methods=['POST'])
+@app.route("/update/complete", methods=['POST'])
 def complete():
     '''
         Taking in tracking ID from UI
