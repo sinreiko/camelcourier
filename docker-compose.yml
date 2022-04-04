@@ -410,26 +410,27 @@ services:
     db:
         image: mysql:5.7
         environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: camelDB
-        MYSQL_USER: is213
-        MYSQL_PASSWORD:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: camelDB
+            MYSQL_USER: is213
+            MYSQL_PASSWORD:
         ports:
-        - "9906:3306"
-    # droppointphp:
-    #     image: php:7.2.2-apache
-    #     build:
-    #         context: ./
-    #         dockerfile: droppointPHP.Dockerfile
-    #     container_name: droppoint
-    #     depends_on:
-    #     - db
-    #     volumes:
-    #     - ./php :/var/www/html/
-    #     ports:
-    #     - "5004:80"
-    #     stdin_open: true
-    #     tty: true
+            - "9906:3306"
+
+    droppointphp:
+        image: php:7.2.2-apache
+        build:
+            context: ./
+            dockerfile: droppointPHP.Dockerfile
+        container_name: droppoint
+        depends_on:
+            - db
+        volumes:
+            - ./php:/var/www/html/
+        ports:
+            - "5004:80"
+        stdin_open: true
+        tty: true
 
 # networks:
 #     rabbitmq_go_net:
