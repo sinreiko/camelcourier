@@ -9,6 +9,9 @@ networks:
     kong-net:
         driver: bridge
 
+# To be added to each service
+# network=<filename>_kong-net
+
 # Services [ <service name> : <port(s)> ]:
 #     - rabbitmq:5672:15672 (RabbitMQ)
 #     - kong-database:5432 (Postgres - Kong)
