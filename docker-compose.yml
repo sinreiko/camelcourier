@@ -2,6 +2,38 @@ version: '3.8'
 
 volumes:
     rabbitmq_data:
+    pgdata: 
+    kongadata:
+
+networks:
+    kong-net:
+        driver: bridge
+
+    # Services:
+    #     - rabbitmq:5672:15672 (RabbitMQ)
+    #     - kong-database:5432 (Postgres - Kong)
+    #     - kong-migration (Prepare Database - Kong)
+    #     - kong:8000 (Kong)
+    #     - konga:1337 (Kong GUI)
+    
+    # HTTP-based services:
+    #     Atomic:
+    #         - order:5000
+    #         - activity:5001
+    #         - shipper:5002
+    #         - rate:5003
+    #         - droppoint:5004
+    #         - valuing:5005
+    #     Composite:
+    #         - pick_parcel:5006
+    #         - create_order:5007
+    #         - update_order:5008
+    #         - cancel_order:5009
+
+    # AMQP-based services (Atomic):
+    #     - activity
+    #     - send_sms:5566
+    #     - email:9000
 
 services:
     ##################################
@@ -17,22 +49,86 @@ services:
         volumes: 
             - rabbitmq_data:/var/lib/rabbitmq
 
-    send_sms:
-        build:
-            context: ./
-            dockerfile: send_sms.Dockerfile
-        image: 889090/send_sms:2.1
+    #######################################
+    # Postgres: The database used by Kong #
+    #######################################
+    kong-database:
+        image: postgres:9.6
         restart: always
-        depends_on:
-            - rabbitmq
-            - activity
+        networks:
+            - kong-net
         environment:
-            rabbit_host: camel-rabbitmq
-            rabbit_port: 5672
-            PYTHONUNBUFFERED: 1
+            POSTGRES_DB: kong
+            POSTGRES_USER: kong
+            POSTGRES_PASSWORD: password
         ports:
-            - "5566:5566"
-    #Order: 5000
+            - "5432:5432"
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "kong"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+
+    ###########################
+    # Kong database migration #
+    ###########################
+    kong-migration:
+        image: kong:2.0.4
+        command: "kong migrations bootstrap"
+        restart: on-failure
+        networks:
+            - kong-net
+        environment:
+            KONG_DATABASE: postgres
+            KONG_PG_HOST: kong-database
+            KONG_PG_USER: kong
+            KONG_PG_PASSWORD: password
+        depends_on:
+            - kong-database
+
+    #########################
+    # Kong: The API Gateway #
+    #########################
+    kong:
+        image: kong:2.0.4
+        restart: always
+        networks:
+            - kong-net
+        environment:
+            KONG_DATABASE: postgres
+            KONG_PG_HOST: kong-database
+            KONG_PG_USER: kong
+            KONG_PG_PASSWORD: password
+            KONG_PROXY_LISTEN: 0.0.0.0:8000
+            KONG_ADMIN_LISTEN: 0.0.0.0:8001
+        depends_on:
+            - kong-migration
+        ports:
+            - "8000:8000"
+
+    ###################
+    # Konga: Kong GUI #
+    ###################
+    konga:
+        image: pantsel/konga
+        restart: always
+        networks:
+            - kong-net
+        environment:
+            DB_ADAPTER: postgres
+            DB_HOST: kong-database
+            DB_USER: kong
+            DB_PASSWORD: password
+            DB_DATABASE: konga_db
+        depends_on:
+            - kong
+        ports:
+            - "1337:1337"
+        volumes:
+            - kongadata:/app/kongadata
+
     order:
         build:
             context: ./
@@ -44,24 +140,6 @@ services:
         ports:
             - "5000:5000"
 
-    #####################################################
-    # Activity: The Activity Log Consumber microservice #
-    #####################################################
-    activity:
-        build:
-            context: ./
-            dockerfile: activity.Dockerfile
-        image: 889090/activity:1.0
-        restart: always
-        depends_on:
-            - rabbitmq
-        environment:
-            rabbit_host: camel-rabbitmq
-            rabbit_port: 5672
-            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
-            PYTHONUNBUFFERED: 1
-
-    #Activity: 5001
     #########################################################
     # Activityhttp: The Activity Log Consumber microservice #
     #########################################################
@@ -76,7 +154,7 @@ services:
             PYTHONUNBUFFERED: 1
         ports:
             - "5001:5001"
-    #Shipper: 5002
+
     shipper:
         build:
             context: ./
@@ -87,8 +165,7 @@ services:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
         ports:
             - "5002:5002"
-    
-    #Rate: 5003
+
     rate:
         build:
             context: ./
@@ -100,7 +177,6 @@ services:
         ports:
             - "5003:5003"
 
-    #DropPoint: 5004
     droppoint:
         build:
             context: ./
@@ -112,7 +188,6 @@ services:
         ports:
             - "5004:5004"
 
-    #Valuing: 5005
     valuing:
         build:
             context: ./
@@ -127,8 +202,7 @@ services:
             rate_URL: http://rate:5003/rate
         ports:
             - "5005:5005"
-    
-    #PickParcel: 5006
+
     ###########################################################
     # Pick Parcel: Picking parcel drop-off point microservice #
     ###########################################################
@@ -157,8 +231,6 @@ services:
         ports:
             - "5006:5006"
 
-
-    #Create Order: 5007
     create_order:
         build:
             context: ./
@@ -181,7 +253,6 @@ services:
         ports:
             - "5007:5007"
 
-    #update_order: 5008
     update_order:
         build:
             context: ./
@@ -224,8 +295,39 @@ services:
         ports:
             - "5009:5009"
 
-    #AcceptDelivery: 5009
-    #Email: 9000
+    #####################################################
+    # Activity: The Activity Log Consumber microservice #
+    #####################################################
+    activity:
+        build:
+            context: ./
+            dockerfile: activity.Dockerfile
+        image: 889090/activity:1.0
+        restart: always
+        depends_on:
+            - rabbitmq
+        environment:
+            rabbit_host: camel-rabbitmq
+            rabbit_port: 5672
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+            PYTHONUNBUFFERED: 1
+
+    send_sms:
+        build:
+            context: ./
+            dockerfile: send_sms.Dockerfile
+        image: 889090/send_sms:2.1
+        restart: always
+        depends_on:
+            - rabbitmq
+            - activity
+        environment:
+            rabbit_host: camel-rabbitmq
+            rabbit_port: 5672
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5566:5566"
+
     email:
         build:
             context: ./
@@ -241,6 +343,8 @@ services:
             rabbit_port: 5672
         ports:
             - "9000:9000"
+
+
 
     #Sms: 5566
     # sendgrid
