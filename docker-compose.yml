@@ -9,31 +9,31 @@ networks:
     kong-net:
         driver: bridge
 
-    # Services:
-    #     - rabbitmq:5672:15672 (RabbitMQ)
-    #     - kong-database:5432 (Postgres - Kong)
-    #     - kong-migration (Prepare Database - Kong)
-    #     - kong:8000 (Kong)
-    #     - konga:1337 (Kong GUI)
-    
-    # HTTP-based services:
-    #     Atomic:
-    #         - order:5000
-    #         - activity:5001
-    #         - shipper:5002
-    #         - rate:5003
-    #         - droppoint:5004
-    #         - valuing:5005
-    #     Composite:
-    #         - pick_parcel:5006
-    #         - create_order:5007
-    #         - update_order:5008
-    #         - cancel_order:5009
+# Services [ <service name> : <port(s)> ]:
+#     - rabbitmq:5672:15672 (RabbitMQ)
+#     - kong-database:5432 (Postgres - Kong)
+#     - kong-migration (Prepare Database - Kong)
+#     - kong:8000 (Kong)
+#     - konga:1337 (Kong GUI)
 
-    # AMQP-based services (Atomic):
-    #     - activity
-    #     - send_sms:5566
-    #     - email:9000
+# HTTP-based services:
+#     Atomic:
+#         - order:5000
+#         - activityhttp:5001
+#         - shipper:5002
+#         - rate:5003
+#         - droppoint:5004
+#         - valuing:5005
+#     Composite:
+#         - pick_parcel:5006
+#         - create_order:5007
+#         - update_order:5008
+#         - cancel_order:5009
+
+# AMQP-based services (Atomic):
+#     - activity
+#     - send_sms:5566
+#     - email:9000
 
 services:
     ##################################
