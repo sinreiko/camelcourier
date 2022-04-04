@@ -168,6 +168,8 @@ services:
             dockerfile: shipper.Dockerfile
         image: 889090/shipper:1.0
         restart: always
+        networks:
+            - kong-net
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
         ports:
@@ -190,6 +192,8 @@ services:
             dockerfile: droppoint.Dockerfile
         image: 889090/droppoint:1.0
         restart: always
+        networks:
+            - kong-net
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
         ports:
@@ -201,6 +205,8 @@ services:
             dockerfile: valuing.Dockerfile
         image: 889090/valuing:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - order
             - rate
@@ -219,6 +225,8 @@ services:
             dockerfile: pick_parcel.Dockerfile
         image: 889090/pick_parcel:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - droppoint
             - order
@@ -244,6 +252,8 @@ services:
             dockerfile: create_order.Dockerfile
         image: 889090/create_order:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - activity
             - order
@@ -267,6 +277,8 @@ services:
             dockerfile: update_order.Dockerfile
         image: 889090/update_order:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - order
             - activity
@@ -288,6 +300,8 @@ services:
             dockerfile: cancel_order.Dockerfile
         image: 889090/cancel_order:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - order
             - activity
