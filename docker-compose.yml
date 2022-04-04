@@ -142,6 +142,7 @@ services:
             - kong-net
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+            PYTHONUNBUFFERED: 1
         ports:
             - "5000:5000"
 
@@ -174,6 +175,7 @@ services:
             - kong-net
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+            PYTHONUNBUFFERED: 1
         depends_on:
             - kong
         ports:
@@ -187,6 +189,7 @@ services:
         restart: always
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+            PYTHONUNBUFFERED: 1
         ports:
             - "5003:5003"
 
@@ -200,6 +203,7 @@ services:
             - kong-net
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+            PYTHONUNBUFFERED: 1
         depends_on:
             - kong
         ports:
@@ -220,6 +224,7 @@ services:
         environment:
             order_URL: http://order:5000/order
             rate_URL: http://rate:5003/rate
+            PYTHONUNBUFFERED: 1
         ports:
             - "5005:5005"
 
@@ -300,6 +305,7 @@ services:
             rabbit_port: 5672
             order_URL: http://order:5000/order
             shipper_URL: http://shipper:5002/shipper
+            PYTHONUNBUFFERED: 1
         ports:
             - "5008:5008"
 
@@ -324,6 +330,7 @@ services:
             rabbit_port: 5672
             order_URL: http://order:5000/order
             shipper_URL: http://shipper:5002/shipper
+            PYTHONUNBUFFERED: 1
         ports:
             - "5009:5009"
 
@@ -373,6 +380,7 @@ services:
         environment:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
+            PYTHONUNBUFFERED: 1
         ports:
             - "9000:9000"
 
