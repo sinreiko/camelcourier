@@ -200,12 +200,12 @@ This is an example of how to list things you need to use the software and how to
 <!-- CONTACT -->
 ## Contact
 
-Vasilis - [@vasng](https://www.instagram.com/vasnjq/) - vasilis.ng.2020@scis.smu.edu.sg</br>
-Po Chien - [@handle](link here) - pochien.lin.2019@socsc.smu.edu.sg</br>
-Jun Hui - [@handle](link here) - junhui.lee.2020@scis.smu.edu.sg</br>
-Nicholas - [@handle](link here) - kwwong.2020@scis.smu.edu.sg</br>
-Reiko - [@handle](link here) - reiko.lee.2020@scis.smu.edu.sg</br>
-Shao Ming - [@handle](link here) - smlee.2020@scis.smu.edu.sg</br>
+Vasilis - vasilis.ng.2020@scis.smu.edu.sg</br>
+Po Chien - pochien.lin.2019@socsc.smu.edu.sg</br>
+Jun Hui - junhui.lee.2020@scis.smu.edu.sg</br>
+Nicholas - kwwong.2020@scis.smu.edu.sg</br>
+Reiko - reiko.lee.2020@scis.smu.edu.sg</br>
+Shao Ming - smlee.2020@scis.smu.edu.sg</br>
 
 Project Link: [https://github.com/sinreiko/camelcourier](https://github.com/sinreiko/camelcourier)
 
