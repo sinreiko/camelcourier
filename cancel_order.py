@@ -42,7 +42,7 @@ CORS(app)
 order_URL = environ.get('order_URL') or "http://localhost:5000/order"
 shipper_URL = environ.get('shipper_URL') or "http://localhost:5002/shipper"
 
-@app.route("/cancel_order", methods=['POST'])
+@app.route("/cancel", methods=['POST'])
 def cancel_order():
     '''
         Taking in trackingID from UI
