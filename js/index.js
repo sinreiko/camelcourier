@@ -90,15 +90,20 @@ const app = Vue.createApp({
                 body: JSON.stringify({
                     query           
                 })
-            }).then(response=>{
+            }).then(response=>response.json()
                 // resp = JSON.parse(response)
-                console.log(response.json())
-                for(ans in response['latest']){
-                    console.log(ans)
-                    this.currency_obj[ans["quoteCurrency"]]=ans["quote"]
-                    console.log(`=======The currency ${ans["quoteCurrency"]} has been updated======`)
+            ).then(
+                data=>{
+                    let resp=data.data.latest
+                    console.log(resp)
+                    for(ans of resp){
+                        console.log(ans)
+                        this.currency_obj[ans.quoteCurrency]=ans.quote
+                        console.log(`updating ${ans.quoteCurrency}`)
+                    }
                 }
-            }).catch(
+            )
+            .catch(
                 error=>{console.log(error)}
             )
         },
