@@ -23,7 +23,7 @@ order_URL = environ.get('order_URL') or "http://localhost:5000/order"
 shipper_URL = environ.get('shipper_URL') or "http://localhost:5002/shipper"
 
 
-@app.route("/<string:status>", methods=['POST'])
+@app.route("/update_order/update/<string:status>", methods=['POST'])
 def update_order(status):
     '''
     Taking in tracking ID from UI

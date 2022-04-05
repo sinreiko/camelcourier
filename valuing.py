@@ -94,19 +94,20 @@ def processValuing(size_info):
         "&destinations=" + receiverAddress + \
         "&key=AIzaSyCtH98HlunuSLPLGvBf0HmEPnPd6YIye5M"
     output = requests.get(url).json()
-
+    print("OUTPUT: ", output)
     # 6-- Return distance
     status = output['rows'][0]['elements'][0]['status']
     if status == "ZERO_RESULTS":
         return jsonify({
             "code": 404,
             "message": "The addresses are invalid."
-        }), 404
+        })
     distance = output['rows'][0]['elements'][0]['distance']['value'] / 1000
 
     # 7-- Request pricing {distance, size} from rate.py
     rate_URL = environ.get('rate_URL') or "http://localhost:5003/rate"
     rate_URL += "/" + str(distance) + "/" + size_info['size']
+    print(rate_URL)
     rate_result = invoke_http(rate_URL, method='GET', json=None)
     print('rate_result:', rate_result)
 

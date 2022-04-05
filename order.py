@@ -80,7 +80,7 @@ class Order(db.Model):
     # Uncomment line below to test this function
 
 
-@app.route("/checkall")
+@app.route("/order/checkall")
 def get_all():
     '''returns a JSON object with list of all order objects 
         [{trackingID, driverID, shipperID, receiverName, receiverAddress, receiverPhone, receiverEmail, pickupAddress},
@@ -139,7 +139,7 @@ def find_driver():
 # [TESTED] This url fulfills order checking.
 
 
-@app.route("/<string:userType>/<string:userID>")
+@app.route("/order/find/<string:userType>/<string:userID>")
 def find_by_driver(userType,userID):
     '''
         returns the order information (trackingID, driverID, shipperID, deliveryStage, deliveryDate) given a trackingID
@@ -169,7 +169,7 @@ def find_by_driver(userType,userID):
     # -----------------[START: find_order_by_driver]-------------------
 
 
-@app.route("/order/<string:trackingID>")
+@app.route("/order/tracking/<string:trackingID>")
 def find_by_order_no(trackingID):
     '''
         returns the order information (trackingID, driverID, shipperID, deliveryStage, deliveryDate) given a trackingID

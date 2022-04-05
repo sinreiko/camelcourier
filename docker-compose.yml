@@ -9,6 +9,9 @@ networks:
     kong-net:
         driver: bridge
 
+# To be added to each service
+# 
+
 # Services [ <service name> : <port(s)> ]:
 #     - rabbitmq:5672:15672 (RabbitMQ)
 #     - kong-database:5432 (Postgres - Kong)
@@ -18,22 +21,22 @@ networks:
 
 # HTTP-based services:
 #     Atomic:
-#         - order:5000
-#         - activityhttp:5001
-#         - shipper:5002
-#         - rate:5003
-#         - droppoint:5004
-#         - valuing:5005
-#     Composite:
+#         - order:5000 (used)
+#         - activityhttp:5001 (Used) D
+#         - shipper:5002 (Used)
+#         - rate:5003 (wont use)
+#         - droppoint:5004 (Used)
+#         - valuing:5005 (Used)
+#     Composite: (Used)
 #         - pick_parcel:5006
 #         - create_order:5007
 #         - update_order:5008
 #         - cancel_order:5009
 
 # AMQP-based services (Atomic):
-#     - activity
-#     - send_sms:5566
-#     - email:9000
+#     - activity (wont use) 
+#     - send_sms:5566 (wont use)
+#     - email:9000 (wont use)
 
 services:
     ##################################
@@ -43,6 +46,8 @@ services:
         image: rabbitmq:3-management
         hostname: camel-rabbitmq
         restart: always
+        networks:
+            - kong-net
         ports:
             - "5672:5672"
             - "15672:15672"
@@ -135,8 +140,11 @@ services:
             dockerfile: order.Dockerfile
         image: 889090/order:1.0
         restart: always
+        networks:
+            - kong-net
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+            PYTHONUNBUFFERED: 1
         ports:
             - "5000:5000"
 
@@ -149,9 +157,13 @@ services:
             dockerfile: activityhttp.Dockerfile
         image: 889090/activityhttp:1.0
         restart: always
+        networks:
+            - kong-net
         environment:
             dbURL: 'mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB'
             PYTHONUNBUFFERED: 1
+        depends_on:
+            - kong
         ports:
             - "5001:5001"
 
@@ -161,8 +173,13 @@ services:
             dockerfile: shipper.Dockerfile
         image: 889090/shipper:1.0
         restart: always
+        networks:
+            - kong-net
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+            PYTHONUNBUFFERED: 1
+        depends_on:
+            - kong
         ports:
             - "5002:5002"
 
@@ -174,19 +191,25 @@ services:
         restart: always
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+            PYTHONUNBUFFERED: 1
         ports:
             - "5003:5003"
 
-    droppoint:
-        build:
-            context: ./
-            dockerfile: droppoint.Dockerfile
-        image: 889090/droppoint:1.0
-        restart: always
-        environment:
-            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
-        ports:
-            - "5004:5004"
+    # droppoint:
+    #     build:
+    #         context: ./
+    #         dockerfile: droppoint.Dockerfile
+    #     image: 889090/droppoint:1.0
+    #     restart: always
+    #     networks:
+    #         - kong-net
+    #     environment:
+    #         dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+    #         PYTHONUNBUFFERED: 1
+    #     depends_on:
+    #         - kong
+    #     ports:
+    #         - "5004:5004"
 
     valuing:
         build:
@@ -194,12 +217,16 @@ services:
             dockerfile: valuing.Dockerfile
         image: 889090/valuing:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - order
             - rate
+            - kong
         environment:
             order_URL: http://order:5000/order
             rate_URL: http://rate:5003/rate
+            PYTHONUNBUFFERED: 1
         ports:
             - "5005:5005"
 
@@ -212,6 +239,8 @@ services:
             dockerfile: pick_parcel.Dockerfile
         image: 889090/pick_parcel:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - droppoint
             - order
@@ -219,6 +248,7 @@ services:
             - email
             - activity
             - rabbitmq
+            - kong
         environment:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
@@ -237,6 +267,8 @@ services:
             dockerfile: create_order.Dockerfile
         image: 889090/create_order:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - activity
             - order
@@ -244,6 +276,7 @@ services:
             - send_sms
             - email
             - rabbitmq
+            - kong
         environment:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
@@ -260,17 +293,21 @@ services:
             dockerfile: update_order.Dockerfile
         image: 889090/update_order:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - order
             - activity
             - rabbitmq
             - send_sms
             - email
+            - kong
         environment:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
             order_URL: http://order:5000/order
             shipper_URL: http://shipper:5002/shipper
+            PYTHONUNBUFFERED: 1
         ports:
             - "5008:5008"
 
@@ -281,17 +318,21 @@ services:
             dockerfile: cancel_order.Dockerfile
         image: 889090/cancel_order:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - order
             - activity
             - rabbitmq
             - send_sms
             - email
+            - kong
         environment:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
             order_URL: http://order:5000/order
             shipper_URL: http://shipper:5002/shipper
+            PYTHONUNBUFFERED: 1
         ports:
             - "5009:5009"
 
@@ -304,6 +345,8 @@ services:
             dockerfile: activity.Dockerfile
         image: 889090/activity:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - rabbitmq
         environment:
@@ -318,6 +361,8 @@ services:
             dockerfile: send_sms.Dockerfile
         image: 889090/send_sms:2.1
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - rabbitmq
             - activity
@@ -335,12 +380,15 @@ services:
             dockerfile: email.Dockerfile
         image: 889090/email_test:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - rabbitmq
             - activity
         environment:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
+            PYTHONUNBUFFERED: 1
         ports:
             - "9000:9000"
 
@@ -390,23 +438,6 @@ services:
     #     ports:
     #         - "9906:3306"
 
-    # droppoint_php:
-    #     container_name: droppointphp
-    #     build:
-    #     context: .
-    #     dockerfile: camelcourier/droppointPHP.Dockerfile
-    #     environment:
-    #         - MYSQL_DBHOST=phpDB
-    #         - MYSQL_DBPORT=9906
-    #         - MYSQL_DBUSER=is213
-    #         - MYSQL_DBNAME=camelDB
-    #     ports:
-    #         - 8080:80
-    #         - 8083:443
-    #     depends_on:
-    #         - phpDB
-    #     stdin_open: true
-    #     tty: true
     db:
         image: mysql:5.7
         environment:

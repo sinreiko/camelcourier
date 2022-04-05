@@ -167,7 +167,14 @@
                                         
                                     </div>
                                     <hr>
-                                    <h3>Total: <strong>${{orderCreation.price}}</strong></h3>
+                                    <h3>Total: <strong>${{Math.round(orderCreation.price*currency_obj[currency]*100)/100}}</strong></h3>
+                                    <!-- currency options -->
+                                    <!-- this is just to call the function -->
+                                    {{showGraphQLData()}}
+                                    <input type="radio" name="currency" value="EUR" v-model="currency">EUR
+                                    <input type="radio" name="currency" value="USD" v-model="currency">USD
+                                    <input type="radio" name="currency" value="CNY" v-model="currency">RMB
+                                    <input type="radio" name="currency" value="SGD" v-model="currency">SGD
                                 </div>
                             </div>
                         </div>

@@ -8,6 +8,10 @@ const pick_parcel_URL = "http://localhost:5006/pickparcel"
 const create_order_URL = "http://localhost:5007/create_order"
 const update_order_URL = "http://localhost:5008"
 const cancel_order_URL = "http://localhost:5009"
+// GraphQL: exchange rate
+let SWOP_API_key='7b31aa8dabd1df60435aec0cbff8f9d17211d33f6b2f20dfe7e7a85bb539689e'
+let SWOP_URL=`https://swop.cx/graphql?api-key=${SWOP_API_key}`
+
 
 const app = Vue.createApp({
     data(){
@@ -55,10 +59,57 @@ const app = Vue.createApp({
             errorMessages:{
                 orderCreation: "",
                 getDeliveryStatus: ""
+            },
+            // these are variables for the graphQL currency app
+            currency:"SGD",
+            currency_obj:{
+                SGD:1,
+                EUR:0.67,
+                USD:0.74,
+                CNY:4.68
             }
         };
     },
     methods: {
+        showGraphQLData(){
+            const query=`
+                query Latest {
+                    latest(baseCurrency: "SGD", quoteCurrencies: ["USD", "EUR", "CNY"]) {
+                    date
+                    baseCurrency
+                    quoteCurrency
+                    quote
+                    }
+                }
+            `;
+
+            fetch(SWOP_URL,{
+                method:"POST",
+                headers: {
+                    "Content-Type":"application/json",
+                    "Accept":"application.json"
+                },
+                body: JSON.stringify({
+                    query           
+                })
+            }).then(response=>response.json()
+                // resp = JSON.parse(response)
+            ).then(
+                data=>{
+                    let resp=data.data.latest
+                    // console.log(resp)
+                    for(ans of resp){
+                        // console.log(ans)
+                        this.currency_obj[ans.quoteCurrency]=ans.quote
+                        // console.log(`updating ${ans.quoteCurrency}`)
+                    }
+                }
+            )
+            .catch(
+                error=>{console.log(error)}
+            )
+        },
+
         calculateProgress(status){
             if (status == 'Order created'){
                 return 10
@@ -581,7 +632,7 @@ app.component('home-header',{
             <!-- <div class="row"> -->
                 <nav class="navbar navbar-expand-lg custom_nav-container">
                     <!-- <div class="col-auto"> -->
-                        
+
                         <a class="navbar-brand" href="index.html">
                             <span>
                                 CAMELCOURIER
@@ -600,7 +651,7 @@ app.component('home-header',{
                                 </li>
                             </ul>
                         </div>
-                    <!-- </div> -->
+                    <!-- </div> -->            
                     <div class=" mr-lg-5 pt-3">
                         <form id="form-login" class="form-inline" action="" method="post">
                             <div class="form-group col-sm-6 col-md-4">
@@ -615,7 +666,7 @@ app.component('home-header',{
                                 <button @click.prevent="userAuthenticate('form-login')" type="submit" class="action-button btn btn-primary mb-2 w-100" style="padding:0">Login</button>
                             </div>
                         </form>
-                    </div>
+                    </div>             
             </nav>
             </div>
     </header>`
@@ -865,3 +916,6 @@ function geolocate() {
         });
     }
 }
+
+
+
