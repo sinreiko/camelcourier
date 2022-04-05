@@ -46,6 +46,8 @@ services:
         image: rabbitmq:3-management
         hostname: camel-rabbitmq
         restart: always
+        networks:
+            - kong-net
         ports:
             - "5672:5672"
             - "15672:15672"
@@ -343,6 +345,8 @@ services:
             dockerfile: activity.Dockerfile
         image: 889090/activity:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - rabbitmq
         environment:
@@ -357,6 +361,8 @@ services:
             dockerfile: send_sms.Dockerfile
         image: 889090/send_sms:2.1
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - rabbitmq
             - activity
@@ -374,6 +380,8 @@ services:
             dockerfile: email.Dockerfile
         image: 889090/email_test:1.0
         restart: always
+        networks:
+            - kong-net
         depends_on:
             - rabbitmq
             - activity
