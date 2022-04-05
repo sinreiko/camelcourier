@@ -177,16 +177,16 @@ services:
         ports:
             - "5003:5003"
 
-    droppoint:
-        build:
-            context: ./
-            dockerfile: droppoint.Dockerfile
-        image: 889090/droppoint:1.0
-        restart: always
-        environment:
-            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
-        ports:
-            - "5004:5004"
+    # droppoint:
+    #     build:
+    #         context: ./
+    #         dockerfile: droppoint.Dockerfile
+    #     image: 889090/droppoint:1.0
+    #     restart: always
+    #     environment:
+    #         dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
+    #     ports:
+    #         - "5004:5004"
 
     valuing:
         build:
@@ -417,7 +417,7 @@ services:
         ports:
             - "9906:3306"
 
-    droppointphp:
+    droppoint:
         image: php:7.2.2-apache
         build:
             context: ./
