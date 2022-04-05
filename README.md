@@ -214,8 +214,9 @@ Project Link: [https://github.com/sinreiko/camelcourier](https://github.com/sinr
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Troubleshooting
-##### Droppoint (PHP ver) encounters connect refused error
+### Droppoint (PHP ver) encounters connect refused error
 **Case 1: Docker requires permission to folder**
+
 This can occur if docker settings did not allow the file to be accessed.
 As this app mounts folders to a path in docker-compose.yml, Docker needs permission to this folder path to work as intended.
 
@@ -229,6 +230,7 @@ _*Enabling file permission on Docker*_
 4. In Docker Desktop, click ```Apply and Restart``` on the bottom right corner
 
 **Case 2: Port for SQL is taken**
+
 This can occur if the port for camel_courier_db_1 is taken. The container uses port 9906. It should not be a commonly used port.
 There are two options to resolve this:
 1. Option 1: Resolve from local machine by freeing up port 9906
