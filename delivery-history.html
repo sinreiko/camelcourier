@@ -47,30 +47,23 @@
                 <div class="tab-content mx-auto" id="pills-tabContent">
                     <!-- Ongoing Tab -->
                     <div class="tab-pane fade show active" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab">
-                        <div class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-3">
-                            <div class="card border-urgent">
-                                <a class="stretched-link text-decoration-none" href='#' data-toggle="modal" data-target="#orderModal">
+                        <div is="order-info" v-for="order in orderList" class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-3">
+                            <div v-if="order.latestStatus=='Pickup'||order.latestStatus=='Delayed'" class="card border-urgent">
+                                <a class="stretched-link text-decoration-none" href='#' data-toggle="modal" data-target="#orderModal" v-on:click="trackParcel(order.trackingID)">
                 
-                                <div class="card-header">[Date] [Time]</div>
-                                <div class="card-body mb-3">
-                                    <small>
-                                        <dl class="row mb-0">
-                                            <dt>Pickup Address</dt>
-                                            <dd>[Address]</dd>
-                                        </dl>
-                                        <dl class="row mb-0">
-                                            <dt>Receiver Address</dt>
-                                            <dd class="col-8 col-sm-9">[Address]</dd>
-                                        </dl>
-                                    </small>
-                                    <hr>
-                                    <div class="float-left money-icon">
+                                    <div class="card-header">Tracking No. {{order.trackingID}}</div>
+                                    <div class="card-body mb-3">
+                                        <small>
+                                            <dl class="row mb-0">
+                                                <dt>Pickup Address</dt>
+                                                <dd>{{order.pickupAddress}}</dd>
+                                            </dl>
+                                            <dl class="row mb-0">
+                                                <dt>Receiver Address</dt>
+                                                <dd class="col-8 col-sm-9">{{order.receiverAddress}}</dd>
+                                            </dl>
+                                        </small>
                                     </div>
-                                    <div class="float-right">
-                                        [Price]
-                                    </div>
-                                    
-                                </div>
                                 </a>
                             </div>
                             <!-- Modal -->
@@ -78,7 +71,7 @@
                                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. [TrackingID]</h5>
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. {{order.trackingID}}</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                             </button>
@@ -87,8 +80,8 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">General Information</th>
-                                                        <th scope="col">Parcel Details</th>
+                                                        <th scope="col">Receiver Details</th>
+                                                        <th scope="col"></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -96,8 +89,8 @@
                                                         <td>
                                                             <small>
                                                                 <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Date Created</dt>
-                                                                    <dd class="col-8 col-sm-9">2022-03-20</dd>
+                                                                    <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                    <dd class="col-8 col-sm-9">{{order.receiverName}}</dd>
                                                                 </dl>
                                                             </small>
                                                             
@@ -105,67 +98,29 @@
                                                         <td>
                                                             <small>
                                                                 <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Delivery Fee</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Price]</dd>
-                                                                </dl>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Weight</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Weight]</dd>
-                                                                </dl>
-                                                            </small>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                                <thead>
-                                                    <th scope="col">Shipper Address</th>
-                                                    <th scope="col">Receiver Address</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <small>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Name</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Shipper Name]</dd>
-                                                                </dl>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Email</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Shipper Email]</dd>
-                                                                </dl>
-                                                                <dl class="row mb-0">
                                                                     <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Shipper Phone]</dd>
-                                                                </dl>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Address</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Shipper Address]</dd>
+                                                                    <dd class="col-8 col-sm-9">{{order.receiverPhone}}</dd>
                                                                 </dl>
                                                             </small>
                                                         </td>
-                                                        <td>
-                                                            <small>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Name</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Receiver Name]</dd>
-                                                                </dl>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Email</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Receiver Email]</dd>
-                                                                </dl>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Receiver Phone]</dd>
-                                                                </dl>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Address</dt>
-                                                                    <dd class="col-8 col-sm-9">[Enter Receiver Address]</dd>
-                                                                </dl>
-                                                            </small>
-                                                        </td>
-                                                        
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <p><strong>{{trackingResult.latest_status}} · {{trackingResult.latest_timestamp}}</strong></p>
+                                                    <div class="progress mb-2">
+                                                        <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" ></div>
+                                                    </div>
+                                                    <ul v-for="activity in trackingResult.activities">
+                                                        <activity v-bind:trackingid="activity.tracking_id" 
+                                                                v-bind:deliverystatus="activity.delivery_status"
+                                                                v-bind:deliverydesc="activity.delivery_desc"
+                                                                v-bind:timestamp="activity.timestamp"
+                                                        ></activity>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn action-button previous previous_button" data-dismiss="modal">Close</button>
@@ -175,8 +130,8 @@
                                                     Update
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="#" data-dismiss="modal">Delay</a>
-                                                    <a class="dropdown-item" href="#" data-dismiss="modal">Complete</a>
+                                                    <a class="dropdown-item" href="#" data-dismiss="modal" v-on:click="updateOrder('delay',order.trackingID)">Delay</a>
+                                                    <a class="dropdown-item" href="#" data-dismiss="modal" v-on:click="updateOrder('complete',order.trackingID)">Complete</a>
                                                 </div>
                                             </div>
                                             <!-- end of dropdown btn -->
@@ -192,23 +147,20 @@
                         <table class="table thead-brown">
                             <thead>
                                 <tr>
-                                    <th>Date Created</th>
                                     <th>Shipper Details</th>
                                     <th>Tracking No.</th>
                                     <th>Receiver Address</th>
                                     <th>Contact No.</th>
-                                    <th>Delivery Status</th>
+                                    <th>Completed Timestamp</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>[Insert Date]</td>
-                                    <td>[Shipper Details]</td>
-                                    <td>[Tracking No]</td>
-                                    <td>[Receiver's Address]</td>
-                                    <td>[Weight]</td>
-                                    <td>[DeliveryStatus]</td>
+                                <tr is="order-info" v-for="order in orderList" inline-template>
+                                    <td>{{order.pickupAddress}}</td>
+                                    <td>{{order.trackingID}}</td>
+                                    <td>{{order.receiverAddress}}</td>
+                                    <td>{{order.latestTimestamp}}</td>
                                     <td>
                                         <!-- Modal btn -->
                                         <button type="button" class="action-button btn btn-primary" data-toggle="modal" data-target="#completedModal">
@@ -219,7 +171,7 @@
                                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. [TrackingID]</h5>
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. {{order.trackingID}}</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -228,8 +180,8 @@
                                                     <table class="table thead-brown">
                                                         <thead>
                                                             <tr>
-                                                                <th scope="col">General Information</th>
-                                                                <th scope="col">Parcel Details</th>
+                                                                <th scope="col">Latest Completed Timestamp</th>
+                                                                <th scope="col">Latest Status</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -237,11 +189,10 @@
                                                                 <td>
                                                                     <small>
                                                                         <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Date Created</dt>
-                                                                            <dd class="col-8 col-sm-9">2022-03-20</dd>
+                                                                            <dt class="col-4 col-sm-3 pr-0">{{order.latestTimestamp}}</dt>
+                                                                            <dd class="col-8 col-sm-9">{{order.latestStatus}}</dd>
                                                                         </dl>
                                                                     </small>
-                                                                    
                                                                 </td>
                                                                 <td>
                                                                     <small>

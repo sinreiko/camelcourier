@@ -30,109 +30,109 @@
     
 </head>
 <body id="app">
-    <driver-header  :username="userName"></driver-header>
+    <driver-header :username="userName"></driver-header>
     <main class="container">
-        <section class="px-3 mb-3">
+        <!-- <section class="px-3 mb-3">
             <label class="form-check-label mr-1">Urgency: </label>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" id="highPriority" name="priority" value="high">
                 <label for="highPriority" class="form-check-label color-urgent">High</label>
             </div>
             <div class="form-check form-check-inline">
-
                 <input class="form-check-input" type="radio" id="midPriority" name="priority" value="medium">
                 <label for="midPriority" class="form-check-label color-medium">Medium</label>
             </div>
             <div class="form-check form-check-inline">
-
                 <input class="form-check-input" type="radio" id="lowPriority" name="priority" value="low">
                 <label for="lowPriority" class="form-check-label color-low">Low</label>
             </div>
-        </section>
+        </section> -->
         <section>
             <div class="row px-3">
-                <div class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-3">
-                    <div class="card border-urgent">
-                        <a class="stretched-link text-decoration-none" href="./pie">
+                <div is="order-info" v-for="order in orderList" class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-3" inline-template>
+                    <div v-if="order.latestStatus=='Order created'" class="card border-urgent">
+                        <a class="stretched-link text-decoration-none" href='pickup.html' data-toggle="modal" data-target="#orderModal" v-on:click="trackParcel(order.trackingID)">
         
-                        <div class="card-header">[Date] [Time]</div>
+                        <div class="card-header">Tracking No. {{order.trackingID}}</div>
                         <div class="card-body mb-3">
                             <small>
                                 <dl class="row mb-0">
                                     <dt>Pickup Address</dt>
-                                    <dd>[Address]</dd>
+                                    <dd>{{order.pickupAddress}}</dd>
                                 </dl>
                                 <dl class="row mb-0">
                                     <dt>Receiver Address</dt>
-                                    <dd class="col-8 col-sm-9">[Address]</dd>
+                                    <dd class="col-8 col-sm-9">{{order.receiverAddress}}</dd>
                                 </dl>
                             </small>
-                            <hr>
-                            <div class="float-left money-icon">
-                            </div>
-                            <div class="float-right">
-                                [Price]
-                            </div>
-                            
                         </div>
                         </a>
                     </div>
-                </div>
-                <div class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-3">
-                    <div class="card border-medium">
-                        <a class="stretched-link text-decoration-none" href="./pie">
-        
-                        <div class="card-header">[Date] [Time]</div>
-                        <div class="card-body mb-3">
-                            <small>
-                                <dl class="row mb-0">
-                                    <dt>Pickup Address</dt>
-                                    <dd>[Address]</dd>
-                                </dl>
-                                <dl class="row mb-0">
-                                    <dt>Receiver Address</dt>
-                                    <dd class="col-8 col-sm-9">[Address]</dd>
-                                </dl>
-                            </small>
-                            <hr>
-                            <div class="float-left money-icon">
+                    <div class="modal fade bd-example-modal-lg" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModal" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. {{order.trackingID}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Receiver Details</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <small>
+                                                        <dl class="row mb-0">
+                                                            <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                            <dd class="col-8 col-sm-9">{{order.receiverName}}</dd>
+                                                        </dl>
+                                                    </small>
+                                                    
+                                                </td>
+                                                <td>
+                                                    <small>
+                                                        <dl class="row mb-0">
+                                                            <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                                            <dd class="col-8 col-sm-9">{{order.receiverPhone}}</dd>
+                                                        </dl>
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <p><strong>{{trackingResult.latest_status}} · {{trackingResult.latest_timestamp}}</strong></p>
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" ></div>
+                                            </div>
+                                            <ul v-for="activity in trackingResult.activities">
+                                                <activity v-bind:trackingid="activity.tracking_id" 
+                                                        v-bind:deliverystatus="activity.delivery_status"
+                                                        v-bind:deliverydesc="activity.delivery_desc"
+                                                        v-bind:timestamp="activity.timestamp"
+                                                ></activity>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn action-button previous previous_button" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn action-button" v-on:click="updateOrder('pickup',order.trackingID)">
+                                        Picked up
+                                    </button>
+                                </div>
                             </div>
-                            <div class="float-right">
-                                [Price]
-                            </div>
-                            
                         </div>
-                        </a>
                     </div>
                 </div>
-                <div class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-lg-3">
-                    <div class="card border-low">
-                        <a class="stretched-link text-decoration-none" href="./pie">
-        
-                        <div class="card-header">[Date] [Time]</div>
-                        <div class="card-body mb-3">
-                            <small>
-                                <dl class="row mb-0">
-                                    <dt>Pickup Address</dt>
-                                    <dd>[Address]</dd>
-                                </dl>
-                                <dl class="row mb-0">
-                                    <dt>Receiver Address</dt>
-                                    <dd class="col-8 col-sm-9">[Address]</dd>
-                                </dl>
-                            </small>
-                            <hr>
-                            <div class="float-left money-icon">
-                            </div>
-                            <div class="float-right">
-                                [Price]
-                            </div>
-                            
-                        </div>
-                        </a>
-                    </div>
-                </div>
-                
             </div>
             
         </section>

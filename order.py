@@ -139,12 +139,15 @@ def find_driver():
 # [TESTED] This url fulfills order checking.
 
 
-@app.route("/order/driver/<string:driverID>")
-def find_by_driver(driverID):
+@app.route("/order/find/<string:userType>/<string:userID>")
+def find_by_driver(userType,userID):
     '''
         returns the order information (trackingID, driverID, shipperID, deliveryStage, deliveryDate) given a trackingID
     '''
-    order = Order.query.filter_by(driverID=driverID).all()
+    if userType=="driver":
+        order = Order.query.filter_by(driverID=userID).all()
+    if userType=="shipper":
+        order = Order.query.filter_by(shipperID=userID).all()
     if len(order):
         return jsonify(
             {
@@ -154,6 +157,7 @@ def find_by_driver(driverID):
                 }
             }
         )
+        
     return jsonify(
         {
             "code": 404,
@@ -214,7 +218,7 @@ def create_order():
     receiverAddress = request.json.get('receiverAddress')
     receiverPhone = request.json.get('receiverPhone')
     receiverEmail = request.json.get('receiverEmail')
-    pickupAddress = None
+    pickupAddress = request.json.get('pickupAddress')
 
     # data = request.get_json() <- fallback
     newOrder = Order(trackingID, driverID, shipperID, receiverName,

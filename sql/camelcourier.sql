@@ -43,9 +43,9 @@ CREATE TABLE `activity` (
 --
 
 INSERT INTO `activity` (`activityID`, `trackingID`, `timestamp`, `deliveryStatus`, `deliveryDesc`) VALUES
-(1, 1337, '2022-03-19 20:45:24', 'Order Created!', 'The order has been created.'),
-(2, 42069, '2022-03-19 20:48:49', 'Order Created!', 'The order has been created.'),
-(3, 1337, '2022-03-20 12:09:57', 'Pickup', 'Order has been picked up by pickup driver');
+(1, 587405231468, '2022-03-19 20:45:24', 'Order Created!', 'The order has been created.'),
+(2, 587405231470, '2022-03-19 20:48:49', 'Order Created!', 'The order has been created.'),
+(3, 587405231470, '2022-03-20 12:09:57', 'Pickup', 'Order has been picked up by pickup driver');
 
 -- --------------------------------------------------------
 

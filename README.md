@@ -150,6 +150,8 @@ This is an example of how to list things you need to use the software and how to
 | :white_large_square: | Rates | rate.py | rate | Nicholas |
 | :white_check_mark: | Shipper | shipper.py | shipper | Jun Hui |
 | :white_large_square: | SMS | send_sms.py | - | Shao Ming |
+| :white_check_mark: | Drop Point | droppoint/index.php | droppoint | Po Chien |
+
 
 <u><b>Composite/Complex Microservices</b></u>
 
@@ -175,7 +177,7 @@ This is an example of how to list things you need to use the software and how to
 |----|----|----|----|
 | :white_large_square: | API Gateway | Vasilis | Implementing KONG/KONGA Gateway |
 | :white_large_square: | Facebook Login | Jun Hui | Implement Graph API |
-| :white_large_square: | Multiple Programming Language | Po Chien | Implement Drop Point MS in PHP |
+| :white_check_mark: | Multiple Programming Language | Po Chien | Implement Drop Point MS in PHP |
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -208,5 +210,37 @@ Reiko - reiko.lee.2020@scis.smu.edu.sg</br>
 Shao Ming - smlee.2020@scis.smu.edu.sg</br>
 
 Project Link: [https://github.com/sinreiko/camelcourier](https://github.com/sinreiko/camelcourier)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Troubleshooting
+### Droppoint (PHP ver) encounters connect refused error
+**Case 1: Docker requires permission to folder**
+
+This can occur if docker settings did not allow the file to be accessed.
+As this app mounts folders to a path in docker-compose.yml, Docker needs permission to this folder path to work as intended.
+
+_*Enabling file permission on Docker*_
+1. Go to Docker Desktop -> click the top right ```gear icon``` to access ```settings``` 
+
+2. In setting's left pane, click ```Resources```. A list will expand. Click ``File Sharing``
+
+3. Go to the bottom of the list and hit the ```+``` sign. Browse the file explorer to find where CamelCourier is. Click ```open``` on bottom right corner.
+
+4. In Docker Desktop, click ```Apply and Restart``` on the bottom right corner
+
+**Case 2: Port for SQL is taken**
+
+This can occur if the port for camel_courier_db_1 is taken. The container uses port 9906. It should not be a commonly used port.
+There are two options to resolve this:
+1. Option 1: Resolve from local machine by freeing up port 9906
+  - Use ```docker ps``` command to check if there's a container currently running on 9906.
+  - If the container is redundant, use ```docker stop <container id>``` to stop the container, then use ```docker rm <container id>```
+  - Re-run ```docker-compose down``` then ```docker-compose up --force-recreate```
+2. Option 2: Change a port for MySQL container
+  - If the current connection in port 9906 cannot be used, first find an available port that we will call ```port XXXX```
+  - Go to camelcourier > docker-compose.yml 
+  - Under services > db > ports, change ```9906:3306``` to ```XXXX:3306```
+  - Re-run ```docker-compose down``` then ```docker-compose up --force-recreate```
 
 <p align="right">(<a href="#top">back to top</a>)</p>

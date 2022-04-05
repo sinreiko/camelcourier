@@ -90,6 +90,12 @@ def processValuing(size_info):
     output = requests.get(url).json()
     print("OUTPUT: ", output)
     # 6-- Return distance
+    status = output['rows'][0]['elements'][0]['status']
+    if status == "ZERO_RESULTS":
+        return jsonify({
+            "code": 404,
+            "message": "The addresses are invalid."
+        })
     distance = output['rows'][0]['elements'][0]['distance']['value'] / 1000
     
     # 7-- Request pricing {distance, size} from rate.py
