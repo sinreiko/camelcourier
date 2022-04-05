@@ -93,9 +93,9 @@ def processValuing(size_info):
     status = output['rows'][0]['elements'][0]['status']
     if status == "ZERO_RESULTS":
         return jsonify({
-                "code": 404,
-                "message": "The addresses are invalid."
-            }), 404
+            "code": 404,
+            "message": "The addresses are invalid."
+        }), 404
     distance = output['rows'][0]['elements'][0]['distance']['value'] / 1000
     
     # 7-- Request pricing {distance, size} from rate.py
