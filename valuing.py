@@ -95,7 +95,7 @@ def processValuing(size_info):
         return jsonify({
             "code": 404,
             "message": "The addresses are invalid."
-        }), 404
+        })
     distance = output['rows'][0]['elements'][0]['distance']['value'] / 1000
     
     # 7-- Request pricing {distance, size} from rate.py
