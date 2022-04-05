@@ -121,7 +121,7 @@ def processCancelOrder(trackingID):
     if code in range(200, 300):
         info = order_result["data"]
         shipperID = info["shipperID"]
-        retrieve_ShipperURL = shipper_URL + '/' + str(shipperID)
+        retrieve_ShipperURL = shipper_URL + '/shipper/' + str(shipperID)
         shipper_result = invoke_http(
             retrieve_ShipperURL, method="GET", json=None)
         shipper = shipper_result["data"]

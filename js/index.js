@@ -1,4 +1,4 @@
-const get_order_URL = "http://localhost:5000"
+const get_order_URL = "http://localhost:5000/order"
 const get_activity_URL = "http://localhost:5001/activity"
 const get_shipper_URL = "http://localhost:5002/shipper"
 const get_rate_URL = "http://localhost:5003/rate"
@@ -6,7 +6,7 @@ const get_droppoint_URL = "http://localhost:5004/droppoint"
 const valuing_URL = "http://localhost:5005/valuing"
 const pick_parcel_URL = "http://localhost:5006/pickparcel"
 const create_order_URL = "http://localhost:5007/create_order"
-const update_order_URL = "http://localhost:5008"
+const update_order_URL = "http://localhost:5008/update_order/update"
 const cancel_order_URL = "http://localhost:5009"
 // GraphQL: exchange rate
 let SWOP_API_key='7b31aa8dabd1df60435aec0cbff8f9d17211d33f6b2f20dfe7e7a85bb539689e'
@@ -329,6 +329,7 @@ const app = Vue.createApp({
                 .then(response => response.json())
                 .then(data => {
                     result = data.data;
+                    console.log(result)
                     this.orderCreation.price = result.price;
 
                     switch (data.code) {
@@ -414,7 +415,7 @@ const app = Vue.createApp({
             // })
         },
         retrieveOrderByUserId(user, userid){
-            fetch(`${get_order_URL}/${user}/${userid}`)
+            fetch(`${get_order_URL}/find/${user}/${userid}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 404) {

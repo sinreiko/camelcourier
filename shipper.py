@@ -26,6 +26,7 @@ CORS(app)
 
 # Define a custom class for each shipper record.
 
+
 class Shipper(db.Model):
     '''
         Takes in the following attributes:
@@ -79,6 +80,7 @@ class Shipper(db.Model):
     # This is used to troubleshoot and see if the data in db is ok
     # Uncomment line below to test this function
 
+
 @app.route("/shipper")
 def get_all():
     shipperList = Shipper.query.all()
@@ -112,6 +114,7 @@ def get_all():
     # -----------------[START: find_by_shipperID]-------------------
 # [TESTED] This url fulfills shipper checking.
 
+
 @app.route("/shipper/<string:shipperID>")
 def find_by_shipperID(shipperID):
     shipper = Shipper.query.filter_by(shipperID=shipperID).first()
@@ -135,6 +138,7 @@ def find_by_shipperID(shipperID):
     # ---------------[END: find_by_shipperID]-------------------
 
 # ===========================================
+
 
 # Alternative app call failsafe
 if __name__ == '__main__':

@@ -94,7 +94,7 @@ def processValuing(size_info):
         "&destinations=" + receiverAddress + \
         "&key=AIzaSyCtH98HlunuSLPLGvBf0HmEPnPd6YIye5M"
     output = requests.get(url).json()
-    print("OUTPUT: ", output)
+
     # 6-- Return distance
     status = output['rows'][0]['elements'][0]['status']
     if status == "ZERO_RESULTS":
@@ -110,7 +110,6 @@ def processValuing(size_info):
     print(rate_URL)
     rate_result = invoke_http(rate_URL, method='GET', json=None)
     print('rate_result:', rate_result)
-
     # 8-- Return price to valuing.py
     return rate_result
 
