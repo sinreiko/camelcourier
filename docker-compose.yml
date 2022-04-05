@@ -34,7 +34,7 @@ networks:
 #         - cancel_order:5009
 
 # AMQP-based services (Atomic):
-#     - activity (wont use)
+#     - activity (wont use) 
 #     - send_sms:5566 (wont use)
 #     - email:9000 (wont use)
 
