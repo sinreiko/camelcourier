@@ -95,11 +95,11 @@ const app = Vue.createApp({
             ).then(
                 data=>{
                     let resp=data.data.latest
-                    console.log(resp)
+                    // console.log(resp)
                     for(ans of resp){
-                        console.log(ans)
+                        // console.log(ans)
                         this.currency_obj[ans.quoteCurrency]=ans.quote
-                        console.log(`updating ${ans.quoteCurrency}`)
+                        // console.log(`updating ${ans.quoteCurrency}`)
                     }
                 }
             )
