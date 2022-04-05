@@ -157,7 +157,7 @@ a:focus {
 }
 
 .custom_nav-container {
-  z-index: 99999;
+  z-index: 99;
   padding-top: 20px;
   -webkit-box-align: end;
       -ms-flex-align: end;

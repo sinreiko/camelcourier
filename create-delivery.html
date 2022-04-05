@@ -68,8 +68,13 @@
                 </div>
 
                 <div class="form-group text-left">
-                    <label for="weight">Weight</label>
-                    <input type="number" name="weight" v-model="orderCreation.weight" class="form-control" placeholder="E.g. 0.1" v-on:keyUp="getPrice">
+                    <label for="size">Parcel Size</label>
+                    <select class="form-select" name="size" v-model="orderCreation.size" v-on:change="getPrice">
+                        <option value="S">S (&#60;2kg)</option>
+                        <option value="M">M (&#60;5kg)</option>
+                        <option value="L">L (&#60;10kg)</option>
+                    </select>
+
                 </div>
             </div>
             <button type="button" class="action-button previous_button">Back</button>
@@ -154,12 +159,10 @@
                             <div class="card-header">Quotation Details</div>
                             <div class="card-body mb-3">
                                 <div class="user-card">
-                                    <label for="weight">Weight:</label>
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <input type="text" readonly class="form-control-plaintext" id="staticWeight" size='8' value="0.10" v-model="orderCreation.weight" >
-                                            <span>KG</span>
-                                            
+                                            <label for="staticWeight">Size: </label>
+                                            <input type="text" readonly class="form-control-plaintext" id="staticWeight" size='8' v-model="orderCreation.size" >
                                         </div>
                                         
                                     </div>

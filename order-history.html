@@ -45,6 +45,7 @@
                                 <th>Receiver Name</th>
                                 <th>Receiver Address</th>
                                 <th>Receiver Phone</th>
+                                <th>Delivery Status</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -55,6 +56,7 @@
                                 <td>{{order.receiverName}}</td>
                                 <td>{{order.receiverAddress}}</td>
                                 <td>{{order.receiverPhone}}</td>
+                                <td :style="style(order.latestStatus)">{{order.latestStatus}}</td>
                                 <td>
                                     <!-- Modal btn -->
                                     <button type="button" class="action-button btn btn-primary" data-toggle="modal" data-target="#orderModal" v-on:click="trackParcel(order.trackingID)">
@@ -74,7 +76,7 @@
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
-                                                            <th scope="col">Shipper Details</th>
+                                                            <th scope="col">Receiver Details</th>
                                                             <th scope="col"></th>
                                                         </tr>
                                                     </thead>
@@ -83,6 +85,10 @@
                                                             <td colspan="2">
                                                                 <small>
                                                                     <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                        <dd class="col-8 col-sm-9">{{order.receiverName}}</dd>
+                                                                        <dt class="col-4 col-sm-3 pr-0">Email</dt>
+                                                                        <dd class="col-8 col-sm-9">{{order.receiverEmail}}</dd>
                                                                         <dt class="col-4 col-sm-3 pr-0">Pickup Address</dt>
                                                                         <dd class="col-8 col-sm-9">{{order.pickupAddress}}</dd>
                                                                     </dl>
@@ -107,6 +113,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
+                                                <button v-if="trackingResult.latest_status!='Completed'&&trackingResult.latest_status!='Cancelled'" type="button" class="btn action-button previous previous_button" data-dismiss="modal" @click="updateOrder('cancel_order',trackingResult.tracking_id)">Cancel Order</button>
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             </div>
                                             </div>

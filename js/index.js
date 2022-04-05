@@ -7,7 +7,7 @@ const valuing_URL = "http://localhost:5005/valuing"
 const pick_parcel_URL = "http://localhost:5006/pickparcel"
 const create_order_URL = "http://localhost:5007/create_order"
 const update_order_URL = "http://localhost:5008"
-const accept_delivery_URL = "http://localhost:5000/accept"
+const cancel_order_URL = "http://localhost:5009"
 
 const app = Vue.createApp({
     data(){
@@ -19,7 +19,8 @@ const app = Vue.createApp({
                 latest_status: '',
                 latest_timestamp: '',
                 progress: '',
-                activities: []
+                activities: [],
+                orderListIndex: 0
             },
             userDetail: JSON.parse(localStorage.getItem("userDetail")),
             dropPoints:[],
@@ -40,7 +41,7 @@ const app = Vue.createApp({
                 receiverPhone: "",
                 //others
                 dropOffOption: "custom", //custom or dropPoint
-                weight: "",
+                size: "",
                 price: "3.00",
             },
             inputTracking: "",
@@ -49,6 +50,7 @@ const app = Vue.createApp({
             fetchResults:{
                 orderCreation: false,
                 orderUpdate: false,
+                getPrice: false,
             },
             errorMessages:{
                 orderCreation: "",
@@ -66,7 +68,7 @@ const app = Vue.createApp({
                 return 100
             }
         },
-        trackParcel(tracking){
+        trackParcel(tracking, index=0){
             // var tracking_arr = []
             // if (this.inputTracking != ""){
             //     if (this.inputTracking.includes(",")){
@@ -77,7 +79,7 @@ const app = Vue.createApp({
             //         tracking_arr.push(this.inputTracking);
             //     }
             var real_tracking = ''
-            if (tracking != ''){
+            if (this.inputTracking == ''){
                 real_tracking = tracking
             } else {
                 real_tracking = this.inputTracking
@@ -107,7 +109,8 @@ const app = Vue.createApp({
                         latest_status: latestStatus,
                         latest_timestamp: latestTimestamp,
                         progress: this.calculateProgress(latestStatus),
-                        activities: res
+                        activities: res,
+                        orderListIndex: index
                     };
                     this.trackingResult.activities.reverse();
                 }
@@ -230,7 +233,8 @@ const app = Vue.createApp({
                         // no book in db
                         this.message = data.message;
                     } else {
-                        res = data.data.droppoints;
+                        // res = data.data.droppoints;
+                        res = data.data.orders
                         this.dropPoints = res;
                         console.log(this.dropPoints);
                     }
@@ -238,7 +242,7 @@ const app = Vue.createApp({
                 .catch(error => {
                     // Errors when calling the service; such as network error, 
                     // service offline, etc
-                    console.log(this.message + error);
+                    // console.log(this.message + error);
 
                 });
         },
@@ -257,26 +261,40 @@ const app = Vue.createApp({
 
         },
         getPrice(){
-            // const response =
-            //     fetch(`${valuing_URL}`)
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         if (data.code === 404) {
-            //             // no book in db
-            //             this.message = data.message;
-            //         } else {
-            //             res = data.data.droppoints;
-            //             console.log(res.latitude)
-            //             this.dropPoints.push(res);
-            //             console.log(this.dropPoints);
-            //         }
-            //     })
-            //     .catch(error => {
-            //         // Errors when calling the service; such as network error, 
-            //         // service offline, etc
-            //         console.log(this.message + error);
+            let jsonData = JSON.stringify({
+                pickupAddress: this.orderCreation.shipperAddress,
+                receiverAddress: this.orderCreation.receiverAddress,
+                size: this.orderCreation.size
 
-            //     });
+            });
+            fetch(`${valuing_URL}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: jsonData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    result = data.data;
+                    this.orderCreation.price = result.price;
+
+                    switch (data.code) {
+                        case 400:
+                        case 500:
+                            this.errorMessages.getPrice = data.message;
+                            break;
+                        default:
+                            throw `${data.code}: ${data.message}`;
+                    }
+                })
+                .catch(error => {
+                    // Errors when calling the service; such as network error, 
+                    // service offline, etc
+                    console.log(this.message + error);
+
+                });
         },
         createOrder(){
             this.fetchResults.orderCreation = false;
@@ -423,6 +441,9 @@ const app = Vue.createApp({
                         for (var i = 0; i < this.orderList.length; i++){
                             if (this.orderList[i].trackingID == trackingid){
                                 this.orderList[i].shipperAddress = res.shipperAddress;
+                                this.orderList[i].shipperName = res.shipperName;
+                                this.orderList[i].shipperEmail = res.shipperEmail;
+                                this.orderList[i].shipperPhone = res.shipperPhone;
                                 break;
                             }
                         }
@@ -440,39 +461,100 @@ const app = Vue.createApp({
             let jsonData = JSON.stringify({
                 trackingID: JSON.stringify(trackingid)
             });
-            fetch(`${update_order_URL}/${status}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                body: jsonData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(JSON.stringify(data));
-                result = data.data;
-                alert(result);
-                // 3 cases
-                switch (data.code) {
-                    case 201:
-                        this.fetchResults.orderUpdate = true;
-                        break;
-                    case 400:
-                    case 500:
-                        this.errorMessages.orderUpdate = data.message;
-                        break;
-                    default:
-                        throw `${data.code}: ${data.message}`;
-                }
-            })
+            if (status!='cancel_order'){
+                fetch(`${update_order_URL}/${status}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: jsonData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(JSON.stringify(data));
+                    result = data.data;
+                    alert(result);
+                    // 3 cases
+                    switch (data.code) {
+                        case 201:
+                            this.fetchResults.orderUpdate = true;
+                            break;
+                        case 400:
+                        case 500:
+                            this.errorMessages.orderUpdate = data.message;
+                            break;
+                        default:
+                            throw `${data.code}: ${data.message}`;
+                    }
+                })
+            } else {
+                fetch(`${cancel_order_URL}/${status}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: jsonData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(JSON.stringify(data));
+                    result = data.data;
+                    alert(result);
+                    // 3 cases
+                    switch (data.code) {
+                        case 201:
+                            this.fetchResults.orderUpdate = true;
+                            break;
+                        case 400:
+                        case 500:
+                            this.errorMessages.orderUpdate = data.message;
+                            break;
+                        default:
+                            throw `${data.code}: ${data.message}`;
+                    }
+                })
+            }
+            
         },
-        customOrderList(status){
+        customOrder(status){
+            this.customOrderList = []
             for (var i = 0; i < this.orderList.length; i++){
                 console.log(this.orderList[i].latestStatus, status)
                 if(this.orderList[i].latestStatus == status){
                     this.customOrderList.push(this.orderList[i])
                 }
+            }
+            console.log(this.customOrderList);
+        },
+        style(k){
+            switch (k) {
+                case 'Order created':
+                    return {
+                        color: 'black'
+                    }
+                case 'Pickup':
+                    return {
+                        color: 'blue'
+                    }
+                case 'Cancelled':
+                    return{
+                        color: 'red'
+                    }
+                case 'Canceled':
+                    return{
+                        color: 'red'
+                }
+                case 'Delayed':
+                    return {
+                        color: 'orange'
+                    }
+                case 'Completed':
+                    return {
+                        color: 'green'
+                    }
+                
             }
         }
     },
@@ -637,7 +719,7 @@ app.component('driver-header',{
                             <a class="nav-link" href="pickup.html">Pickup</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="delivery-history.html">Delivery History</a>
+                            <a class="nav-link" href="delivery-history.html" v-on:click="customOrder('Pickup')">Delivery History</a>
                         </li>
                     </ul>
                 </div>

@@ -1,5 +1,5 @@
 # ------------
-#                   O v e r v i e w 
+#                   O v e r v i e w
 # This is the complex microservice for canceling an order in the Shipper's UI
 # =======================================
 # ------    C o m p o n e n t s
@@ -10,7 +10,7 @@
 # --- activity.py
 
 # ------    P r o c e d u r e
-# 1-- The microservice receives an order cancelation form with ShipperID, receiver info {name, address, phone, email} 
+# 1-- The microservice receives an order cancelation form with ShipperID, receiver info {name, address, phone, email}
 # 2-- The microservice then cancels the order by calling order api via [POST]
 # 3-- Activity Log is called for order cancelation
 # 4-- Shipper's email is obtained through the Shipper microservice
@@ -25,7 +25,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
 
-import os, sys
+import os
+import sys
 from os import environ
 
 import requests
@@ -41,6 +42,7 @@ CORS(app)
 # URL of all the simple microservices that you're contacting
 order_URL = environ.get('order_URL') or "http://localhost:5000/order"
 shipper_URL = environ.get('shipper_URL') or "http://localhost:5002/shipper"
+
 
 @app.route("/cancel_order", methods=['POST'])
 def cancel_order():
@@ -67,7 +69,8 @@ def cancel_order():
             # Unexpected error in code
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
+            ex_str = str(e) + " at " + str(exc_type) + ": " + \
+                fname + ": line " + str(exc_tb.tb_lineno)
             print(ex_str)
 
             return jsonify({
@@ -81,6 +84,7 @@ def cancel_order():
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
 
+
 def processCancelOrder(trackingID):
     # 1. Get trackingID from order microservice
     # Invoke the order microservice
@@ -88,7 +92,7 @@ def processCancelOrder(trackingID):
     tracking_URL = order_URL + '/' + trackingID["trackingID"]
     order_result = invoke_http(tracking_URL, method='GET', json=None)
     print('order_result:', order_result)
-        
+
     # 2. Display canceled order in activity log
     # Create the activity log for canceled order
     code = order_result["code"]
@@ -97,69 +101,75 @@ def processCancelOrder(trackingID):
         # Invoke the activity microservice
         print('\n-----Invoking activity microservice-----')
         # order_result = json.dumps(order)
-        message={
+        message = {
             "code": 200,
-            "data":{
+            "data": {
                 "tracking_id": trackingID['trackingID'],
-                "delivery_status": "Canceled",
+                "delivery_status": "Cancelled",
                 "delivery_desc": "Order has been canceled by shipper."
-                }
+            }
         }
-        msg=json.dumps(message)
+        msg = json.dumps(message)
         amqp_setup.check_setup()
         amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="cancel.order",
-                                     body=msg, properties=pika.BasicProperties(delivery_mode=2))
-        print("\nCanceled status published to the RabbitMQ Exchange:", msg)      
+                                         body=msg, properties=pika.BasicProperties(delivery_mode=2))
+        print("\nCanceled status published to the RabbitMQ Exchange:", msg)
     else:
         print('\nFailed to cancel order in activity')
-   
+
     # 3. Retrieve shipper Email and ID
     if code in range(200, 300):
         info = order_result["data"]
         shipperID = info["shipperID"]
-        retrieve_ShipperURL = shipper_URL +  '/' + str(shipperID)
-        shipper_result = invoke_http(retrieve_ShipperURL, method="GET", json=None)
+        retrieve_ShipperURL = shipper_URL + '/' + str(shipperID)
+        shipper_result = invoke_http(
+            retrieve_ShipperURL, method="GET", json=None)
         shipper = shipper_result["data"]
-        print("\n========shipper result data is: =======\n",shipper_result['data'])  
+        print("\n========shipper result data is: =======\n",
+              shipper_result['data'])
         shipper_email = shipper["shipperEmail"]
         # if error is thrown, append to error_msg
     else:
         return jsonify(
             {
                 "code": 500,
-                "data":{
+                "data": {
                     "email": shipper_email
-                    },
+                },
                 "message": "An error occurred while retrieving shipper email. "
             }
         ), 500
 
     # 4. Email shipper
-    email_content = "This is to inform you that Tracking ID: " + trackingID["trackingID"] +" has been canceled."
+    email_content = "This is to inform you that Tracking ID: " + \
+        trackingID["trackingID"] + " has been canceled."
     email_msg = {
-            "toEmail": shipper_email,
-            "subject": "Order has been canceled",
-            "content": email_content
-        }
-    email_message=json.dumps(email_msg)
+        "toEmail": shipper_email,
+        "subject": "Order has been canceled",
+        "content": email_content
+    }
+    email_message = json.dumps(email_msg)
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="canceled.email",
-    body=email_message)
+                                     body=email_message)
 
     # 5. Inform receiver
     recipient = info["receiverPhone"]
-    msg = "[Camel Couriers] Your order " + trackingID["trackingID"] + " has been canceled."
-    sms_msg ={
-            "toPhone": recipient,
-            "content": msg
-        }
-    sms_message=json.dumps(sms_msg)
+    msg = "[CAMELCOURIER] Your order " + \
+        trackingID["trackingID"] + " has been canceled."
+    sms_msg = {
+        "toPhone": recipient,
+        "content": msg
+    }
+    sms_message = json.dumps(sms_msg)
     amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="canceled.sms",
-    body=sms_message)
+                                     body=sms_message)
 
     # 6. Return order as a json object with codes
     return order_result
 
+
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":
-    print("This is flask " + os.path.basename(__file__) + " for canceling an order...")
+    print("This is flask " + os.path.basename(__file__) +
+          " for canceling an order...")
     app.run(host="0.0.0.0", port=5009, debug=True)
