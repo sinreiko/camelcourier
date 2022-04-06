@@ -78,7 +78,7 @@ if ($num > 0) {
         extract($row);
         // products array        
         $item = array(
-            "address"=> $address,
+            "address" => $address,
             "placeID" => $placeID
         );
         //add item to the result array

@@ -1,7 +1,6 @@
-const get_order_URL = "http://localhost:5000/order"
-const get_activity_URL = "http://localhost:5001/activity"
-const get_shipper_URL = "http://localhost:5002/shipper"
-const get_rate_URL = "http://localhost:5003/rate"
+const get_order_URL = "http://localhost:8000/api/order"
+const get_activity_URL = "http://localhost:5001/api/activity"
+const get_shipper_URL = "http://localhost:5002/api/shipper"
 const get_droppoint_URL = "http://localhost:5004/droppoint/"
 const valuing_URL = "http://localhost:5005/valuing"
 const pick_parcel_URL = "http://localhost:5006/pickparcel"
@@ -29,9 +28,7 @@ const app = Vue.createApp({
             userDetail: JSON.parse(localStorage.getItem("userDetail")),
             dropPoints:[
                 {
-                    latitude: 0,
-                    longitude: 0,
-                    region: "",
+                    address: "",
                     placeID: "",
                 }
             ],

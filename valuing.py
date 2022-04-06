@@ -75,23 +75,6 @@ def request_price():
 
 
 def processValuing(size_info):
-    '''
-        size_info is a json with:
-            pickupAddress
-            receiverAddress
-            size
-    '''
-    # 3-- Obtain origin and destination of order for {trackingID} from order.py
-    # print('\n-----Invoking order microservice-----')
-    # order_URL = environ.get('order_URL') or "http://localhost:5000/order"
-    # order_URL += "/tracking/" + str(size_info['trackingID'])
-    # order_result = invoke_http(order_URL, method='GET', json=None)
-    # print('order_result:', order_result)
-
-    # code=order_result["code"]
-    # info=order_result['data']
-    #   UPDATE: front end already has the addresses, so there's no longer a need to call order
-
     # 4-- Return order details {pickupAddress, receiverAddress}
     pickupAddress = size_info['pickupAddress']
     receiverAddress = size_info['receiverAddress']

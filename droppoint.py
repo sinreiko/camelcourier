@@ -20,19 +20,15 @@ CORS(app)
 class Droppoint(db.Model):
     __tablename__ = 'droppoint'
 
-    longitude = db.Column(db.Float, primary_key=True)
-    latitude = db.Column(db.Float, primary_key=True)
-    region = db.Column(db.String(100), nullable=False)
     placeID = db.Column(db.String(100), nullable=False)
+    address = db.Column(db.String(100), nullable=False)
 
-    def __init__(self, longitude, latitude, region, placeID):
-        self.longitude = longitude
-        self.latitude = latitude
-        self.region = region
+    def __init__(self, address, placeID):
+        self.address = address
         self.placeID = placeID
 
     def json(self):
-        return {"longitude": self.longitude, "latitude": self.latitude, "region": self.region, "placeID": self.placeID}
+        return {"address": self.address, "placeID": self.placeID}
 
 
 # return all droppoints function
