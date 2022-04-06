@@ -1,5 +1,5 @@
 # ------------
-#                   O v e r v i e w 
+#                   O v e r v i e w
 # This is the complex microservice for valuing an order in the Shipper's UI
 # =======================================
 # ------    C o m p o n e n t s
@@ -23,7 +23,8 @@
 # ------------
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import os, sys
+import os
+import sys
 from os import environ
 
 import requests
@@ -32,11 +33,13 @@ from invokes import invoke_http
 app = Flask(__name__)
 CORS(app)
 
+
 @app.route("/valuing", methods=['POST'])
 def request_price():
     '''
         Takes in POST inputs for json object with the following:
-            - trackingID
+            - pickupAddress
+            - receiverAddress
             - size
         and runs the procedure above (line 11-19)
     '''
@@ -55,7 +58,8 @@ def request_price():
             # Unexpected error in code
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            ex_str = str(e) + " at " + str(exc_type) + ": " + fname + ": line " + str(exc_tb.tb_lineno)
+            ex_str = str(e) + " at " + str(exc_type) + ": " + \
+                fname + ": line " + str(exc_tb.tb_lineno)
             print(ex_str)
 
             return jsonify({
@@ -72,23 +76,25 @@ def request_price():
 
 def processValuing(size_info):
     # 3-- Obtain origin and destination of order for {trackingID} from order.py
-    print('\n-----Invoking order microservice-----')
-    order_URL = environ.get('order_URL') or "http://localhost:5000/order"
-    order_URL += "/tracking/" + str(size_info['trackingID'])
-    order_result = invoke_http(order_URL, method='GET', json=None)
-    print('order_result:', order_result)
+    # print('\n-----Invoking order microservice-----')
+    # order_URL = environ.get('order_URL') or "http://localhost:5000/order"
+    # order_URL += "/" + str(size_info['trackingID'])
+    # order_result = invoke_http(order_URL, method='GET', json=None)
+    # print('order_result:', order_result)
 
-    code=order_result["code"]
-    info=order_result['data']
+    # code=order_result["code"]
+    # info=order_result['data']
 
     # 4-- Return order details {pickupAddress, receiverAddress}
-    pickupAddress=info['pickupAddress']
-    receiverAddress=info['receiverAddress']
+    pickupAddress = size_info['pickupAddress']
+    receiverAddress = size_info['receiverAddress']
 
     # 5-- Find distance between {pickupAddress, receiverAddress} using Google Maps distance matrix API
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + pickupAddress + "&destinations=" + receiverAddress + "&key=AIzaSyCtH98HlunuSLPLGvBf0HmEPnPd6YIye5M"
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + pickupAddress + \
+        "&destinations=" + receiverAddress + \
+        "&key=AIzaSyCtH98HlunuSLPLGvBf0HmEPnPd6YIye5M"
     output = requests.get(url).json()
-    print("OUTPUT: ", output)
+
     # 6-- Return distance
     status = output['rows'][0]['elements'][0]['status']
     if status == "ZERO_RESULTS":
@@ -97,16 +103,16 @@ def processValuing(size_info):
             "message": "The addresses are invalid."
         })
     distance = output['rows'][0]['elements'][0]['distance']['value'] / 1000
-    
+
     # 7-- Request pricing {distance, size} from rate.py
     rate_URL = environ.get('rate_URL') or "http://localhost:5003/rate"
     rate_URL += "/" + str(distance) + "/" + size_info['size']
     print(rate_URL)
     rate_result = invoke_http(rate_URL, method='GET', json=None)
     print('rate_result:', rate_result)
-
     # 8-- Return price to valuing.py
     return rate_result
+
 
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) +

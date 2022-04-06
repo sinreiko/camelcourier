@@ -35,106 +35,110 @@
         <section class="container">
             <ul class="nav nav-pills mb-3 d-flex justify-content-center" id="pills-tab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="pills-ongoing-tab" data-toggle="pill" href="#pills-ongoing" role="tab" aria-controls="pills-ongoing" aria-selected="true">Ongoing</a>
+                    <a class="nav-link active" id="pills-ongoing-tab" data-toggle="pill" href="#pills-ongoing" role="tab" aria-controls="pills-ongoing" aria-selected="true" @click="customOrder('Pickup')">Ongoing</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="pills-completed-tab" data-toggle="pill" href="#pills-completed" role="tab" aria-controls="pills-completed" aria-selected="false">Completed</a>
+                    <a class="nav-link" id="pills-delayed-tab" data-toggle="pill" href="#pills-delayed" role="tab" aria-controls="pills-delayed" aria-selected="true" @click="customOrder('Delayed')">Delayed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="pills-cancelled-tab" data-toggle="pill" href="#pills-cancelled" role="tab" aria-controls="pills-cancelled" aria-selected="false">Cancelled</a>
+                    <a class="nav-link" id="pills-completed-tab" data-toggle="pill" href="#pills-completed" role="tab" aria-controls="pills-completed" aria-selected="false" @click="customOrder('Completed')">Completed</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-cancelled-tab" data-toggle="pill" href="#pills-cancelled" role="tab" aria-controls="pills-cancelled" aria-selected="false" @click="customOrder('Cancelled')">Cancelled</a>
                 </li>
             </ul>
                 <div class="tab-content mx-auto" id="pills-tabContent">
                     <!-- Ongoing Tab -->
                     <div class="tab-pane fade show active" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab">
-                        <div is="order-info" v-for="order in orderList" class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-3">
-                            <div v-if="order.latestStatus=='Pickup'||order.latestStatus=='Delayed'" class="card border-urgent">
-                                <a class="stretched-link text-decoration-none" href='#' data-toggle="modal" data-target="#orderModal" v-on:click="trackParcel(order.trackingID)">
-                
-                                    <div class="card-header">Tracking No. {{order.trackingID}}</div>
-                                    <div class="card-body mb-3">
-                                        <small>
-                                            <dl class="row mb-0">
-                                                <dt>Pickup Address</dt>
-                                                <dd>{{order.pickupAddress}}</dd>
-                                            </dl>
-                                            <dl class="row mb-0">
-                                                <dt>Receiver Address</dt>
-                                                <dd class="col-8 col-sm-9">{{order.receiverAddress}}</dd>
-                                            </dl>
-                                        </small>
-                                    </div>
-                                </a>
-                            </div>
-                            <!-- Modal -->
-                            <div class="modal fade bd-example-modal-lg" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModal" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. {{order.trackingID}}</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                            </button>
+                        <div class="row px-3">
+                            <div is="order-info" v-for="order in customOrderList" class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-3">
+                                <div v-if="order.latestStatus=='Pickup'" class="card border-urgent">
+                                    <a class="stretched-link text-decoration-none" href='delivery-history.html' data-toggle="modal" data-target="#orderModal" v-on:click="trackParcel(order.trackingID)">
+                                        <div class="card-header">Tracking No. {{order.trackingID}}</div>
+                                        <div class="card-body mb-3">
+                                            <small>
+                                                <dl class="row mb-0">
+                                                    <dt>Pickup Address</dt>
+                                                    <dd>{{order.pickupAddress}}</dd>
+                                                </dl>
+                                                <dl class="row mb-0">
+                                                    <dt>Receiver Address</dt>
+                                                    <dd class="col-8 col-sm-9">{{order.receiverAddress}}</dd>
+                                                </dl>
+                                            </small>
                                         </div>
-                                        <div class="modal-body">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Receiver Details</th>
-                                                        <th scope="col"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <small>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Name</dt>
-                                                                    <dd class="col-8 col-sm-9">{{order.receiverName}}</dd>
-                                                                </dl>
-                                                            </small>
-                                                            
-                                                        </td>
-                                                        <td>
-                                                            <small>
-                                                                <dl class="row mb-0">
-                                                                    <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
-                                                                    <dd class="col-8 col-sm-9">{{order.receiverPhone}}</dd>
-                                                                </dl>
-                                                            </small>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                                                <div class="card-body">
-                                                    <p><strong>{{trackingResult.latest_status}} · {{trackingResult.latest_timestamp}}</strong></p>
-                                                    <div class="progress mb-2">
-                                                        <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" ></div>
-                                                    </div>
-                                                    <ul v-for="activity in trackingResult.activities">
-                                                        <activity v-bind:trackingid="activity.tracking_id" 
-                                                                v-bind:deliverystatus="activity.delivery_status"
-                                                                v-bind:deliverydesc="activity.delivery_desc"
-                                                                v-bind:timestamp="activity.timestamp"
-                                                        ></activity>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn action-button previous previous_button" data-dismiss="modal">Close</button>
-                                            <!-- Dropdown btn -->
-                                            <div class="dropdown">
-                                                <button type="button" class="btn action-button dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                                    Update
+                                    </a>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade bd-example-modal-lg" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. {{trackingResult.trackingID}}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
                                                 </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item" href="#" data-dismiss="modal" v-on:click="updateOrder('delay',order.trackingID)">Delay</a>
-                                                    <a class="dropdown-item" href="#" data-dismiss="modal" v-on:click="updateOrder('complete',order.trackingID)">Complete</a>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Receiver Details</th>
+                                                            <th scope="col"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <small>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                        <dd class="col-8 col-sm-9">{{order.receiverName}}</dd>
+                                                                    </dl>
+                                                                </small>
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <small>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                                                        <dd class="col-8 col-sm-9">{{order.receiverPhone}}</dd>
+                                                                    </dl>
+                                                                </small>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <p><strong>{{trackingResult.latest_status}} · {{trackingResult.latest_timestamp}}</strong></p>
+                                                        <div class="progress mb-2">
+                                                            <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" ></div>
+                                                        </div>
+                                                        <ul v-for="activity in trackingResult.activities">
+                                                            <activity v-bind:trackingid="activity.tracking_id" 
+                                                                    v-bind:deliverystatus="activity.delivery_status"
+                                                                    v-bind:deliverydesc="activity.delivery_desc"
+                                                                    v-bind:timestamp="activity.timestamp"
+                                                            ></activity>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <!-- end of dropdown btn -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn action-button previous previous_button" data-dismiss="modal">Close</button>
+                                                <!-- Dropdown btn -->
+                                                <div class="dropdown">
+                                                    <button type="button" class="btn action-button dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                                        Update
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="#pills-ongoing" data-dismiss="modal" v-on:click="updateOrder('delay',trackingResult.tracking_id)">Delay</a>
+                                                        <a class="dropdown-item" href="delivery-history.html/#pills-completed" data-dismiss="modal" v-on:click="updateOrder('complete',trackingResult.tracking_id)">Complete</a>
+                                                    </div>
+                                                </div>
+                                                <!-- end of dropdown btn -->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -142,139 +146,224 @@
                         </div>
                     </div>
                     <!-- End of Ongoing Tab -->
+                    <div class="tab-pane fade" id="pills-delayed" role="tabpanel" aria-labelledby="pills-delayed-tab">
+                        <div class="row px-3" >
+                            <div is="order-info" v-for="order in customOrderList" class="pickup-card col-sm-12 col-md-6 col-lg-4 mb-3">
+                                <div v-if="order.latestStatus=='Delayed'" class="card border-urgent">
+                                    <a class="stretched-link text-decoration-none" href='delivery-history.html' data-toggle="modal" data-target="#delayModal" v-on:click="trackParcel(order.trackingID)">
+                                        <div class="card-header">Tracking No. {{order.trackingID}}</div>
+                                        <div class="card-body mb-3">
+                                            <small>
+                                                <dl class="row mb-0">
+                                                    <dt>Pickup Address</dt>
+                                                    <dd>{{order.pickupAddress}}</dd>
+                                                </dl>
+                                                <dl class="row mb-0">
+                                                    <dt>Receiver Address</dt>
+                                                    <dd class="col-8 col-sm-9">{{order.receiverAddress}}</dd>
+                                                </dl>
+                                            </small>
+                                        </div>
+                                    </a>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade bd-example-modal-lg" id="delayModal" tabindex="10000" role="dialog" aria-labelledby="delayModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. {{trackingResult.trackingID}}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Receiver Details</th>
+                                                            <th scope="col"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <small>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Name</dt>
+                                                                        <dd class="col-8 col-sm-9">{{order.receiverName}}</dd>
+                                                                    </dl>
+                                                                </small>
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <small>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
+                                                                        <dd class="col-8 col-sm-9">{{order.receiverPhone}}</dd>
+                                                                    </dl>
+                                                                </small>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <p><strong>{{trackingResult.latest_status}} · {{trackingResult.latest_timestamp}}</strong></p>
+                                                        <div class="progress mb-2">
+                                                            <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" ></div>
+                                                        </div>
+                                                        <ul v-for="activity in trackingResult.activities">
+                                                            <activity v-bind:trackingid="activity.tracking_id" 
+                                                                    v-bind:deliverystatus="activity.delivery_status"
+                                                                    v-bind:deliverydesc="activity.delivery_desc"
+                                                                    v-bind:timestamp="activity.timestamp"
+                                                            ></activity>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn action-button previous previous_button" data-dismiss="modal">Close</button>
+                                                <!-- Dropdown btn -->
+                                                <div class="dropdown">
+                                                    <button type="button" class="btn action-button dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                                        Update
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a class="dropdown-item" href="delivery-history.html" data-dismiss="modal" v-on:click="updateOrder('complete',trackingResult.tracking_id)">Complete</a>
+                                                    </div>
+                                                </div>
+                                                <!-- end of dropdown btn -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Completed Tab -->
                     <div class="tab-pane fade table-responsive" id="pills-completed" role="tabpanel" aria-labelledby="pills-completed-tab">
                         <table class="table thead-brown">
                             <thead>
                                 <tr>
+                                    <th>Date Completed</th> 
                                     <th>Shipper Details</th>
                                     <th>Tracking No.</th>
                                     <th>Receiver Address</th>
                                     <th>Contact No.</th>
-                                    <th>Completed Timestamp</th>
+                                    <th></th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr is="order-info" v-for="order in orderList" inline-template>
+                                <tr is="order-info" v-for="(order, index) in customOrderList" inline-template>
+                                    <td>{{order.latestTimestamp}}</td>
                                     <td>{{order.pickupAddress}}</td>
                                     <td>{{order.trackingID}}</td>
                                     <td>{{order.receiverAddress}}</td>
-                                    <td>{{order.latestTimestamp}}</td>
+                                    <td>{{order.receiverPhone}}</td>
                                     <td>
                                         <!-- Modal btn -->
-                                        <button type="button" class="action-button btn btn-primary" data-toggle="modal" data-target="#completedModal">
+                                        <button type="button" class="action-button btn btn-primary" data-toggle="modal" data-target="#completedModal" v-on:click="trackParcel(order.trackingID, index)">
                                             View
                                         </button>
-                                        <!-- Modal -->
-                                        <div class="modal fade bd-example-modal-lg" id="completedModal" tabindex="-1" role="dialog" aria-labelledby="completedModal" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. {{order.trackingID}}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <table class="table thead-brown">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Latest Completed Timestamp</th>
-                                                                <th scope="col">Latest Status</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <small>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">{{order.latestTimestamp}}</dt>
-                                                                            <dd class="col-8 col-sm-9">{{order.latestStatus}}</dd>
-                                                                        </dl>
-                                                                    </small>
-                                                                </td>
-                                                                <td>
-                                                                    <small>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Delivery Fee</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Price]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Weight</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Weight]</dd>
-                                                                        </dl>
-                                                                    </small>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                        <thead>
-                                                            <th scope="col">Shipper Address</th>
-                                                            <th scope="col">Receiver Address</th>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <small>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Name</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Name]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Email</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Email]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Phone]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Address</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Shipper Address]</dd>
-                                                                        </dl>
-                                                                    </small>
-                                                                </td>
-                                                                <td>
-                                                                    <small>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Name</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Name]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Email</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Email]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Mobile No.</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Phone]</dd>
-                                                                        </dl>
-                                                                        <dl class="row mb-0">
-                                                                            <dt class="col-4 col-sm-3 pr-0">Address</dt>
-                                                                            <dd class="col-8 col-sm-9">[Enter Receiver Address]</dd>
-                                                                        </dl>
-                                                                    </small>
-                                                                </td>
-                                                                
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- end of modal -->
+                                        
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <!-- end of ongoing content -->
+                        <!-- end of completed content -->
                     </div>
-                    <div class="tab-pane fade" id="pills-cancelled" role="tabpanel" aria-labelledby="pills-cancelled-tab">...</div>
+                    <!-- Modal -->
+                    <div class="modal fade bd-example-modal-lg" id="completedModal" tabindex="10000" role="dialog" aria-labelledby="completedModal" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Tracking No. {{trackingResult.tracking_id}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table thead-brown">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Parcel Tracking Details</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                <small>
+                                                    <dl class="row mb-0">
+                                                        <dt class="col-4 col-sm-3 pr-0">Date Completed</dt>
+                                                        <dd class="col-8 col-sm-9">{{trackingResult.latest_timestamp}}</dd>
+                                                        <dt class="col-4 col-sm-3 pr-0">Status</dt>
+                                                        <dd class="col-8 col-sm-9">{{trackingResult.latest_status}}</dd>
+                                                    </dl>
+                                                </small>
+                                            </td>
+                                            
+                                        </tr>
+                                    </tbody>
+        
+                                </table>
+                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <p><strong>{{trackingResult.latest_status}} · {{trackingResult.latest_timestamp}}</strong></p>
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="trackingResult.progress" aria-valuemin="0" aria-valuemax="100" ></div>
+                                        </div>
+                                        <ul v-for="activity in trackingResult.activities">
+                                            <activity v-bind:trackingid="activity.tracking_id" 
+                                                    v-bind:deliverystatus="activity.delivery_status"
+                                                    v-bind:deliverydesc="activity.delivery_desc"
+                                                    v-bind:timestamp="activity.timestamp"
+                                            ></activity>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end of modal -->
+                    <div class="tab-pane fade" id="pills-cancelled" role="tabpanel" aria-labelledby="pills-cancelled-tab">
+                        <table class="table thead-brown">
+                            <thead>
+                                <tr>
+                                    <th>Date Completed</th> 
+                                    <th>Shipper Details</th>
+                                    <th>Tracking No.</th>
+                                    <th>Receiver Address</th>
+                                    <th>Contact No.</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr is="order-info" v-for="(order, index) in customOrderList" inline-template>
+                                    <td>{{order.latestTimestamp}}</td>
+                                    <td>{{order.pickupAddress}}</td>
+                                    <td>{{order.trackingID}}</td>
+                                    <td>{{order.receiverAddress}}</td>
+                                    <td>{{order.receiverPhone}}</td>
+                                    <td>
+                                        <!-- Modal btn -->
+                                        <button type="button" class="action-button btn btn-primary" data-toggle="modal" data-target="#completedModal" v-on:click="trackParcel(order.trackingID, index)">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            
+                
             
         </section>
         
