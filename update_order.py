@@ -282,7 +282,7 @@ def updateOrder(status, order):
         # 6. Inform receiver
         recipient = info["receiverPhone"]
         msg = "[CAMELCOURIER] Your order " + \
-            str(order["trackingID"]) + " has been comepleted."
+            str(order["trackingID"]) + " has been completed."
         sms_msg = {
             "toPhone": recipient,
             "content": msg
