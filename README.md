@@ -66,7 +66,7 @@
     <li><a href="#microservices">Microservices</a></li>
     <li><a href="#beyond-the-lab">Beyond The Lab</a></li>
     <li><a href="#other-tasks">Other Tasks</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact">Contact</a></li>    
   </ol>
 </details>
 
@@ -175,7 +175,7 @@ This is an example of how to list things you need to use the software and how to
 
 | Done | Name | Responsible | Description |
 |----|----|----|----|
-| :white_large_square: | API Gateway | Vasilis | Implementing KONG/KONGA Gateway |
+| :white_check_mark: | API Gateway | Vasilis | Implementing KONG/KONGA Gateway, Routing |
 | :white_large_square: | Facebook Login | Jun Hui | Implement Graph API |
 | :white_check_mark: | Multiple Programming Language | Po Chien | Implement Drop Point MS in PHP |
 
