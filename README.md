@@ -66,7 +66,8 @@
     <li><a href="#microservices">Microservices</a></li>
     <li><a href="#beyond-the-lab">Beyond The Lab</a></li>
     <li><a href="#other-tasks">Other Tasks</a></li>
-    <li><a href="#contact">Contact</a></li>    
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#troubleshooting">Troubleshooting</a></li>
   </ol>
 </details>
 
