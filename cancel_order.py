@@ -89,7 +89,7 @@ def processCancelOrder(trackingID):
     # 1. Get trackingID from order microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    tracking_URL = order_URL + '/' + str(trackingID["trackingID"])
+    tracking_URL = order_URL + '/tracking/' + str(trackingID["trackingID"])
     order_result = invoke_http(tracking_URL, method='GET', json=None)
     print('order_result:', order_result)
 
@@ -121,7 +121,7 @@ def processCancelOrder(trackingID):
     if code in range(200, 300):
         info = order_result["data"]
         shipperID = info["shipperID"]
-        retrieve_ShipperURL = shipper_URL + '/shipper/' + str(shipperID)
+        retrieve_ShipperURL = shipper_URL + '/' + str(shipperID)
         shipper_result = invoke_http(
             retrieve_ShipperURL, method="GET", json=None)
         shipper = shipper_result["data"]
