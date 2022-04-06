@@ -127,7 +127,7 @@ There are 3 areas you have to set up, Docker, mySQL and Kong API gateway.
 4. Click "Go" to run the sql
 
 ### Kong/Konga Set Up
-1. You are required to have your docker containers up and running before continuing to the next step. If your containers are not running, see "Docker Set Up" above. Alternatively, you can check if your containers are running by running the command below (Note: only kong-migration should be exited).
+1. You are required to have your docker containers up and running before continuing to the next step. If your containers are not running, see "Docker Set Up" above. Alternatively, you can check if your containers are running by running the following command below (Note: only kong-migration should be exited).
     ```
     docker-compose ps
     ```
