@@ -61,7 +61,7 @@
                             <input class="form-check-input" type="radio" name="dropOff" v-model="orderCreation.dropOffOption" value="dropPoint" @click="getDropPoints">
                             <label for="flexRadioDefault1">Drop off Points </label>
                         </div>
-                        <select class="form-select" v-if="orderCreation.dropOffOption=='dropPoint'" v-model="orderCreation.pickupAddress"  v-on:change="changeDropPoint">
+                        <select class="form-select" v-if="orderCreation.dropOffOption=='dropPoint'" v-model="orderCreation.dropOffAddress"  v-on:change="changeDropPoint">
                             <option selected disabled value="">Select your preferred region</option>
                             <option  v-for="dp in dropPoints" :value="`${dp.placeID}|${dp.address}`">{{dp.address}}</option>
                         </select>
@@ -212,10 +212,6 @@
                                     <dt class="col-4 col-sm-3 pr-0">Delivery Fee</dt>
                                     <dd class="col-8 col-sm-9">{{orderCreation.price}}</dd>
                                 </dl>
-                                <dl class="row mb-0">
-                                    <dt class="col-4 col-sm-3 pr-0">Weight</dt>
-                                    <dd class="col-8 col-sm-9">{{orderCreation.weight}}</dd>
-                                </dl>
                             </small>
                         </td>
                     </tr>
@@ -275,7 +271,7 @@
         </fieldset>  
         <fieldset>
             <button type="button" class="action-button previous previous_button">Back</button> 
-            <a href="order-history.html" class="action-button" v-on:click="createOrder">Check Out</button> 
+            <a  class="action-button" v-on:click="createOrder">Check Out</button> 
         </fieldset>
         </form>  
         </section> 
