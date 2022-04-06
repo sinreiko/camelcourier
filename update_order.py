@@ -223,7 +223,7 @@ def updateOrder(status, order):
         return order_result
 
     ######## Complete Order #########
-    else:
+    elif status == 'complete':
         if code in range(200, 300):
             # Invoke the activity microservice
             print('\n-----Invoking activity microservice-----')
