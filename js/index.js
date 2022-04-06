@@ -64,6 +64,7 @@ const app = Vue.createApp({
                 dropOffOption: "custom", //custom or dropPoint
                 size: "",
                 price: "3.00",
+                pickupAddress:""
             },
             inputTracking: "",
             orderList:[],
@@ -323,7 +324,7 @@ const app = Vue.createApp({
             var service = new google.maps.places.PlacesService(map);
             let dropOffAddress = this.orderCreation.dropOffAddress
             let placeID = dropOffAddress.split("|")[0]
-            this.orderCreation.receiverAddress = dropOffAddress.split("|")[1]
+            this.orderCreation.pickupAddress = dropOffAddress.split("|")[1]
             console.log(dropOffAddress)
             service.getDetails({
                 placeId: placeID
@@ -403,7 +404,7 @@ const app = Vue.createApp({
                 receiverAddress: this.orderCreation.receiverUnit + " " + this.orderCreation.receiverAddress + " " + this.orderCreation.receiverPostal,
                 receiverPhone: "+65" + this.orderCreation.receiverPhone,
                 receiverEmail: this.orderCreation.receiverEmail,
-                pickupAddress: this.orderCreation.shipperAddress
+                pickupAddress: this.orderCreation.pickupAddress
             });
             alert(jsonData);
             fetch(`${create_order_URL}`,
@@ -425,7 +426,7 @@ const app = Vue.createApp({
                         this.fetchResults.orderCreation = true;
                         alert("Order has been created.");
                         if(this.orderCreation.dropOffOption == 'dropPoint'){
-                            this.pickupParcel(result.shipperID,result.trackingID,result.receiverAddress)
+                            this.pickupParcel(result.shipperID,result.trackingID,this.orderCreation.pickupAddress)
                         } else { 
                             window.location.href = "order-history.html"
                         }
@@ -576,7 +577,6 @@ const app = Vue.createApp({
                     headers: {
                         "Content-type": "application/json",
                         "Access-Control-Allow-Origin": "*"
-
                     },
                     body: jsonData
                 })

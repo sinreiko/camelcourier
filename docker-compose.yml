@@ -145,8 +145,8 @@ services:
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
             PYTHONUNBUFFERED: 1
-        ports:
-            - "5000:5000"
+        # ports:
+        #     - "5000:5000"
 
     ########################################################
     # Activityhttp: The Activity Log Consumer microservice #
@@ -164,8 +164,8 @@ services:
             PYTHONUNBUFFERED: 1
         depends_on:
             - kong
-        ports:
-            - "5001:5001"
+        # ports:
+        #     - "5001:5001"
 
     #####################################
     # Shipper: The Shipper microservice #
@@ -183,8 +183,8 @@ services:
             PYTHONUNBUFFERED: 1
         depends_on:
             - kong
-        ports:
-            - "5002:5002"
+        # ports:
+        #     - "5002:5002"
 
     ###############################
     # Rate: The Rate microservice #
@@ -200,8 +200,8 @@ services:
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
             PYTHONUNBUFFERED: 1
-        ports:
-            - "5003:5003"
+        # ports:
+        #     - "5003:5003"
 
     #####################################
     # Valuing: The Valuing microservice #
@@ -222,8 +222,8 @@ services:
             order_URL: http://order:5000/order
             rate_URL: http://rate:5003/rate
             PYTHONUNBUFFERED: 1
-        ports:
-            - "5005:5005"
+        # ports:
+        #     - "5005:5005"
 
     ###########################################################
     # Pick Parcel: Picking parcel drop-off point microservice #
@@ -253,8 +253,8 @@ services:
             # droppoint_URL: "http://localhost:5004/droppoint"
             # email_URL: "http://localhost:9000/email"
             PYTHONUNBUFFERED: 1
-        ports:
-            - "5006:5006"
+        # ports:
+        #     - "5006:5006"
 
     ########################################################
     # Create Order: The Create Delivery Order microservice #
@@ -281,8 +281,8 @@ services:
             order_URL: http://order:5000/order
             shipper_URL: http://shipper:5002/shipper
             PYTHONUNBUFFERED: 1
-        ports:
-            - "5007:5007"
+        # ports:
+        #     - "5007:5007"
 
     ########################################################
     # Update Order: The Activity Log Consumer microservice #
@@ -308,8 +308,8 @@ services:
             order_URL: http://order:5000/order
             shipper_URL: http://shipper:5002/shipper
             PYTHONUNBUFFERED: 1
-        ports:
-            - "5008:5008"
+        # ports:
+        #     - "5008:5008"
 
     #########################################
     # Update Order: The Update microservice #
@@ -335,8 +335,8 @@ services:
             order_URL: http://order:5000/order
             shipper_URL: http://shipper:5002/shipper
             PYTHONUNBUFFERED: 1
-        ports:
-            - "5009:5009"
+        # ports:
+        #     - "5009:5009"
 
     #####################################################
     # Activity: The Activity Log Consumber microservice #
@@ -375,8 +375,8 @@ services:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
             PYTHONUNBUFFERED: 1
-        ports:
-            - "5566:5566"
+        # ports:
+        #     - "5566:5566"
 
     ##########################################
     # Email: The Email Consumer microservice #
@@ -396,8 +396,8 @@ services:
             rabbit_host: camel-rabbitmq
             rabbit_port: 5672
             PYTHONUNBUFFERED: 1
-        ports:
-            - "9000:9000"
+        # ports:
+        #     - "9000:9000"
 
     ##########################################
     # Drop Point db: The Drop Point Database #
@@ -420,7 +420,7 @@ services:
         build:
             context: ./
             dockerfile: droppointPHP.Dockerfile
-        networks:
+        networks: 
             - kong-net
         depends_on:
             - db
