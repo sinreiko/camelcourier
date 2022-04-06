@@ -127,7 +127,7 @@ def processPickup(pickup_details):
     print('\n\n-----Publishing to the email with routing_key=email-----')
     message = json.dumps({
         "toEmail": shipper_email,
-        "subject": "New order has been created",
+        "subject": "New order has been updated with pick up address",
         "content": email_content
     })
 
