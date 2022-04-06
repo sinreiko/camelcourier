@@ -10,7 +10,7 @@
   <p align="center">
     <i>IS213 Enterprise Solution Development Project for Singapore Management University</i>
     <br />
-    CamelCourier is a courier/logistics company, similar to Ninja Van. In this project, we are building a courier service with various relevant business scenarios/processes leveraging a microservices architecture rather than a monolithic one as well as other appropriate tools and technology.
+    CamelCourier is a courier/logistics company, similar to Ninja Van. In this project, we are building a courier service with various relevant business scenarios/processes leveraging a microservice(s) architecture rather than a monolithic one as well as other appropriate tools and technologies.
     <br />
     <a href="https://github.com/sinreiko/camelcourier"><strong>Explore GitHub Repository »</strong></a>
     <br />
@@ -53,9 +53,9 @@
 <!-- ABOUT THE PROJECT -->
 # About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<a href="https://github.com/sinreiko/camelcourier"><img src="https://i.postimg.cc/qgHTDWQ4/photo-2022-04-07-00-10-52.jpg" alt="Logo" width="1000"></a>
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+We are CamelCourier! We provide logistics services to individuals and companies (similar to companies like NinjaVan & FedEx). This project is build to provide like services like accounts, status management, pricings, ordering, tracking, etc. For further details about the project, please view the report <a href="https://docs.google.com/document/d/1dJoWSUa3_W_yBXOmVrcms0zxBURCweqW/edit?usp=sharing&ouid=103579897753241852301&rtpof=true&sd=true">here</a>.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -127,7 +127,7 @@ There are 3 areas you have to set up, Docker, mySQL and Kong API gateway.
 4. Click "Go" to run the sql
 
 ### Kong/Konga Set Up
-1. You are required to have your docker containers up and running before continuing to the next step. If your containers are not running, see "Docker Set Up" above. Alternatively, you can check if your containers are running by running the command below (Note: only kong-migration should be exited).
+1. You are required to have your docker containers up and running before continuing to the next step. If your containers are not running, see "Docker Set Up" above. Alternatively, you can check if your containers are running by running the following command below (Note: only kong-migration should be exited).
     ```
     docker-compose ps
     ```

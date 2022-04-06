@@ -1,11 +1,10 @@
 # imports
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_cors import CORS
 from os import environ
 
 app = Flask(__name__)
-# NOTE! main db name changed to camelcourier. Pls import the new sql called camelcourier!
 
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
     'dbURL') or 'mysql+mysqlconnector://root:root@localhost:3306/camelDB'
@@ -13,6 +12,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+CORS(app)
 
 # database setup
 class Rate(db.Model):

@@ -9,8 +9,6 @@ networks:
     kong-net:
         driver: bridge
 
-# To be added to each service
-
 # Services [ <service name> : <port(s)> ]:
 #     - rabbitmq:5672:15672 (RabbitMQ)
 #     - kong-database:5432 (Postgres - Kong)
@@ -20,22 +18,22 @@ networks:
 
 # HTTP-based services:
 #     Atomic:
-#         - order:5000 (used)
-#         - activityhttp:5001 (Used) D
-#         - shipper:5002 (Used)
-#         - rate:5003 (wont use)
-#         - droppoint:5004 (Used)
-#         - valuing:5005 (Used)
-#     Composite: (Used)
+#         - order:5000
+#         - activityhttp:5001
+#         - shipper:5002
+#         - rate:5003
+#         - droppoint:5004
+#         - valuing:5005
+#     Composite:
 #         - pick_parcel:5006
 #         - create_order:5007
 #         - update_order:5008
 #         - cancel_order:5009
 
 # AMQP-based services (Atomic):
-#     - activity (wont use) 
-#     - send_sms:5566 (wont use)
-#     - email:9000 (wont use)
+#     - activity
+#     - send_sms:5566
+#     - email:9000
 
 services:
     ##################################
@@ -133,6 +131,9 @@ services:
         volumes:
             - kongadata:/app/kongadata
 
+    #################################
+    # Order: The Order microservice #
+    #################################
     order:
         build:
             context: ./
@@ -147,9 +148,9 @@ services:
         ports:
             - "5000:5000"
 
-    #########################################################
-    # Activityhttp: The Activity Log Consumber microservice #
-    #########################################################
+    ########################################################
+    # Activityhttp: The Activity Log Consumer microservice #
+    ########################################################
     activityhttp:
         build:
             context: ./
@@ -166,6 +167,9 @@ services:
         ports:
             - "5001:5001"
 
+    #####################################
+    # Shipper: The Shipper microservice #
+    #####################################
     shipper:
         build:
             context: ./
@@ -182,6 +186,9 @@ services:
         ports:
             - "5002:5002"
 
+    ###############################
+    # Rate: The Rate microservice #
+    ###############################
     rate:
         build:
             context: ./
@@ -196,22 +203,9 @@ services:
         ports:
             - "5003:5003"
 
-    # droppoint:
-    #     build:
-    #         context: ./
-    #         dockerfile: droppoint.Dockerfile
-    #     image: 889090/droppoint:1.0
-    #     restart: always
-    #     networks:
-    #         - kong-net
-    #     environment:
-    #         dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
-    #         PYTHONUNBUFFERED: 1
-    #     depends_on:
-    #         - kong
-    #     ports:
-    #         - "5004:5004"
-
+    #####################################
+    # Valuing: The Valuing microservice #
+    #####################################
     valuing:
         build:
             context: ./
@@ -262,6 +256,9 @@ services:
         ports:
             - "5006:5006"
 
+    ########################################################
+    # Create Order: The Create Delivery Order microservice #
+    ########################################################
     create_order:
         build:
             context: ./
@@ -287,6 +284,9 @@ services:
         ports:
             - "5007:5007"
 
+    ########################################################
+    # Update Order: The Activity Log Consumer microservice #
+    ########################################################
     update_order:
         build:
             context: ./
@@ -311,6 +311,9 @@ services:
         ports:
             - "5008:5008"
 
+    #########################################
+    # Update Order: The Update microservice #
+    #########################################
     cancel_order:
         build:
             context: ./
@@ -354,6 +357,9 @@ services:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
             PYTHONUNBUFFERED: 1
 
+    ######################################
+    # SMS: The SMS Consumer microservice #
+    ######################################
     send_sms:
         build:
             context: ./
@@ -372,6 +378,9 @@ services:
         ports:
             - "5566:5566"
 
+    ##########################################
+    # Email: The Email Consumer microservice #
+    ##########################################
     email:
         build:
             context: ./
@@ -390,52 +399,9 @@ services:
         ports:
             - "9000:9000"
 
-
-
-    #Sms: 5566
-    # sendgrid
-    # sendgrid:
-    #     # build:
-    #     #     context: ./
-    #     image: sendgrid/sendgrid-python
-    #     restart: always
-    #     ports:
-    #         - "5011:5011"
-    #rabbitmq
-    # rabbitmq:
-    #     image: rabbitmq:3-management-alpine
-    #     container_name: 'rabbitmq'
-    #     ports:
-    #         - 5672:5672
-    #         - 15672:15672
-    #     volumes:
-    #         - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-    #         - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    #     networks:
-    #         - rabbitmq_go_net
-    # rabbitmq:
-    #     container_name: "rabbitmq"
-    #     image: rabbitmq:3.8-management-alpine
-    #     environment:
-    #         - RABBITMQ_DEFAULT_USER=guest
-    #         - RABBITMQ_DEFAULT_PASS=guest
-    #     ports:
-    #         # AMQP protocol port
-    #         - '5672:5672'
-    #         # HTTP management UI
-    #         - '15672:15672'
-    # phpDB:
-    #     image: mysql:8.0.0
-    #     container_name: mysql8
-    #     environment:
-    #     MYSQL_DATABASE: camelDB
-    #     MYSQL_USER: is213
-    #     volumes:
-    #         - datafiles:/var/lib/mysql
-    #     restart: always
-    #     ports:
-    #         - "9906:3306"
-
+    ##########################################
+    # Drop Point db: The Drop Point Database #
+    ##########################################
     db:
         image: mysql:5.7
         environment:
@@ -446,6 +412,9 @@ services:
         ports:
             - "9906:3306"
 
+    ###############################################
+    # Drop Point: The Drop Off Point microservice #
+    ###############################################
     droppoint:
         image: php:7.2.2-apache
         build:
@@ -460,7 +429,3 @@ services:
             - "5004:80"
         stdin_open: true
         tty: true
-
-# networks:
-#     rabbitmq_go_net:
-#         driver: bridge

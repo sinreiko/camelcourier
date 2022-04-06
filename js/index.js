@@ -1,14 +1,24 @@
-const get_order_URL = "http://localhost:8000/api/order"
-const get_activity_URL = "http://localhost:8000/api/activity"
-const get_shipper_URL = "http://localhost:8000/api/shipper"
-const get_droppoint_URL = "http://localhost:5004/droppoint/"
+// const get_order_URL = "http://localhost:8000/api/order"
+// const get_activity_URL = "http://localhost:8000/api/activity"
+// const get_shipper_URL = "http://localhost:8000/api/shipper"
+// // const get_droppoint_URL = "http://localhost:5004/droppoint/"
 // const get_droppoint_URL = "http://localhost:8000/api/droppoint/"
 
-const valuing_URL = "http://localhost:8000/api/valuing"
-const pick_parcel_URL = "http://localhost:8000/api/pickparcel"
-const create_order_URL = "http://localhost:8000/api/create_order"
-const update_order_URL = "http://localhost:8000/update_order/update"
-const cancel_order_URL = "http://localhost:8000/api/cancel_order"
+// const valuing_URL = "http://localhost:8000/api/valuing"
+// const pick_parcel_URL = "http://localhost:8000/api/pickparcel"
+// const create_order_URL = "http://localhost:8000/api/create_order"
+// const update_order_URL = "http://localhost:8000/update_order/update"
+// const cancel_order_URL = "http://localhost:8000/api"
+
+const get_order_URL = "http://localhost:5000/order"
+const get_activity_URL = "http://localhost:5001/activity"
+const get_shipper_URL = "http://localhost:5002/shipper"
+const get_droppoint_URL = "http://localhost:5004/droppoint/"
+const valuing_URL = "http://localhost:5005/valuing"
+const pick_parcel_URL = "http://localhost:5006/pick_parcel"
+const create_order_URL = "http://localhost:5007/create_order"
+const update_order_URL = "http://localhost:5008/update_order/update"
+const cancel_order_URL = "http://localhost:5009/"
 // GraphQL: exchange rate
 let SWOP_API_key='7b31aa8dabd1df60435aec0cbff8f9d17211d33f6b2f20dfe7e7a85bb539689e'
 let SWOP_URL=`https://swop.cx/graphql?api-key=${SWOP_API_key}`
@@ -52,7 +62,6 @@ const app = Vue.createApp({
                 receiverPhone: "",
                 //others
                 dropOffOption: "custom", //custom or dropPoint
-                dropPointIndex: 0,
                 size: "",
                 price: "3.00",
             },
@@ -64,10 +73,7 @@ const app = Vue.createApp({
                 orderUpdate: false,
                 getPrice: false,
             },
-            errorMessages:{
-                orderCreation: "",
-                getDeliveryStatus: ""
-            },
+            message: "",
             // these are variables for the graphQL currency app
             currency:"SGD",
             currency_obj:{
@@ -95,7 +101,8 @@ const app = Vue.createApp({
                 method:"POST",
                 headers: {
                     "Content-Type":"application/json",
-                    "Accept":"application.json"
+                    "Accept":"application.json",
+                    "Access-Control-Allow-Origin": "*"
                 },
                 body: JSON.stringify({
                     query           
@@ -150,19 +157,11 @@ const app = Vue.createApp({
                 if (data.code === 404) {
                     // no book in db
                     this.message = data.message;
+                    alert(this.message)
                 } else {
                     res = data.data;
-                    // console.log(res);
-                    // console.log(res[res.length - 1]);
-                    
                     latestStatus = res[res.length - 1].delivery_status;
                     latestTimestamp = res[res.length - 1].timestamp;
-                    // this.trackingResult.push({
-                    //     tracking_id: res[0].tracking_id,
-                    //     latest_status: latestStatus,
-                    //     progress: this.calculateProgress(latestStatus),
-                    //     activities: res
-                    // });
                     this.trackingResult = {
                         tracking_id: real_tracking,
                         latest_status: latestStatus,
@@ -302,7 +301,6 @@ const app = Vue.createApp({
                             
                         })
                         this.changeDropPoint();
-
                     }
                 })
                 .catch(error => {
@@ -319,9 +317,12 @@ const app = Vue.createApp({
             });
         
             var service = new google.maps.places.PlacesService(map);
-        
+            let dropOffAddress = this.orderCreation.dropOffAddress
+            let placeID = dropOffAddress.split("|")[0]
+            this.orderCreation.receiverAddress = dropOffAddress.split("|")[1]
+            console.log(dropOffAddress)
             service.getDetails({
-                placeId: this.orderCreation.pickupAddress
+                placeId: placeID
             }, function (place, status) {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
         
@@ -330,13 +331,10 @@ const app = Vue.createApp({
                         map: map,
                         position: place.geometry.location
                     });
-        
                     // Center map on place location
                     map.setCenter(place.geometry.location);
                 }
             });
-            // document.getElementById('map').src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyDoa4g6pnzYFf_BP9pbIg0BiOfmqGoAsbk&zoom=17&q="
-            // +this.orderCreation.pickupAddress;
         },
         resetDropPoint(){
             $('.slider_form').removeClass('col-md-6')
@@ -360,13 +358,13 @@ const app = Vue.createApp({
                 pickupAddress: this.orderCreation.shipperAddress,
                 receiverAddress: this.orderCreation.receiverAddress,
                 size: this.orderCreation.size
-
             });
             fetch(`${valuing_URL}`,
             {
                 method: "POST",
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
                 },
                 body: jsonData
             })
@@ -375,7 +373,6 @@ const app = Vue.createApp({
                     result = data.data;
                     console.log(result)
                     this.orderCreation.price = result.price;
-
                     switch (data.code) {
                         case 400:
                         case 500:
@@ -394,7 +391,7 @@ const app = Vue.createApp({
         },
         createOrder(){
             this.fetchResults.orderCreation = false;
-            this.errorMessages.orderCreation = "";
+            this.messages = "";
 
             let jsonData = JSON.stringify({
                 shipperID: this.userDetail.shipperID, //shipperID
@@ -409,57 +406,41 @@ const app = Vue.createApp({
             {
                 method: "POST",
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
                 },
                 body: jsonData
             })
             .then(response => response.json())
             .then(data => {
-                alert(data);
                 result = data.data;
-                alert(result);
+                
                 // 3 cases
                 switch (data.code) {
                     case 201:
                         this.fetchResults.orderCreation = true;
+                        alert("Order has been created.");
+                        if(this.orderCreation.dropOffOption == 'dropPoint'){
+                            this.pickupParcel(result.shipperID,result.trackingID,result.receiverAddress)
+                        } else { 
+                            window.location.href = "order-history.html"
+                        }
                         break;
                     case 400:
                     case 500:
-                        this.errorMessages.orderCreation = data.message;
+                        this.message = data.message;
+                        console.log(this.message)
                         break;
                     default:
+                        console.log(data.message);
                         throw `${data.code}: ${data.message}`;
                 }
             })
-            // fetch(`${get_order_URL}`,
-            // {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-type": "application/json"
-            //     },
-            //     body: jsonData
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     console.log(data);
-            //     result = data.data;
-            //     console.log(result);
-            //     // 3 cases
-            //     switch (data.code) {
-            //         case 201:
-            //             this.fetchResults.orderCreation = true;
-            //             break;
-            //         case 400:
-            //         case 500:
-            //             this.errorMessages.orderCreation = data.message;
-            //             break;
-            //         default:
-            //             throw `${data.code}: ${data.message}`;
-            //     }
-            // })
         },
         retrieveOrderByUserId(user, userid){
-            fetch(`${get_order_URL}/find/${user}/${userid}`)
+            fetch(`${get_order_URL}/find/${user}/${userid}`,{
+                mode:"no-cors"
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 404) {
@@ -562,15 +543,15 @@ const app = Vue.createApp({
                 {
                     method: "POST",
                     headers: {
-                        "Content-type": "application/json"
+                        "Content-type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
                     },
                     body: jsonData
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(JSON.stringify(data));
+                    alert('Order has been updated.');
                     result = data.data;
-                    alert(result);
                     // 3 cases
                     switch (data.code) {
                         case 201:
@@ -589,15 +570,17 @@ const app = Vue.createApp({
                 {
                     method: "POST",
                     headers: {
-                        "Content-type": "application/json"
+                        "Content-type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+
                     },
                     body: jsonData
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(JSON.stringify(data));
                     result = data.data;
-                    alert(result);
+                    alert('Order has been cancelled');
+                    window.location.href = 'order-history.html'
                     // 3 cases
                     switch (data.code) {
                         case 201:
@@ -652,6 +635,40 @@ const app = Vue.createApp({
                     }
                 
             }
+        },
+        pickupParcel(shipperid,trackingid,pickup){
+            let jsonData = JSON.stringify({
+                shipperID: shipperid, //shipperID
+                trackingID: trackingid,
+                pickupAddress: pickup,
+            });
+            fetch(`${pick_parcel_URL}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: jsonData
+            })
+            .then(response => response.json())
+            .then(data => {
+                
+                // 3 cases
+                switch (data.code) {
+                    case 201:
+                        alert("Order is awaiting pickup.");
+                        window.location.href = "order-history.html"
+                        break;
+                    case 400:
+                    case 500:
+                        this.message = data.message;
+                        console.log(this.message)
+                        break;
+                    default:
+                        console.log(data.message);
+                        throw `${data.code}: ${data.message}`;
+                }
+            })
         }
     },
     beforeMount(){
@@ -660,7 +677,6 @@ const app = Vue.createApp({
         } else if (this.userType == 'shipper'){
             this.retrieveOrderByUserId('shipper', this.userDetail.shipperID)
         }
-        
     },
     mounted(){
         console.log(this.userDetail)
