@@ -86,14 +86,33 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
+#### Front-End Dependencies
 * [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
 * [Bootstrap](https://getbootstrap.com)
 * [JQuery](https://jquery.com)
+
+#### Back-End Dependencies
+* [Flask](https://flask.palletsprojects.com/en/2.1.x/)
+* [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/)
+* [FlaskSQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
+* [pika](https://pika.readthedocs.io/en/stable/)
+
+#### External APIs
+* [SWOP API](https://swop.cx/)
+* [Google Distance Matrix API](https://developers.google.com/maps/documentation/distance-matrix)
+* [Twilio](https://www.twilio.com/)
+* [SendGrid](https://sendgrid.com/)
+
+#### Other Technologies Involved
+* [Docker](https://www.docker.com/)
+* [Kong](https://konghq.com/kong)
+* [Konga](https://pantsel.github.io/konga/)
+* [RabbitMQ (AMQP)](https://www.rabbitmq.com/)
+* [GraphQL](https://graphql.org/)
+* [REST](https://restfulapi.net/)
+
+
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
