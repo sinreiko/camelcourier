@@ -6,9 +6,8 @@
         private $table_name = "droppoint";
    
         // object properties
-        public $longitude;
-        public $latitude;
-        public $region;
+        public $address;
+        public $placeID;
     
         // constructor with $db as database connection
         public function __construct($db) {
