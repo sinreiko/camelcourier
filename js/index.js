@@ -104,7 +104,8 @@ const app = Vue.createApp({
                 method:"POST",
                 headers: {
                     "Content-Type":"application/json",
-                    "Accept":"application.json"
+                    "Accept":"application.json",
+                    "Access-Control-Allow-Origin": "*"
                 },
                 body: JSON.stringify({
                     query           
@@ -376,7 +377,8 @@ const app = Vue.createApp({
             {
                 method: "POST",
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
                 },
                 body: jsonData
             })
@@ -419,7 +421,8 @@ const app = Vue.createApp({
             {
                 method: "POST",
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
                 },
                 body: jsonData
             })
@@ -469,7 +472,9 @@ const app = Vue.createApp({
             // })
         },
         retrieveOrderByUserId(user, userid){
-            fetch(`${get_order_URL}/find/${user}/${userid}`)
+            fetch(`${get_order_URL}/find/${user}/${userid}`,{
+                mode:"no-cors"
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 404) {
@@ -572,7 +577,8 @@ const app = Vue.createApp({
                 {
                     method: "POST",
                     headers: {
-                        "Content-type": "application/json"
+                        "Content-type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
                     },
                     body: jsonData
                 })
@@ -599,7 +605,9 @@ const app = Vue.createApp({
                 {
                     method: "POST",
                     headers: {
-                        "Content-type": "application/json"
+                        "Content-type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+
                     },
                     body: jsonData
                 })
