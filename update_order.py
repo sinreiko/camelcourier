@@ -69,7 +69,7 @@ def updateOrder(status, order):
     # 1. Get tracking id from order microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    tracking_URL = order_URL + '/' + order["trackingID"]
+    tracking_URL = order_URL + '/' + str(order["trackingID"])
     order_result = invoke_http(tracking_URL, method='GET', json=None)
     print('order_result:', order_result)
 
