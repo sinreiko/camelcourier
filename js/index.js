@@ -719,15 +719,15 @@ app.component('home-header',{
                     <!-- </div> -->            
                     <div class=" mr-lg-5 pt-3">
                         <form id="form-login" class="form-inline" action="" method="post">
-                            <div class="form-group col-sm-6 col-md-4">
+                            <div class="form-group w-40">
                                 <label for="email" class="sr-only">Email address</label>
                                 <input v-model="userEmail" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
                             </div>
-                            <div class="form-group col-sm-6 col-md-4">
+                            <div class="form-group w-40">
                                 <label for="password" class="sr-only">Password</label>
                                 <input v-model="userPassword" type="password" class="form-control" id="password" aria-describedby="emailHelp" placeholder="Enter password">
                             </div>
-                            <div class="form-group col-sm-6 col-md-3 mt-md-2">
+                            <div class="form-group w-20 mt-md-2">
                                 <button @click.prevent="userAuthenticate('form-login')" type="submit" class="action-button btn btn-primary mb-2 w-100" style="padding:0">Login</button>
                             </div>
                         </form>
