@@ -189,6 +189,8 @@ services:
             dockerfile: rate.Dockerfile
         image: 889090/rate:1.0
         restart: always
+        networks:
+            - kong-net
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/camelDB
             PYTHONUNBUFFERED: 1
@@ -453,7 +455,9 @@ services:
         build:
             context: ./
             dockerfile: droppointPHP.Dockerfile
-        container_name: droppoint
+        # container_name: droppoint
+        networks:
+            - kong-net
         depends_on:
             - db
         volumes:
