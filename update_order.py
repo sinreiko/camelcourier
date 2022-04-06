@@ -189,9 +189,6 @@ def updateOrder(status, order):
             return jsonify(
                 {
                     "code": 500,
-                    "data": {
-                        "email": shipper_email
-                    },
                     "message": "An error occurred while retrieving shipper email. "
                 }
             ), 500
@@ -264,9 +261,6 @@ def updateOrder(status, order):
             return jsonify(
                 {
                     "code": 500,
-                    "data": {
-                        "email": shipper_email
-                    },
                     "message": "An error occurred while retrieving shipper email. "
                 }
             ), 500

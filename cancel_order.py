@@ -60,7 +60,7 @@ def cancel_order():
     if request.is_json:
         try:
             trackingID = request.get_json()
-            print("\nReceived a tracking_id to be canceled in JSON:", trackingID)
+            print("\nReceived a tracking_id to be canceled in JSON:", str(trackingID))
 
             result = processCancelOrder(trackingID)
             return jsonify(result), result["code"]
@@ -89,7 +89,7 @@ def processCancelOrder(trackingID):
     # 1. Get trackingID from order microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    tracking_URL = order_URL + '/' + trackingID["trackingID"]
+    tracking_URL = order_URL + '/' + str(trackingID["trackingID"])
     order_result = invoke_http(tracking_URL, method='GET', json=None)
     print('order_result:', order_result)
 
@@ -133,16 +133,13 @@ def processCancelOrder(trackingID):
         return jsonify(
             {
                 "code": 500,
-                "data": {
-                    "email": shipper_email
-                },
                 "message": "An error occurred while retrieving shipper email. "
             }
         ), 500
 
     # 4. Email shipper
     email_content = "This is to inform you that Tracking ID: " + \
-        trackingID["trackingID"] + " has been canceled."
+        str(trackingID["trackingID"]) + " has been canceled."
     email_msg = {
         "toEmail": shipper_email,
         "subject": "Order has been canceled",
@@ -155,7 +152,7 @@ def processCancelOrder(trackingID):
     # 5. Inform receiver
     recipient = info["receiverPhone"]
     msg = "[CAMELCOURIER] Your order " + \
-        trackingID["trackingID"] + " has been canceled."
+        str(trackingID["trackingID"]) + " has been canceled."
     sms_msg = {
         "toPhone": recipient,
         "content": msg
