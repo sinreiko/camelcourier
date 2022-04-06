@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 06, 2022 at 06:55 AM
+-- Generation Time: Apr 06, 2022 at 11:54 AM
 -- Server version: 8.0.21
 -- PHP Version: 7.4.9
 
@@ -20,6 +20,9 @@ SET time_zone = "+00:00";
 --
 -- Database: `cameldb`
 --
+DROP DATABASE IF EXISTS `cameldb`;
+CREATE DATABASE IF NOT EXISTS `cameldb` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `cameldb`;
 
 -- --------------------------------------------------------
 

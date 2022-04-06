@@ -120,14 +120,15 @@ There are 3 areas you have to set up, Docker, mySQL and Kong API gateway.
    ```
 
 ### MySQL/phpMyAdmin Set Up
-1. Get a free API Key at [https://example.com](https://example.com)
+1. Start up your WAMP/MAMP
+2. Login to your http://localhost/phpmyadmin/
 2. Clone the repo
    ```sh
    git clone https://github.com/github_username/repo_name.git
    ```
 
 ### Kong/Konga Set Up
-1. Get a free API Key at [https://example.com](https://example.com)
+1. You are required to have your docker containers up and running before continuing to this step. If you have not, see "Docker Set Up" above.
 2. Clone the repo
    ```sh
    git clone https://github.com/github_username/repo_name.git
