@@ -76,18 +76,18 @@ def request_price():
 
 def processValuing(size_info):
     # 3-- Obtain origin and destination of order for {trackingID} from order.py
-    # print('\n-----Invoking order microservice-----')
-    # order_URL = environ.get('order_URL') or "http://localhost:5000/order"
-    # order_URL += "/" + str(size_info['trackingID'])
-    # order_result = invoke_http(order_URL, method='GET', json=None)
-    # print('order_result:', order_result)
+    print('\n-----Invoking order microservice-----')
+    order_URL = environ.get('order_URL') or "http://localhost:5000/order"
+    order_URL += "/tracking/" + str(size_info['trackingID'])
+    order_result = invoke_http(order_URL, method='GET', json=None)
+    print('order_result:', order_result)
 
-    # code=order_result["code"]
-    # info=order_result['data']
+    code=order_result["code"]
+    info=order_result['data']
 
     # 4-- Return order details {pickupAddress, receiverAddress}
-    pickupAddress = size_info['pickupAddress']
-    receiverAddress = size_info['receiverAddress']
+    pickupAddress = info['pickupAddress']
+    receiverAddress = info['receiverAddress']
 
     # 5-- Find distance between {pickupAddress, receiverAddress} using Google Maps distance matrix API
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + pickupAddress + \
