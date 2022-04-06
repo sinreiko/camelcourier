@@ -104,7 +104,7 @@ To get local copy of CamelCourier up and running by following these simple steps
 
 These are the prerequisites required for CamelCourier.
 
-* Docker: https://www.docker.com/
+* Docker Desktop: https://www.docker.com/products/docker-desktop/
 * WAMP (Windows): https://www.wampserver.com/en/
 * MAMP (Mac): https://www.mamp.info/en/mac/
 
@@ -113,40 +113,35 @@ These are the prerequisites required for CamelCourier.
 There are 3 areas you have to set up, Docker, mySQL and Kong API gateway.
 
 ### Docker Set Up
-1. Get 
-2. Clone the repo
-   ```sh
+1. Start up Docker Desktop
+2. Open Command Prompt/Terminal and navigate to the folder with docker-compose.yml
+2. Build, create and start your containers (Note: This step may take a few minutes)
+   ```
    docker-compose up
    ```
 
 ### MySQL/phpMyAdmin Set Up
 1. Start up your WAMP/MAMP
-2. Login to your http://localhost/phpmyadmin/
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
+2. Go to http://localhost/phpmyadmin/ > Login > Import
+3. "Choose File" to import and select "cameldb.sql" (under the sql folder)
+4. Click "Go" to run the sql
 
 ### Kong/Konga Set Up
-1. You are required to have your docker containers up and running before continuing to this step. If you have not, see "Docker Set Up" above.
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
+1. You are required to have your docker containers up and running before continuing to the next step. If your containers are not running, see "Docker Set Up" above. Alternatively, you can check if your containers are running by running the command below (Note: only kong-migration should be exited).
+    ```
+    docker-compose ps
+    ```
+2. Go to http://localhost:1337/ > Create account and login
+3. Go to Connections > New Connection > Enter connection details stated below > Create Connection > Activate Connection
+    ```
+      Name: default
+      Kong Admin URL: http://kong:8001
+    ```
+4. Go to Snapshots > Import from file
+5. Select the "snapshot_1.json" (under the "kong snapshot" folder)
+6. Go to the details of the snapshot you just imported
+7. Click Restore (Note: It is common to encounter an error, just repeat this step and restore again)
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
