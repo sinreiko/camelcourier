@@ -68,22 +68,21 @@ INSERT INTO `activity` (`activityID`, `trackingID`, `timestamp`, `deliveryStatus
 
 DROP TABLE IF EXISTS `droppoint`;
 CREATE TABLE IF NOT EXISTS `droppoint` (
-  `latitude` float NOT NULL,
-  `longitude` float NOT NULL,
   `region` varchar(64) NOT NULL,
-  PRIMARY KEY (`latitude`,`longitude`)
+  `placeID` varchar(100) NOT NULL,
+  PRIMARY KEY (`placeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `droppoint`
 --
 
-INSERT INTO `droppoint` (`latitude`, `longitude`, `region`) VALUES
-(1.26525, 103.82, 'South'),
-(1.28571, 103.844, 'South'),
-(1.28739, 103.83, 'South'),
-(1.43637, 103.787, 'North'),
-(1.44618, 103.82, 'North');
+INSERT INTO `droppoint` (`region`, `placeID`) VALUES
+('South', 'ChIJr9GWQuIb2jER3YsiRj8AqFw'),
+('South', 'ChIJM7Kvx3QZ2jERqxq34uk5HAY'),
+('South', 'ChIJz-Tz8HgZ2jER_TPrfDQFrhg'),
+('North', 'ChIJVfCo8QgT2jERgKTarqz3AAU'),
+('North', 'EhdTZW1iYXdhbmcgRHIsIFNpbmdhcG9yZSIuKiwKFAoSCYfBbtljE9oxEUnZp-9q-D44EhQKEgl1k4uKIxHaMRHE9atSz2l4iA');
 
 -- --------------------------------------------------------
 
