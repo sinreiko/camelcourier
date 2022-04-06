@@ -69,7 +69,7 @@ def updateOrder(status, order):
     # 1. Get tracking id from order microservice
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    tracking_URL = order_URL + '/' + str(order["trackingID"])
+    tracking_URL = order_URL + '/tracking/' + str(order["trackingID"])
     order_result = invoke_http(tracking_URL, method='GET', json=None)
     print('order_result:', order_result)
 
@@ -102,7 +102,7 @@ def updateOrder(status, order):
         if code in range(200, 300):
             info = order_result["data"]
             shipperID = info["shipperID"]
-            retrieve_ShipperURL = shipper_URL + '/shipper/' + str(shipperID)
+            retrieve_ShipperURL = shipper_URL + '/' + str(shipperID)
             shipper_result = invoke_http(
                 retrieve_ShipperURL, method="GET", json=None)
             shipper = shipper_result["data"]
@@ -123,7 +123,7 @@ def updateOrder(status, order):
 
         # 5. Email shipper
         email_content = "This is to inform you that Tracking ID: " + \
-            order["trackingID"] + " has been picked up"
+            str(order["trackingID"]) + " has been picked up"
 
         email_msg = {
             "toEmail": shipper_email,
@@ -138,7 +138,7 @@ def updateOrder(status, order):
         # 6. Inform receiver
         recipient = info["receiverPhone"]
         msg = "[CAMELCOURIER] Your order " + \
-            order["trackingID"] + " has been picked up."
+            str(order["trackingID"]) + " has been picked up."
         sms_msg = {
             "toPhone": recipient,
             "content": msg
@@ -198,7 +198,7 @@ def updateOrder(status, order):
 
         # 5. Email shipper
         email_content = "This is to inform you that Tracking ID: " + \
-            order["trackingID"] + " has been delayed"
+            str(order["trackingID"]) + " has been delayed"
 
         email_msg = {
             "toEmail": shipper_email,
@@ -213,7 +213,7 @@ def updateOrder(status, order):
         # 6. Inform receiver
         recipient = info["receiverPhone"]
         msg = "[CAMELCOURIER] Your order " + \
-            order["trackingID"] + " has been delayed."
+            str(order["trackingID"]) + " has been delayed."
         sms_msg = {
             "toPhone": recipient,
             "content": msg
@@ -273,7 +273,7 @@ def updateOrder(status, order):
 
         # 5. Email shipper
         email_content = "This is to inform you that Tracking ID: " + \
-            order["trackingID"] + " has been completed"
+            str(order["trackingID"]) + " has been completed"
 
         email_msg = {
             "toEmail": shipper_email,
@@ -288,7 +288,7 @@ def updateOrder(status, order):
         # 6. Inform receiver
         recipient = info["receiverPhone"]
         msg = "[CAMELCOURIER] Your order " + \
-            order["trackingID"] + " has been comepleted."
+            str(order["trackingID"]) + " has been comepleted."
         sms_msg = {
             "toPhone": recipient,
             "content": msg
