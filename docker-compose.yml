@@ -10,7 +10,6 @@ networks:
         driver: bridge
 
 # To be added to each service
-# 
 
 # Services [ <service name> : <port(s)> ]:
 #     - rabbitmq:5672:15672 (RabbitMQ)
@@ -463,7 +462,3 @@ services:
             - "5004:80"
         stdin_open: true
         tty: true
-
-# networks:
-#     rabbitmq_go_net:
-#         driver: bridge
