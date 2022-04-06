@@ -53,9 +53,9 @@
 <!-- ABOUT THE PROJECT -->
 # About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<img src="https://i.postimg.cc/qgHTDWQ4/photo-2022-04-07-00-10-52.jpg" alt="Logo" width="1000">
 
-We are CamelCourier! We provide logistics services to individuals and companies (similar to companies like NinjaVan & FedEx). This project is build to provide like services like accounts, status management, pricings, ordering, tracking, etc.
+We are CamelCourier! We provide logistics services to individuals and companies (similar to companies like NinjaVan & FedEx). This project is build to provide like services like accounts, status management, pricings, ordering, tracking, etc. For further details about the project, please view the report <a href="https://docs.google.com/document/d/1dJoWSUa3_W_yBXOmVrcms0zxBURCweqW/edit?usp=sharing&ouid=103579897753241852301&rtpof=true&sd=true">here</a>.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
