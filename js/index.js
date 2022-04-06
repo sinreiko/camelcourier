@@ -1,13 +1,14 @@
-const get_order_URL = "http://localhost:5000/order"
-const get_activity_URL = "http://localhost:5001/activity"
-const get_shipper_URL = "http://localhost:5002/shipper"
-const get_rate_URL = "http://localhost:5003/rate"
+const get_order_URL = "http://localhost:8000/api/order"
+const get_activity_URL = "http://localhost:8000/api/activity"
+const get_shipper_URL = "http://localhost:8000/api/shipper"
 const get_droppoint_URL = "http://localhost:5004/droppoint/"
-const valuing_URL = "http://localhost:5005/valuing"
-const pick_parcel_URL = "http://localhost:5006/pickparcel"
-const create_order_URL = "http://localhost:5007/create_order"
-const update_order_URL = "http://localhost:5008/update_order/update"
-const cancel_order_URL = "http://localhost:5009"
+// const get_droppoint_URL = "http://localhost:8000/api/droppoint/"
+
+const valuing_URL = "http://localhost:8000/api/valuing"
+const pick_parcel_URL = "http://localhost:8000/api/pickparcel"
+const create_order_URL = "http://localhost:8000/api/create_order"
+const update_order_URL = "http://localhost:8000/update_order/update"
+const cancel_order_URL = "http://localhost:8000/api/cancel_order"
 // GraphQL: exchange rate
 let SWOP_API_key='7b31aa8dabd1df60435aec0cbff8f9d17211d33f6b2f20dfe7e7a85bb539689e'
 let SWOP_URL=`https://swop.cx/graphql?api-key=${SWOP_API_key}`
@@ -27,7 +28,13 @@ const app = Vue.createApp({
                 orderListIndex: 0
             },
             userDetail: JSON.parse(localStorage.getItem("userDetail")),
-            dropPoints:[],
+            dropPoints:[
+                {
+                    address: "",
+                    placeID: "",
+                }
+            ],
+            mapLink: "",
             orderCreation:{
                 //shipper
                 shipperPostal: "",
@@ -45,6 +52,7 @@ const app = Vue.createApp({
                 receiverPhone: "",
                 //others
                 dropOffOption: "custom", //custom or dropPoint
+                dropPointIndex: 0,
                 size: "",
                 price: "3.00",
             },
@@ -284,10 +292,17 @@ const app = Vue.createApp({
                         // no book in db
                         this.message = data.message;
                     } else {
-                        // res = data.data.droppoints;
-                        res = data.data.orders
+                        res = data.data
                         this.dropPoints = res;
                         console.log(this.dropPoints);
+                        $('.slider_form').addClass('col-md-6')
+                        $('.slider_form').animate({
+                            margin: 0
+                        },1000, function(){
+                            
+                        })
+                        this.changeDropPoint();
+
                     }
                 })
                 .catch(error => {
@@ -296,6 +311,35 @@ const app = Vue.createApp({
                     // console.log(this.message + error);
 
                 });
+        },
+        changeDropPoint(){
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: new google.maps.LatLng(0, 0),
+                zoom: 15
+            });
+        
+            var service = new google.maps.places.PlacesService(map);
+        
+            service.getDetails({
+                placeId: this.orderCreation.pickupAddress
+            }, function (place, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+        
+                    // Create marker
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: place.geometry.location
+                    });
+        
+                    // Center map on place location
+                    map.setCenter(place.geometry.location);
+                }
+            });
+            // document.getElementById('map').src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyDoa4g6pnzYFf_BP9pbIg0BiOfmqGoAsbk&zoom=17&q="
+            // +this.orderCreation.pickupAddress;
+        },
+        resetDropPoint(){
+            $('.slider_form').removeClass('col-md-6')
         },
         getPickUpAddress(pickup){
             this.orderCreation.shipperPostal = pickup.shipperPostal;

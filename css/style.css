@@ -257,6 +257,8 @@ a:focus {
 }
 
 .slider_form {
+  display:relative;
+  left:0;
   width: 400px;
   padding: 25px;
   background-color: #B28E68;
@@ -1061,3 +1063,7 @@ a:focus {
   color: #fff;
   background-color: #007bff;
 } */
+
+.shift-left{
+  transform: translateX(-100%);
+}

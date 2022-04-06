@@ -14,7 +14,7 @@ include_once 'api/objects/Post.php';
 // get database connection
 $database = new Database();
 $db = $database->getConnection();
-  
+
 // prepare droppoint object
 $droppt = new Post($db);
 
@@ -61,7 +61,7 @@ $result_arr["code"] = 500;
 // } else {
 //     // set response code - 404 Not found
 //     http_response_code(404);
-  
+
 //     // tell the user item does not exist
 //     echo json_encode(array("message" => "Item does not exist."));
 
@@ -70,35 +70,32 @@ $result_arr["code"] = 500;
 
 //=========
 // read the details of product to be edited
-$stmt=$droppt->read();
-$num=$stmt->rowCount();
-if ($num>0) {
+$stmt = $droppt->read();
+$num = $stmt->rowCount();
+if ($num > 0) {
     // code...
-    while( $row = $stmt->fetch(PDO::FETCH_ASSOC) ){
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
         // products array        
         $item = array(
-                "latitude" => $latitude,
-                "longitude" => $longitude,
-                "region" => $region
-            );
+            "address" => $address,
+            "placeID" => $placeID
+        );
         //add item to the result array
         array_push($result_arr["data"], $item);
-
     }
-      
+
     // set response code - 200 OK
-    $result_arr['code']=200;
+    $result_arr['code'] = 200;
     http_response_code(200);
-      
+
     // make it json format
     echo json_encode($result_arr);
-    } else {
+} else {
 
     // set response code - 404 Not found
     http_response_code(404);
-  
+
     // tell the user item does not exist
     echo json_encode(array("message" => "Item does not exist."));
 }
-?>

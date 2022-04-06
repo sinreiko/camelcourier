@@ -7,7 +7,7 @@ from os import environ
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get(
-    'dbURL') or 'mysql+mysqlconnector://root@localhost:3306/camelDB'
+    'dbURL') or 'mysql+mysqlconnector://root:root@localhost:3306/camelDB'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
@@ -20,17 +20,15 @@ CORS(app)
 class Droppoint(db.Model):
     __tablename__ = 'droppoint'
 
-    longitude = db.Column(db.Float, primary_key=True)
-    latitude = db.Column(db.Float, primary_key=True)
-    region = db.Column(db.String(100), nullable=False)
+    placeID = db.Column(db.String(100), nullable=False)
+    address = db.Column(db.String(100), nullable=False)
 
-    def __init__(self, longitude, latitude, region):
-        self.longitude = longitude
-        self.latitude = latitude
-        self.region = region
+    def __init__(self, address, placeID):
+        self.address = address
+        self.placeID = placeID
 
     def json(self):
-        return {"longitude": self.longitude, "latitude": self.latitude, "region": self.region}
+        return {"address": self.address, "placeID": self.placeID}
 
 
 # return all droppoints function

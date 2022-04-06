@@ -68,22 +68,21 @@ INSERT INTO `activity` (`activityID`, `trackingID`, `timestamp`, `deliveryStatus
 
 DROP TABLE IF EXISTS `droppoint`;
 CREATE TABLE IF NOT EXISTS `droppoint` (
-  `latitude` float NOT NULL,
-  `longitude` float NOT NULL,
-  `region` varchar(64) NOT NULL,
-  PRIMARY KEY (`latitude`,`longitude`)
+  `address` varchar(64) NOT NULL,
+  `placeID` varchar(100) NOT NULL,
+  PRIMARY KEY (`placeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `droppoint`
 --
 
-INSERT INTO `droppoint` (`latitude`, `longitude`, `region`) VALUES
-(1.26525, 103.82, 'South'),
-(1.28571, 103.844, 'South'),
-(1.28739, 103.83, 'South'),
-(1.43637, 103.787, 'North'),
-(1.44618, 103.82, 'North');
+INSERT INTO `droppoint` (`address`, `placeID`) VALUES
+('1 Maritime Square, Singapore 099253', 'ChIJr9GWQuIb2jER3YsiRj8AqFw'),
+('101 Upper Cross St, Singapore 058357', 'ChIJM7Kvx3QZ2jERqxq34uk5HAY'),
+('298 Jln Bukit Ho Swee, Singapore 169565', 'ChIJz-Tz8HgZ2jER_TPrfDQFrhg'),
+('Woodlands, Singapore', 'ChIJVfCo8QgT2jERgKTarqz3AAU'),
+('Sembawang Dr, Singapore', 'EhdTZW1iYXdhbmcgRHIsIFNpbmdhcG9yZSIuKiwKFAoSCYfBbtljE9oxEUnZp-9q-D44EhQKEgl1k4uKIxHaMRHE9atSz2l4iA');
 
 -- --------------------------------------------------------
 
