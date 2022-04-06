@@ -78,8 +78,6 @@ if ($num > 0) {
         extract($row);
         // products array        
         $item = array(
-            "latitude" => $latitude,
-            "longitude" => $longitude,
             "region" => $region,
             "placeID" => $placeID
         );
