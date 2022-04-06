@@ -63,7 +63,7 @@
                         </div>
                         <select class="form-select" v-if="orderCreation.dropOffOption=='dropPoint'" v-model="orderCreation.pickupAddress"  v-on:change="changeDropPoint">
                             <option selected disabled value="">Select your preferred region</option>
-                            <option  v-for="(dp,index) in dropPoints" :value="dp.placeID">{{dp.region}}</option>
+                            <option  v-for="dp in dropPoints" :value="dp.placeID|dp.address">{{dp.address}}</option>
                         </select>
                         
                         <input v-else type="text" class="form-control" id="receiverPostal" placeholder="Address">
