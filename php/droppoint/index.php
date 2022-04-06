@@ -78,6 +78,7 @@ if ($num > 0) {
         extract($row);
         // products array        
         $item = array(
+            "address"=> $address,
             "region" => $region,
             "placeID" => $placeID
         );
