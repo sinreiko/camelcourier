@@ -145,12 +145,12 @@ This is an example of how to list things you need to use the software and how to
 |----|----|----|----|----|
 | :white_check_mark: | Activity | activity.py | activity | Vasilis |
 | :white_check_mark: | Activity HTTP | activityhttp.py | activity | Vasilis |
-| :white_large_square: | Drop Point | droppoint.py | droppoint | Nicholas |
+| :white_check_mark: | Drop Point | droppoint.py | droppoint | Nicholas |
 | :white_check_mark: | Email | email_test.py | - | Shao Ming |
 | :white_check_mark: | Order | order.py | order | Po Chien |
-| :white_large_square: | Rates | rate.py | rate | Nicholas |
+| :white_check_mark: | Rates | rate.py | rate | Nicholas |
 | :white_check_mark: | Shipper | shipper.py | shipper | Jun Hui |
-| :white_large_square: | SMS | send_sms.py | - | Shao Ming |
+| :white_check_mark: | SMS | send_sms.py | - | Shao Ming |
 | :white_check_mark: | Drop Point | droppoint/index.php | droppoint | Po Chien |
 
 
@@ -162,7 +162,7 @@ This is an example of how to list things you need to use the software and how to
 | :white_check_mark: | Create Delivery | create_order.py | Po Chien |
 | :white_check_mark: | Pick Parcel | pick_parcel.py | Vasilis |
 | :white_check_mark: | Update Delivery | update_order.py | Shao Ming |
-| :white_large_square: | Valuing | ?? | Nicholas |
+| :white_check_mark: | Valuing | valuing.py | Nicholas |
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -177,7 +177,7 @@ This is an example of how to list things you need to use the software and how to
 | Done | Name | Responsible | Description |
 |----|----|----|----|
 | :white_check_mark: | API Gateway | Vasilis | Implementing KONG/KONGA Gateway, Routing |
-| :white_large_square: | Facebook Login | Jun Hui | Implement Graph API |
+| :white_check_mark: | GraphQL | Po Chien | Implement SWOP API with GraphQL |
 | :white_check_mark: | Multiple Programming Language | Po Chien | Implement Drop Point MS in PHP |
 
 <p align="right">(<a href="#top">back to top</a>)</p>
