@@ -420,7 +420,6 @@ services:
         build:
             context: ./
             dockerfile: droppointPHP.Dockerfile
-        container_name: droppoint
         depends_on:
             - db
         volumes:
