@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/sinreiko/camelcourier">
-    <img src="images/camel.png" alt="Logo" width="100" height="100">
+    <img src="https://i.ibb.co/HnsV5XP/camel.png" alt="Logo" width="100" height="100">
   </a>
 
 <h2 align="center">CamelCourier</h3>
