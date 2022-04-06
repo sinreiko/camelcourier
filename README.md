@@ -1,25 +1,3 @@
-<!-- ## API used and paths -->
-<!-- ### Microservices -->
-<!-- | Microservice name | Source | Related files |
-|----|----|----
-| Order | Self coded | test_order.py, createOrderTest.sql |
-
-### Paths and descriptions
-| API | Path | Method| Description |
-|----|----|----|----|
-| test_order.py | /order | POST | Creates a new order|
-| test_order.py | /order/*<string:trackingID>*| GET | Retrieves order entry |
-| test_order.py | /order/update | PUT | Updates order pickupAddress |
-
-## Files
-| File Name | Description | Author |
-|-----|----|----|
-| test_order.py | prototype for the Order microservice | Po Chien |
-| createOrderTest.sql | test data for test_order.py | Po Chien | -->
-
-
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -73,7 +51,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+# About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
@@ -83,26 +61,26 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 
 
-### Built With
+## Built With
 
-#### Front-End Dependencies
+### Front-End Dependencies
 * [Vue.js](https://vuejs.org/)
 * [Bootstrap](https://getbootstrap.com)
 * [JQuery](https://jquery.com)
 
-#### Back-End Dependencies
+### Back-End Dependencies
 * [Flask](https://flask.palletsprojects.com/en/2.1.x/)
 * [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/)
 * [FlaskSQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
-* [pika](https://pika.readthedocs.io/en/stable/)
+* [Pika](https://pika.readthedocs.io/en/stable/)
 
-#### External APIs
+### External APIs
 * [SWOP API](https://swop.cx/)
 * [Google Distance Matrix API](https://developers.google.com/maps/documentation/distance-matrix)
 * [Twilio](https://www.twilio.com/)
 * [SendGrid](https://sendgrid.com/)
 
-#### Other Technologies Involved
+### Other Technologies Involved
 * [Docker](https://www.docker.com/)
 * [Kong](https://konghq.com/kong)
 * [Konga](https://pantsel.github.io/konga/)
@@ -118,20 +96,42 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 
 <!-- GETTING STARTED -->
-## Getting Started
+# Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To get local copy of CamelCourier up and running by following these simple steps below.
 
-### Prerequisites
+## Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+These are the prerequisites required for CamelCourier.
 
-### Installation
+* Docker: https://www.docker.com/
+* WAMP (Windows): https://www.wampserver.com/en/
+* MAMP (Mac): https://www.mamp.info/en/mac/
+
+## Installation
+
+There are 3 areas you have to set up, Docker, mySQL and Kong API gateway.
+
+### Docker Set Up
+1. Get 
+2. Clone the repo
+   ```sh
+   docker-compose up
+   ```
+
+### MySQL/phpMyAdmin Set Up
+1. Get a free API Key at [https://example.com](https://example.com)
+2. Clone the repo
+   ```sh
+   git clone https://github.com/github_username/repo_name.git
+   ```
+
+### Kong/Konga Set Up
+1. Get a free API Key at [https://example.com](https://example.com)
+2. Clone the repo
+   ```sh
+   git clone https://github.com/github_username/repo_name.git
+   ```
 
 1. Get a free API Key at [https://example.com](https://example.com)
 2. Clone the repo
@@ -152,7 +152,7 @@ This is an example of how to list things you need to use the software and how to
 
 
 <!-- MICROSERVICES/TRACKING SHEET -->
-## Microservices
+# Microservices
 
 <u><b>Atomic/Simple Microservices</b></u>
 
@@ -187,7 +187,7 @@ This is an example of how to list things you need to use the software and how to
 
 
 <!-- BEYOND THE LAB -->
-## Beyond The Lab
+# Beyond The Lab
 
 <!-- DONE - :white_check_mark: -->
 <!-- NOT DONE - :white_large_square: -->
@@ -203,7 +203,7 @@ This is an example of how to list things you need to use the software and how to
 
 
 <!-- Other Tasks -->
-## Other Tasks
+# Other Tasks
 
 <!-- DONE - :white_check_mark: -->
 <!-- NOT DONE - :white_large_square: -->
@@ -219,7 +219,7 @@ This is an example of how to list things you need to use the software and how to
 
 
 <!-- CONTACT -->
-## Contact
+# Contact
 
 Vasilis - vasilis.ng.2020@scis.smu.edu.sg</br>
 Po Chien - pochien.lin.2019@socsc.smu.edu.sg</br>
@@ -232,8 +232,8 @@ Project Link: [https://github.com/sinreiko/camelcourier](https://github.com/sinr
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Troubleshooting
-### Droppoint (PHP ver) encounters connect refused error
+# Troubleshooting
+## Droppoint (PHP ver) encounters connect refused error
 **Case 1: Docker requires permission to folder**
 
 This can occur if docker settings did not allow the file to be accessed.
