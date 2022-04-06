@@ -68,7 +68,7 @@ INSERT INTO `activity` (`activityID`, `trackingID`, `timestamp`, `deliveryStatus
 
 DROP TABLE IF EXISTS `droppoint`;
 CREATE TABLE IF NOT EXISTS `droppoint` (
-  `region` varchar(64) NOT NULL,
+  `address` varchar(64) NOT NULL,
   `placeID` varchar(100) NOT NULL,
   PRIMARY KEY (`placeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -77,12 +77,12 @@ CREATE TABLE IF NOT EXISTS `droppoint` (
 -- Dumping data for table `droppoint`
 --
 
-INSERT INTO `droppoint` (`region`, `placeID`) VALUES
-('South', 'ChIJr9GWQuIb2jER3YsiRj8AqFw'),
-('South', 'ChIJM7Kvx3QZ2jERqxq34uk5HAY'),
-('South', 'ChIJz-Tz8HgZ2jER_TPrfDQFrhg'),
-('North', 'ChIJVfCo8QgT2jERgKTarqz3AAU'),
-('North', 'EhdTZW1iYXdhbmcgRHIsIFNpbmdhcG9yZSIuKiwKFAoSCYfBbtljE9oxEUnZp-9q-D44EhQKEgl1k4uKIxHaMRHE9atSz2l4iA');
+INSERT INTO `droppoint` (`address`, `placeID`) VALUES
+('1 Maritime Square, Singapore 099253', 'ChIJr9GWQuIb2jER3YsiRj8AqFw'),
+('101 Upper Cross St, Singapore 058357', 'ChIJM7Kvx3QZ2jERqxq34uk5HAY'),
+('298 Jln Bukit Ho Swee, Singapore 169565', 'ChIJz-Tz8HgZ2jER_TPrfDQFrhg'),
+('Woodlands, Singapore', 'ChIJVfCo8QgT2jERgKTarqz3AAU'),
+('Sembawang Dr, Singapore', 'EhdTZW1iYXdhbmcgRHIsIFNpbmdhcG9yZSIuKiwKFAoSCYfBbtljE9oxEUnZp-9q-D44EhQKEgl1k4uKIxHaMRHE9atSz2l4iA');
 
 -- --------------------------------------------------------
 
