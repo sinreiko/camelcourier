@@ -27,7 +27,15 @@ const app = Vue.createApp({
                 orderListIndex: 0
             },
             userDetail: JSON.parse(localStorage.getItem("userDetail")),
-            dropPoints:[],
+            dropPoints:[
+                {
+                    latitude: 0,
+                    longitude: 0,
+                    region: "",
+                    placeID: "",
+                }
+            ],
+            mapLink: "",
             orderCreation:{
                 //shipper
                 shipperPostal: "",
@@ -45,6 +53,7 @@ const app = Vue.createApp({
                 receiverPhone: "",
                 //others
                 dropOffOption: "custom", //custom or dropPoint
+                dropPointIndex: 0,
                 size: "",
                 price: "3.00",
             },
@@ -284,10 +293,17 @@ const app = Vue.createApp({
                         // no book in db
                         this.message = data.message;
                     } else {
-                        // res = data.data.droppoints;
-                        res = data.data.orders
+                        res = data.data
                         this.dropPoints = res;
                         console.log(this.dropPoints);
+                        $('.slider_form').addClass('col-md-6')
+                        $('.slider_form').animate({
+                            margin: 0
+                        },1000, function(){
+                            
+                        })
+                        this.changeDropPoint();
+
                     }
                 })
                 .catch(error => {
@@ -296,6 +312,35 @@ const app = Vue.createApp({
                     // console.log(this.message + error);
 
                 });
+        },
+        changeDropPoint(){
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: new google.maps.LatLng(0, 0),
+                zoom: 15
+            });
+        
+            var service = new google.maps.places.PlacesService(map);
+        
+            service.getDetails({
+                placeId: this.orderCreation.pickupAddress
+            }, function (place, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+        
+                    // Create marker
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: place.geometry.location
+                    });
+        
+                    // Center map on place location
+                    map.setCenter(place.geometry.location);
+                }
+            });
+            // document.getElementById('map').src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyDoa4g6pnzYFf_BP9pbIg0BiOfmqGoAsbk&zoom=17&q="
+            // +this.orderCreation.pickupAddress;
+        },
+        resetDropPoint(){
+            $('.slider_form').removeClass('col-md-6')
         },
         getPickUpAddress(pickup){
             this.orderCreation.shipperPostal = pickup.shipperPostal;

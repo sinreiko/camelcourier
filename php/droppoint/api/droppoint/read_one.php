@@ -29,7 +29,8 @@ if($match->fullname != null) {
     $item = array(
         "latitude" => $latitude,
         "longitude" => $longitude,
-        "region" => $region
+        "region" => $region,
+        "placeID" => $placeID
     );
   
     // set response code - 200 OK
@@ -45,4 +46,3 @@ else {
     // tell the user item does not exist
     echo json_encode(array("message" => "Item does not exist."));
 }
-?>

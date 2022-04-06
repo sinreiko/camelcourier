@@ -38,7 +38,8 @@ if ($num>0) {
         $item = array(
                 "latitude" => $latitude,
                 "longitude" => $longitude,
-                "region" => $region
+                "region" => $region,
+                "placeID" => $placeID
             );
         //add item to the result array
         array_push($result_arr["data"], $item);
@@ -59,4 +60,3 @@ if ($num>0) {
     // tell the user item does not exist
     echo json_encode(array("message" => "Item does not exist."));
 }
-?>
