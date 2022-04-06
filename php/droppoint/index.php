@@ -79,7 +79,6 @@ if ($num > 0) {
         // products array        
         $item = array(
             "address"=> $address,
-            "region" => $region,
             "placeID" => $placeID
         );
         //add item to the result array
