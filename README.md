@@ -10,7 +10,7 @@
   <p align="center">
     <i>IS213 Enterprise Solution Development Project for Singapore Management University</i>
     <br />
-    CamelCourier is a courier/logistics company, similar to Ninja Van. In this project, we are building a courier service with various relevant business scenarios/processes leveraging a microservice(s) architecture rather than a monolithic one as well as other appropriate tools and technology.
+    CamelCourier is a courier/logistics company, similar to Ninja Van. In this project, we are building a courier service with various relevant business scenarios/processes leveraging a microservice(s) architecture rather than a monolithic one as well as other appropriate tools and technologies.
     <br />
     <a href="https://github.com/sinreiko/camelcourier"><strong>Explore GitHub Repository »</strong></a>
     <br />
