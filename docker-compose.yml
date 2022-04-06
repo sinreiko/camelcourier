@@ -289,7 +289,6 @@ services:
     update_order:
         build:
             context: ./
-            # To add create_order.Dockerfile
             dockerfile: update_order.Dockerfile
         image: 889090/update_order:1.0
         restart: always
@@ -314,7 +313,6 @@ services:
     cancel_order:
         build:
             context: ./
-            # To add create_order.Dockerfile
             dockerfile: cancel_order.Dockerfile
         image: 889090/cancel_order:1.0
         restart: always
@@ -376,7 +374,6 @@ services:
     email:
         build:
             context: ./
-            # To add create_order.Dockerfile
             dockerfile: email.Dockerfile
         image: 889090/email_test:1.0
         restart: always
@@ -448,20 +445,20 @@ services:
         ports:
             - "9906:3306"
 
-    # droppoint:
-    #     image: php:7.2.2-apache
-    #     build:
-    #         context: ./
-    #         dockerfile: droppointPHP.Dockerfile
-    #     container_name: droppoint
-    #     depends_on:
-    #         - db
-    #     volumes:
-    #         - ./php:/var/www/html/
-    #     ports:
-    #         - "5004:80"
-    #     stdin_open: true
-    #     tty: true
+    droppoint:
+        image: php:7.2.2-apache
+        build:
+            context: ./
+            dockerfile: droppointPHP.Dockerfile
+        container_name: droppoint
+        depends_on:
+            - db
+        volumes:
+            - ./php:/var/www/html/
+        ports:
+            - "5004:80"
+        stdin_open: true
+        tty: true
 
 # networks:
 #     rabbitmq_go_net:
