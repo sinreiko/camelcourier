@@ -62,7 +62,6 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#microservices">Microservices</a></li>
     <li><a href="#beyond-the-lab">Beyond The Lab</a></li>
     <li><a href="#other-tasks">Other Tasks</a></li>
