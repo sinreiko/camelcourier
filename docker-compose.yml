@@ -420,6 +420,8 @@ services:
         build:
             context: ./
             dockerfile: droppointPHP.Dockerfile
+        networks:
+            - kong-net
         depends_on:
             - db
         volumes:
