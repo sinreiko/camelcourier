@@ -108,8 +108,8 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 * [Konga](https://pantsel.github.io/konga/)
 * [RabbitMQ (AMQP)](https://www.rabbitmq.com/)
 * [GraphQL](https://graphql.org/)
-* [REST](https://restfulapi.net/)
-
+* [Restful](https://restfulapi.net/)
+* [GitHub](https://github.com/)
 
 
 
