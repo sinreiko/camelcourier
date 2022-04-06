@@ -1,30 +1,8 @@
-<!-- ## API used and paths -->
-<!-- ### Microservices -->
-<!-- | Microservice name | Source | Related files |
-|----|----|----
-| Order | Self coded | test_order.py, createOrderTest.sql |
-
-### Paths and descriptions
-| API | Path | Method| Description |
-|----|----|----|----|
-| test_order.py | /order | POST | Creates a new order|
-| test_order.py | /order/*<string:trackingID>*| GET | Retrieves order entry |
-| test_order.py | /order/update | PUT | Updates order pickupAddress |
-
-## Files
-| File Name | Description | Author |
-|-----|----|----|
-| test_order.py | prototype for the Order microservice | Po Chien |
-| createOrderTest.sql | test data for test_order.py | Po Chien | -->
-
-
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/sinreiko/camelcourier">
-    <img src="images/camel.png" alt="Logo" width="100" height="100">
+    <img src="https://i.ibb.co/HnsV5XP/camel.png" alt="Logo" width="100" height="100">
   </a>
 
 <h2 align="center">CamelCourier</h3>
@@ -62,18 +40,18 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#microservices">Microservices</a></li>
     <li><a href="#beyond-the-lab">Beyond The Lab</a></li>
     <li><a href="#other-tasks">Other Tasks</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li><a href="#troubleshooting">Troubleshooting</a></li>
   </ol>
 </details>
 
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+# About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
@@ -83,57 +61,94 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 
 
-### Built With
+## Built With
 
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
+### Front-End Dependencies
 * [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
 * [Bootstrap](https://getbootstrap.com)
 * [JQuery](https://jquery.com)
+
+### Back-End Dependencies
+* [Flask](https://flask.palletsprojects.com/en/2.1.x/)
+* [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/)
+* [FlaskSQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
+* [Pika](https://pika.readthedocs.io/en/stable/)
+
+### External APIs
+* [SWOP API](https://swop.cx/)
+* [Google Distance Matrix API](https://developers.google.com/maps/documentation/distance-matrix)
+* [Twilio](https://www.twilio.com/)
+* [SendGrid](https://sendgrid.com/)
+
+### Other Technologies Involved
+* [Docker](https://www.docker.com/)
+* [Kong](https://konghq.com/kong)
+* [Konga](https://pantsel.github.io/konga/)
+* [RabbitMQ (AMQP)](https://www.rabbitmq.com/)
+* [GraphQL](https://graphql.org/)
+* [Restful](https://restfulapi.net/)
+* [GitHub](https://github.com/)
+
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
 <!-- GETTING STARTED -->
-## Getting Started
+# Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To get local copy of CamelCourier up and running by following these simple steps below.
 
-### Prerequisites
+## Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+These are the prerequisites required for CamelCourier.
 
-### Installation
+* Docker Desktop: https://www.docker.com/products/docker-desktop/
+* WAMP (Windows): https://www.wampserver.com/en/
+* MAMP (Mac): https://www.mamp.info/en/mac/
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
+## Installation
+
+There are 3 areas you have to set up, Docker, mySQL and Kong API gateway.
+
+### Docker Set Up
+1. Start up Docker Desktop
+2. Open Command Prompt/Terminal and navigate to the folder with docker-compose.yml
+2. Build, create and start your containers (Note: This step may take a few minutes)
    ```
-3. Install NPM packages
-   ```sh
-   npm install
+   docker-compose up
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+
+### MySQL/phpMyAdmin Set Up
+1. Start up your WAMP/MAMP
+2. Go to http://localhost/phpmyadmin/ > Login > Import
+3. "Choose File" to import and select "cameldb.sql" (under the sql folder)
+4. Click "Go" to run the sql
+
+### Kong/Konga Set Up
+1. You are required to have your docker containers up and running before continuing to the next step. If your containers are not running, see "Docker Set Up" above. Alternatively, you can check if your containers are running by running the command below (Note: only kong-migration should be exited).
+    ```
+    docker-compose ps
+    ```
+2. Go to http://localhost:1337/ > Create account and login
+3. Go to Connections > New Connection > Enter connection details stated below > Create Connection > Activate Connection
+    ```
+      Name: default
+      Kong Admin URL: http://kong:8001
+    ```
+4. Go to Snapshots > Import from file
+5. Select the "snapshot_1.json" (under the "kong snapshot" folder)
+6. Go to the details of the snapshot you just imported
+7. Click Restore (Note: It is common to encounter an error, just repeat this step and restore again)
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
 <!-- MICROSERVICES/TRACKING SHEET -->
-## Microservices
+# Microservices
 
 <u><b>Atomic/Simple Microservices</b></u>
 
@@ -144,12 +159,12 @@ This is an example of how to list things you need to use the software and how to
 |----|----|----|----|----|
 | :white_check_mark: | Activity | activity.py | activity | Vasilis |
 | :white_check_mark: | Activity HTTP | activityhttp.py | activity | Vasilis |
-| :white_large_square: | Drop Point | droppoint.py | droppoint | Nicholas |
+| :white_check_mark: | Drop Point | droppoint.py | droppoint | Nicholas |
 | :white_check_mark: | Email | email_test.py | - | Shao Ming |
 | :white_check_mark: | Order | order.py | order | Po Chien |
-| :white_large_square: | Rates | rate.py | rate | Nicholas |
+| :white_check_mark: | Rates | rate.py | rate | Nicholas |
 | :white_check_mark: | Shipper | shipper.py | shipper | Jun Hui |
-| :white_large_square: | SMS | send_sms.py | - | Shao Ming |
+| :white_check_mark: | SMS | send_sms.py | - | Shao Ming |
 | :white_check_mark: | Drop Point | droppoint/index.php | droppoint | Po Chien |
 
 
@@ -161,22 +176,22 @@ This is an example of how to list things you need to use the software and how to
 | :white_check_mark: | Create Delivery | create_order.py | Po Chien |
 | :white_check_mark: | Pick Parcel | pick_parcel.py | Vasilis |
 | :white_check_mark: | Update Delivery | update_order.py | Shao Ming |
-| :white_large_square: | Valuing | ?? | Nicholas |
+| :white_check_mark: | Valuing | valuing.py | Nicholas |
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
 <!-- BEYOND THE LAB -->
-## Beyond The Lab
+# Beyond The Lab
 
 <!-- DONE - :white_check_mark: -->
 <!-- NOT DONE - :white_large_square: -->
 
 | Done | Name | Responsible | Description |
 |----|----|----|----|
-| :white_large_square: | API Gateway | Vasilis | Implementing KONG/KONGA Gateway |
-| :white_large_square: | Facebook Login | Jun Hui | Implement Graph API |
+| :white_check_mark: | API Gateway | Vasilis | Implementing KONG/KONGA Gateway, Routing |
+| :white_check_mark: | GraphQL | Po Chien | Implement SWOP API with GraphQL |
 | :white_check_mark: | Multiple Programming Language | Po Chien | Implement Drop Point MS in PHP |
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -184,7 +199,7 @@ This is an example of how to list things you need to use the software and how to
 
 
 <!-- Other Tasks -->
-## Other Tasks
+# Other Tasks
 
 <!-- DONE - :white_check_mark: -->
 <!-- NOT DONE - :white_large_square: -->
@@ -200,7 +215,7 @@ This is an example of how to list things you need to use the software and how to
 
 
 <!-- CONTACT -->
-## Contact
+# Contact
 
 Vasilis - vasilis.ng.2020@scis.smu.edu.sg</br>
 Po Chien - pochien.lin.2019@socsc.smu.edu.sg</br>
@@ -213,8 +228,8 @@ Project Link: [https://github.com/sinreiko/camelcourier](https://github.com/sinr
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Troubleshooting
-### Droppoint (PHP ver) encounters connect refused error
+# Troubleshooting
+## Droppoint (PHP ver) encounters connect refused error
 **Case 1: Docker requires permission to folder**
 
 This can occur if docker settings did not allow the file to be accessed.

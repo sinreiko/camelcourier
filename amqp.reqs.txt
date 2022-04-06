@@ -3,3 +3,6 @@ twilio==7.7.1
 starkbank-ecdsa==2.0.3
 elliptic-curve==0.1.2
 sendgrid==6.9.7
+Flask==2.0.2
+Flask-SQLAlchemy==2.5.1
+Flask-Cors==3.0.10
