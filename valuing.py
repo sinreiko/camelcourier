@@ -3,20 +3,17 @@
 # This is the complex microservice for valuing an order in the Shipper's UI
 # =======================================
 # ------    C o m p o n e n t s
-# --- order.py
 # --- rate.py
 # --- Google Maps distance matrix API (external service)
 
 # ------    P r o c e d u r e
 # 1-- Shipper finds out a cost estimation after setting pickupAddress (either doorstep or drop-off)
-# 2-- Request quote {trackingID, size} to valuing.py
-# 3-- Obtain origin and destination of order for {trackingID} from order.py
-# 4-- Return order details {pickupAddress, receiverAddress}
-# 5-- Find distance between {pickupAddress, receiverAddress} using Google Maps distance matrix API
-# 6-- Return distance
-# 7-- Request pricing {distance, size} from rate.py
-# 8-- Return price to valuing.py
-# 9-- Return and display pricing on Shipper's UI
+# 2-- Request quote {pickupAddress, receiverAddress, size} to valuing.py
+# 3-- Find distance between {pickupAddress, receiverAddress} using Google Maps distance matrix API
+# 4-- Return distance
+# 5-- Request pricing {distance, size} from rate.py
+# 6-- Return price to valuing.py
+# 7-- Return and display pricing on Shipper's UI
 # =======================================
 
 #   Imports
@@ -41,7 +38,7 @@ def request_price():
             - pickupAddress
             - receiverAddress
             - size
-        and runs the procedure above (line 11-19)
+        and runs the procedure above (line 10-16)
     '''
     # Check input format and data of the request are JSON
     if request.is_json:
@@ -51,7 +48,7 @@ def request_price():
             print("\nValuing a price estimation in JSON:", size_info)
             result = processValuing(size_info)
 
-            # 9-- Return and display pricing on Shipper's UI
+            # 7-- Return and display pricing on Shipper's UI
             return jsonify(result), result["code"]
 
         except Exception as e:
@@ -81,7 +78,6 @@ def processValuing(size_info):
             receiverAddress
             size
     '''
-    # 3-- Obtain origin and destination of order for {trackingID} from order.py
     # print('\n-----Invoking order microservice-----')
     # order_URL = environ.get('order_URL') or "http://localhost:5000/order"
     # order_URL += "/tracking/" + str(size_info['trackingID'])
@@ -92,17 +88,16 @@ def processValuing(size_info):
     # info=order_result['data']
     #   UPDATE: front end already has the addresses, so there's no longer a need to call order
 
-    # 4-- Return order details {pickupAddress, receiverAddress}
     pickupAddress = size_info['pickupAddress']
     receiverAddress = size_info['receiverAddress']
 
-    # 5-- Find distance between {pickupAddress, receiverAddress} using Google Maps distance matrix API
+    # 3-- Find distance between {pickupAddress, receiverAddress} using Google Maps distance matrix API
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + pickupAddress + \
         "&destinations=" + receiverAddress + \
         "&key=AIzaSyCtH98HlunuSLPLGvBf0HmEPnPd6YIye5M"
     output = requests.get(url).json()
 
-    # 6-- Return distance
+    # 4-- Return distance
     status = output['rows'][0]['elements'][0]['status']
     if status == "ZERO_RESULTS":
         return jsonify({
@@ -111,13 +106,13 @@ def processValuing(size_info):
         })
     distance = output['rows'][0]['elements'][0]['distance']['value'] / 1000
 
-    # 7-- Request pricing {distance, size} from rate.py
+    # 5-- Request pricing {distance, size} from rate.py
     rate_URL = environ.get('rate_URL') or "http://localhost:5003/rate"
     rate_URL += "/" + str(distance) + "/" + size_info['size']
     print(rate_URL)
     rate_result = invoke_http(rate_URL, method='GET', json=None)
     print('rate_result:', rate_result)
-    # 8-- Return price to valuing.py
+    # 6-- Return price to valuing.py
     return rate_result
 
 
