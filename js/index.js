@@ -1,24 +1,24 @@
-// const get_order_URL = "http://localhost:8000/api/order"
-// const get_activity_URL = "http://localhost:8000/api/activity"
-// const get_shipper_URL = "http://localhost:8000/api/shipper"
-// // const get_droppoint_URL = "http://localhost:5004/droppoint/"
-// const get_droppoint_URL = "http://localhost:8000/api/droppoint/"
+const get_order_URL = "http://localhost:8000/api/order"
+const get_activity_URL = "http://localhost:8000/api/activity"
+const get_shipper_URL = "http://localhost:8000/api/shipper"
+// const get_droppoint_URL = "http://localhost:5004/droppoint/"
+const get_droppoint_URL = "http://localhost:8000/api/droppoint/"
 
-// const valuing_URL = "http://localhost:8000/api/valuing"
-// const pick_parcel_URL = "http://localhost:8000/api/pickparcel"
-// const create_order_URL = "http://localhost:8000/api/create_order"
-// const update_order_URL = "http://localhost:8000/update_order/update"
-// const cancel_order_URL = "http://localhost:8000/api"
+const valuing_URL = "http://localhost:8000/api/valuing"
+const pick_parcel_URL = "http://localhost:8000/api/pickparcel"
+const create_order_URL = "http://localhost:8000/api/create_order"
+const update_order_URL = "http://localhost:8000/update_order/update"
+const cancel_order_URL = "http://localhost:8000/api"
 
-const get_order_URL = "http://localhost:5000/order"
-const get_activity_URL = "http://localhost:5001/activity"
-const get_shipper_URL = "http://localhost:5002/shipper"
-const get_droppoint_URL = "http://localhost:5004/droppoint/"
-const valuing_URL = "http://localhost:5005/valuing"
-const pick_parcel_URL = "http://localhost:5006/pick_parcel"
-const create_order_URL = "http://localhost:5007/create_order"
-const update_order_URL = "http://localhost:5008/update_order/update"
-const cancel_order_URL = "http://localhost:5009/"
+// const get_order_URL = "http://localhost:5000/order"
+// const get_activity_URL = "http://localhost:5001/activity"
+// const get_shipper_URL = "http://localhost:5002/shipper"
+// const get_droppoint_URL = "http://localhost:5004/droppoint/"
+// const valuing_URL = "http://localhost:5005/valuing"
+// const pick_parcel_URL = "http://localhost:5006/pick_parcel"
+// const create_order_URL = "http://localhost:5007/create_order"
+// const update_order_URL = "http://localhost:5008/update_order/update"
+// const cancel_order_URL = "http://localhost:5009/"
 // GraphQL: exchange rate
 let SWOP_API_key='7b31aa8dabd1df60435aec0cbff8f9d17211d33f6b2f20dfe7e7a85bb539689e'
 let SWOP_URL=`https://swop.cx/graphql?api-key=${SWOP_API_key}`
@@ -284,7 +284,11 @@ const app = Vue.createApp({
         },
         getDropPoints(){
             const response =
-                fetch(`${get_droppoint_URL}`)
+                fetch(`${get_droppoint_URL}`,{
+                    headers:{
+                        "Access-Control-Allow-Origin": "*"
+                    }
+                })
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 404) {
@@ -438,16 +442,16 @@ const app = Vue.createApp({
             })
         },
         retrieveOrderByUserId(user, userid){
-            fetch(`${get_order_URL}/find/${user}/${userid}`,{
-                mode:"no-cors"
-            })
+            fetch(`${get_order_URL}/find/${user}/${userid}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 404) {
                         // no book in db
                         this.message = data.message;
+                        console.log('====bruh got no data sia=====')
                     } else {
                         orders = data.data.orders;
+                        console.log('====got orders==')
                         console.log(orders);
                         for (var i = 0; i < orders.length; i++){
                             this.orderList.push({
