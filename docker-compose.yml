@@ -291,7 +291,6 @@ services:
     update_order:
         build:
             context: ./
-            # To add create_order.Dockerfile
             dockerfile: update_order.Dockerfile
         image: 889090/update_order:1.0
         restart: always
@@ -316,7 +315,6 @@ services:
     cancel_order:
         build:
             context: ./
-            # To add create_order.Dockerfile
             dockerfile: cancel_order.Dockerfile
         image: 889090/cancel_order:1.0
         restart: always
@@ -378,7 +376,6 @@ services:
     email:
         build:
             context: ./
-            # To add create_order.Dockerfile
             dockerfile: email.Dockerfile
         image: 889090/email_test:1.0
         restart: always

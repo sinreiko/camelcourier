@@ -21,6 +21,7 @@ $droppt = new Post($db);
 // products array
 $result_arr = array();
 $result_arr["data"] = array();
+$result_arr["code"] = 500;
 // set region property of record to read
 // $droppt->region = isset($_GET['region']) ? $_GET['region'] : die();
 // //=========mysqli version
@@ -87,6 +88,7 @@ if ($num>0) {
     }
       
     // set response code - 200 OK
+    $result_arr['code']=200;
     http_response_code(200);
       
     // make it json format

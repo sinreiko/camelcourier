@@ -169,6 +169,7 @@ CREATE TABLE `droppoint` (
   `latitude` float NOT NULL,
   `longitude` float NOT NULL,
   `region` varchar(64) NOT NULL,
+  `placeID` varchar(100) NOT NULL,
   PRIMARY KEY(`latitude`,`longitude`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -176,12 +177,12 @@ CREATE TABLE `droppoint` (
 -- Dumping data for table `droppoint`
 --
 
-INSERT INTO `droppoint` (`latitude`, `longitude`, `region`) VALUES
-(1.285710443426781, 103.84394318783733, 'South'),
-(1.2873912711321067, 103.83038699037779, 'South'),
-(1.2652501481293283, 103.82045618343764, 'South'),
-(1.446181576052929, 103.81975637505069, 'North'),
-(1.4363720994679852, 103.78683027012158, 'North');
+INSERT INTO `droppoint` (`latitude`, `longitude`, `region`, `placeID`) VALUES
+(1.285710443426781, 103.84394318783733, 'South', 'ChIJM7Kvx3QZ2jERqxq34uk5HAY'),
+(1.2873912711321067, 103.83038699037779, 'South', 'ChIJz-Tz8HgZ2jER_TPrfDQFrhg'),
+(1.2652501481293283, 103.82045618343764, 'South', 'ChIJr9GWQuIb2jER3YsiRj8AqFw'),
+(1.446181576052929, 103.81975637505069, 'North', 'EhdTZW1iYXdhbmcgRHIsIFNpbmdhcG9yZSIuKiwKFAoSCYfBbtljE9oxEUnZp-9q-D44EhQKEgl1k4uKIxHaMRHE9atSz2l4iA'),
+(1.4363720994679852, 103.78683027012158, 'North', 'ChIJVfCo8QgT2jERgKTarqz3AAU');
 
 -- --------------------------------------------------------
 
