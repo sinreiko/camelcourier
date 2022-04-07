@@ -121,6 +121,10 @@ def processCreateOrder(order):
         print("\nOrder published to RabbitMQ Exchange.\n")
     else:
         print('\nFailed to create order')
+        return{
+            "code": 500,
+            "message": "An error occurred while creating order. "
+        }
     # 4. Retrieve shipper Email
     shipperID = info["shipperID"]
     shipperURL = shipper_URL+'/'+str(shipperID)
