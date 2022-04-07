@@ -267,7 +267,7 @@ Even if Konga sets up a global plugin, it is likely the case that the CORS issue
 
 **For Linux users**: terminal > run ```google-chrome --disable-web-security```
 
-## Case 3: Not receiving SMS
+## Not receiving SMS
 
 As we are currently only own a trial Twilio account, please contact us (emails above) to get your number verified to receive any SMS notifications (not required for email notifications).
 
