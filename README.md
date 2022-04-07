@@ -258,4 +258,14 @@ There are two options to resolve this:
   - Under services > db > ports, change ```9906:3306``` to ```XXXX:3306```
   - Re-run ```docker-compose down``` then ```docker-compose up --force-recreate```
 
+## CORS error when using localhost:8000 as origin
+Even if Konga sets up a global plugin, it is likely the case that the CORS issue still persists. Instead, this workaround bypasses CORS from client-side.
+
+**For OSX users**: terminal > run ```open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security```
+
+**For Windows users**: download a CORS bypass plugin like this one: https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino?hl=en run as per instructed
+
+**For Linux users**: terminal > run ```google-chrome --disable-web-security```
+
+
 <p align="right">(<a href="#top">back to top</a>)</p>
