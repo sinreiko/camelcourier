@@ -64,7 +64,8 @@ const app = Vue.createApp({
                 dropOffOption: "custom", //custom or dropPoint
                 size: "",
                 price: "3.00",
-                pickupAddress:""
+                pickupAddress:"",
+                pickupPostal: ""
             },
             inputTracking: "",
             orderList:[],
@@ -344,15 +345,15 @@ const app = Vue.createApp({
         resetDropPoint(){
             $('.slider_form').removeClass('col-md-6')
         },
-        getPickUpAddress(pickup){
-            this.orderCreation.shipperPostal = pickup.shipperPostal;
-            this.orderCreation.shipperAddress = pickup.shipperAddress;
+        getPickUpAddress(){
+            this.orderCreation.pickupPostal = this.pickupPostal;
+            this.orderCreation.pickupAddress = this.pickupAddress;
             this.orderCreation.shipperName = this.userName;
             this.orderCreation.shipperEmail = this.userDetail.shipperEmail;
             this.orderCreation.shipperPhone = this.userDetail.shipperPhone;
             // console.log(JSON.stringify(this.orderCreation));
         },
-        getDropOffAddress(dropoff){
+        getReceiverAddress(dropoff){
             this.orderCreation.receiverPostal = dropoff.receiverPostal;
             this.orderCreation.receiverAddress = dropoff.receiverAddress;
             // console.log(JSON.stringify(this.orderCreation));
@@ -360,10 +361,11 @@ const app = Vue.createApp({
         },
         getPrice(){
             let jsonData = JSON.stringify({
-                pickupAddress: this.orderCreation.shipperAddress,
+                pickupAddress: this.orderCreation.pickupAddress,
                 receiverAddress: this.orderCreation.receiverAddress,
                 size: this.orderCreation.size
             });
+            console.log(jsonData);
             fetch(`${valuing_URL}`,
             {
                 method: "POST",
@@ -526,6 +528,10 @@ const app = Vue.createApp({
                                 this.orderList[i].shipperName = res.shipperName;
                                 this.orderList[i].shipperEmail = res.shipperEmail;
                                 this.orderList[i].shipperPhone = res.shipperPhone;
+                                this.orderCreation.shipperAddress=res.shipperAddress;
+                                this.orderCreation.shipperEmail=res.shipperEmail;
+                                this.orderCreation.shipperPhone=res.shipperPhone;
+                                this.orderCreation.shipperName=res.shipperName;
                                 break;
                             }
                         }
@@ -765,6 +771,7 @@ app.component('home-header',{
                         for (let i = 0; i < res.length; i++) {
                             this.shipperLogin.push(res[i])
                         }
+                        console.log('-----this is the shipper obj retrieved-----')
                     }
                 })
         },
@@ -934,18 +941,18 @@ function initAutocomplete() {
     shipper_autocomplete.addListener('place_changed', function() {
         var place = shipper_autocomplete.getPlace();
 
-        var shipperAddress = {
-            shipperPostal: "",
-            shipperAddress: ""
+        var pickupAdd= {
+            pickupPostal: "",
+            pickupAddress: ""
         }
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
             if (addressType == 'postal_code'){
-                shipperAddress.shipperPostal = place.address_components[i]['long_name'];
+                pickupAdd.pickupPostal = place.address_components[i]['long_name'];
             }
         }
-        shipperAddress.shipperAddress = place.formatted_address;
-        vm.getPickUpAddress(shipperAddress);        
+        pickupAdd.pickupAddress = place.formatted_address;
+        vm.getPickUpAddress();        
     });
     receiver_autocomplete.addListener('place_changed', function() {
         var place = receiver_autocomplete.getPlace();
@@ -960,7 +967,7 @@ function initAutocomplete() {
             }
         }
         receiverAddress.receiverAddress = place.formatted_address;
-        vm.getDropOffAddress(receiverAddress);        
+        vm.getReceiverAddress(receiverAddress);        
     });
 }
 
