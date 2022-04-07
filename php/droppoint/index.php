@@ -5,6 +5,13 @@ header("Access-Control-Expose-Headers: X-JSON");
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header("Access-Control-Allow-Headers: *");
 header("Content-Type: application/json; charset=UTF-8");
+header("HTTP/1.1 200 OK");
+if ($method == "OPTIONS") {
+    header('Access-Control-Allow-Origin: *');
+    header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
+    header("HTTP/1.1 200 OK");
+    die();
+}
 // include database and object files
 include_once 'api/config/database.php';
 // echo "\nI just read database.php";

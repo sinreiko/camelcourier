@@ -24,6 +24,7 @@
 </head>
 <body id="app">
     <shipper-header :username="userName"></shipper-header>
+    {{getShipper}}
     <main class="mb-5">
     <article>
     <!-- Start Multiform HTML -->
@@ -47,7 +48,7 @@
                     <h4>Get Instant Quotes</h4>
                     <div class="form-group text-start">
                         <label for="receive">Receiver address</label>
-                        <input type="text" class="form-control" id="shipperPostal" onFocus="geolocate()" placeholder="Address" v-model="orderCreation.receiverAddress">
+                        <input type="text" class="form-control" id="receiverPostal" onFocus="geolocate()" placeholder="Address" v-model="orderCreation.receiverAddress">
                     </div>
                     <div class="pac-card" id="pac-card"></div>
 
@@ -116,7 +117,7 @@
                             </div>
                             <div class="row my-2">
                                 <div class="form-floating col-md-6">
-                                    <input type="text" class="form-control" readonly class="form-control-plaintext" placeholder="Postcode" v-model="orderCreation.shipperPostal">
+                                    <input type="text" class="form-control" class="form-control-plaintext" placeholder="Postcode" v-model="orderCreation.shipperPostal">
                                 </div>
                                 <div class="form-floating col-md-6">
                                     <input type="text" class="form-control" placeholder="Unit Number: eg #12-1900" v-model="orderCreation.shipperUnit">
@@ -146,7 +147,7 @@
                             </div>
                             <div class="row my-2">
                                 <div class="form-floating col-md-6">
-                                    <input type="text" class="form-control" readonly class="form-control-plaintext" placeholder="Postcode" v-model="orderCreation.receiverPostal">
+                                    <input type="text" class="form-control" class="form-control" placeholder="Postcode" v-model="orderCreation.receiverPostal">
                                 </div>
                                 <div class="form-floating col-md-6">
                                     <input type="text" class="form-control" id="receiverUnit" placeholder="Unit Number: eg #12-1900" v-model="orderCreation.receiverUnit">
