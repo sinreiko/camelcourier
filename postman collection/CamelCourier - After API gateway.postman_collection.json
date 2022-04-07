@@ -1,0 +1,385 @@
+{
+	"info": {
+		"_postman_id": "7851cc55-797c-4781-afda-ef522a48f22a",
+		"name": "CamelCourier - After API gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Activity Log - Success",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/api/activity/587405231516",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"activity",
+						"587405231516"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activity Log - Failure no activity",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/api/activity/123321",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"activity",
+						"123321"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order - Check All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/api/order/checkall",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"order",
+						"checkall"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order - Find order by user type and ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/api/order/find/shipper/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"order",
+						"find",
+						"shipper",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order - By tracking ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/api/order/tracking/587405231518",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"order",
+						"tracking",
+						"587405231518"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order - Create new order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"shipperID\": 5,\r\n   \"receiverName\": \"Nelson Tan\",\r\n   \"receiverPhone\": \"+6582184938\",\r\n   \"receiverEmail\": \"vasilis.ng.2020@scis.smu.edu.sg\",\r\n   \"receiverAddress\":\"256 Jurong East St 24\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/order",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order - Update Pickup Address",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"pickupAddress\": \"Limbang Shopping Centre\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/order/587405231521",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"order",
+						"587405231521"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shipper - Get all shippers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/shipper",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"shipper"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shipper - Get shipper details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/shipper/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"shipper",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Valuing -  Get value for an order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"pickupAddress\": \"43 Holland Dr, Singapore 270043\",\r\n   \"receiverAddress\": \"505 Ang Mo Kio Avenue 8, Singapore\",\r\n   \"size\": \"M\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/valuing",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"valuing"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order -  Create an order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"shipperID\": 5,\r\n   \"receiverName\": \"Ninja Man\",\r\n   \"receiverPhone\": \"+6582184938\",\r\n   \"receiverEmail\": \"vasilis.ng.2020@scis.smu.edu.sg\",\r\n   \"receiverAddress\":\"680 Choa Chu Kang Crescent\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/create_order",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"create_order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Drop Point - Get all drop points",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/droppoint/",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"droppoint",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pick Parcel - Update the order with Pickup Address",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"shipperID\": 5,\r\n    \"trackingID\": 587405231522,\r\n    \"pickupAddress\": \"429 Choa Chu Kang Ave 4\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/pick_parcel",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"pick_parcel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Order - Update order with status",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"trackingID\": 587405231522\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/update_order/update/delay",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"update_order",
+						"update",
+						"delay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Order - Cancel an Order by Tracking ID",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"trackingID\": 587405231521\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/cancel_order",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"cancel_order"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
