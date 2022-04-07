@@ -206,8 +206,8 @@ There are 3 areas you have to set up, Docker, mySQL and Kong API gateway.
 
 | Done | Name | Responsible | Description |
 |----|----|----|----|
-| :white_large_square: | Front End UI | Reiko | HTML, CSS, Javascript |
-| :white_large_square: | Consuming | Reiko | Connecting UI with Microservices |
+| :white_check_mark: | Front End UI | Reiko | HTML, CSS, Javascript |
+| :white_check_mark: | Consuming | Reiko | Connecting UI with Microservices |
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -257,5 +257,9 @@ There are two options to resolve this:
   - Go to camelcourier > docker-compose.yml 
   - Under services > db > ports, change ```9906:3306``` to ```XXXX:3306```
   - Re-run ```docker-compose down``` then ```docker-compose up --force-recreate```
+
+**Case 3: Not receiving SMS**
+
+As we are currently only own a trial Twilio account, please contact us (emails above) to get your number verified to receive any SMS notifications (not required for email notifications).
 
 <p align="right">(<a href="#top">back to top</a>)</p>

@@ -96,7 +96,8 @@ def processValuing(size_info):
         "&destinations=" + receiverAddress + \
         "&key=AIzaSyCtH98HlunuSLPLGvBf0HmEPnPd6YIye5M"
     output = requests.get(url).json()
-
+    print(output)
+    
     # 4-- Return distance
     status = output['rows'][0]['elements'][0]['status']
     if status == "ZERO_RESULTS":
